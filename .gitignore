@@ -1,0 +1,73 @@
+# =========================
+# .NET & Visual Studio
+# =========================
+
+# Build folders
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+[Tt]emp/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio specific
+.vs/
+
+# VS Code
+.vscode/
+.history/
+*.code-workspace
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Debug & crash
+*.pdb
+*.cache
+*.tmp
+*.log
+*.dmp
+
+# Database (local)
+*.db
+*.sqlite
+*.mdf
+*.ldf
+
+# Secrets
+secrets.json
+appsettings.json
+appsettings.*.json
+
+# Environment files
+.env
+.env.*
+
+# Publish output
+publish/
+dist/
+
+# JetBrains Rider
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node (for full-stack repos)
+node_modules/
+
+# =========================
+# DO NOT IGNORE (KEEP THESE IN GIT)
+# =========================
+
+

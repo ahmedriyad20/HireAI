@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace HireAIProject.Controllers
+namespace HireAI.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]

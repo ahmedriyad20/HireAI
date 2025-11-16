@@ -1,4 +1,4 @@
-namespace HireAIProject
+namespace HireAI.API
 {
     public class WeatherForecast
     {

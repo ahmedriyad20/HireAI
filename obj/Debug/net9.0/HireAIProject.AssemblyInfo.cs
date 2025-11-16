@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HireAIProject")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c01b7aa14bd51ee97f510de61a126c2c5dd37583")]
 [assembly: System.Reflection.AssemblyProductAttribute("HireAIProject")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HireAIProject")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

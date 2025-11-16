@@ -1,5 +1,5 @@
 
-namespace HireAIProject
+namespace HireAI.API
 {
     public class Program
     {
