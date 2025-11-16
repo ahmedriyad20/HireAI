@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\HireAI.Service\HireAI.Service.csproj" />
-  </ItemGroup>
-
 </Project>

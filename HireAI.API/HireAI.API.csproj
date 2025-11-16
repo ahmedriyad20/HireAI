@@ -8,6 +8,17 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HireAI.Core\HireAI.Core.csproj" />
+    <ProjectReference Include="..\HireAI.Infrastructure\HireAI.Infrastructure.csproj" />
+    <ProjectReference Include="..\HireAI.Service\HireAI.Service.csproj" />
   </ItemGroup>
 
 </Project>

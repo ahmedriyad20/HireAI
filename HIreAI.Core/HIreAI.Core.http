@@ -1,6 +1,0 @@
-@HIreAI.Core_HostAddress = http://localhost:5003
-
-GET {{HIreAI.Core_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
