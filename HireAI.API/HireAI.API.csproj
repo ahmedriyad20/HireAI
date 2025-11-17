@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\HireAI.Core\HireAI.Core.csproj" />
     <ProjectReference Include="..\HireAI.Infrastructure\HireAI.Infrastructure.csproj" />
     <ProjectReference Include="..\HireAI.Service\HireAI.Service.csproj" />
