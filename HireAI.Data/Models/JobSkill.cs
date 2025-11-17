@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace HireAI.Data.Models
 {
-    internal class JobSkill
+    public class JobSkill
     {
+        int JobId { get; set; }
+        int SkillId { get; set; }
     }
 }
