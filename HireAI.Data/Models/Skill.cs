@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HireAI.Data.Helpers.Enums
+namespace HireAI.Data.Models
 {
-    internal class class1
+    internal class Skill
     {
     }
 }

@@ -17,4 +17,9 @@
     <ProjectReference Include="..\HireAI.Service\HireAI.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="APIBases\" />
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>

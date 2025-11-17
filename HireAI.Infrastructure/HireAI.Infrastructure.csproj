@@ -10,4 +10,14 @@
     <ProjectReference Include="..\HireAI.Data\HireAI.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Config\" />
+    <Folder Include="Context\" />
+    <Folder Include="GenericBase\" />
+    <Folder Include="Implementation\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="Respositories\" />
+    <Folder Include="Seeding\" />
+  </ItemGroup>
+
 </Project>

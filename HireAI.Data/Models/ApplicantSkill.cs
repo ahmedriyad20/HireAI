@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HireAI.Core.MiddleWare
+namespace HireAI.Data.Models
 {
-    class Class1
+    internal class ApplicantSkill
     {
     }
 }
