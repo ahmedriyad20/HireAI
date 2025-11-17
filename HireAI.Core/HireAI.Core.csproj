@@ -10,8 +10,4 @@
     <ProjectReference Include="..\HireAI.Service\HireAI.Service.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="MiddleWare\" />
-  </ItemGroup>
-
 </Project>
