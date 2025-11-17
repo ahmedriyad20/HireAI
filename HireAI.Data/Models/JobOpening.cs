@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace HireAI.Data.Models
 {
-    public class Job
+    public class JobOpening
     {
 
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
-        public Guid HRId { get; set; }
+        public int HRId { get; set; }
         public HR HR { get; set; }
 
         public string Title { get; set; } = null!;

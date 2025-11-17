@@ -13,21 +13,21 @@ namespace HireAI.Data.Models
     {
 
        
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
-        public Guid JobId { get; set; }
-        public Job Job { get; set; } = null!;
+        public int JobId { get; set; }
+        public JobOpening Job { get; set; } = null!;
 
-        public Guid ApplicationId { get; set; }
+        public int ApplicationId { get; set; }
         public Application Application { get; set; } = null!;
 
-        public Guid TestId { get; set; }
-        public Test Test { get; set; } = null!;
+        public int TestId { get; set; }
+        public Exam Test { get; set; } = null!;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
       
-        public ICollection<CandidateResponse>? CandidateResponses { get; set; }
+        public ICollection<ApplicantResponse>? ApplicantResponses { get; set; }
         public TestEvaluation? TestEvaluation { get; set; }
     
 

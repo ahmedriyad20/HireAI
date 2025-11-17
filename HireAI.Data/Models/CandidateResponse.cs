@@ -10,15 +10,15 @@ using static System.Net.Mime.MediaTypeNames;
 namespace HireAI.Data.Models
 {
 
-    public class CandidateResponse
+    public class ApplicantResponse
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
-        public Guid QuestionId { get; set; }
+        public int QuestionId { get; set; }
 
         public Question Question { get; set; } = null!;
 
-        public Guid TestAttemptId { get; set; }
+        public int TestAttemptId { get; set; }
 
         public TestAttempt TestAttempt { get; set; } = null!;
 

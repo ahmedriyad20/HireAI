@@ -10,12 +10,12 @@ namespace HireAI.Data.Models
     public   class ApplicantSkill
     {
 
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
-        public Guid CandidateId { get; set; } // Applicant Id
-        public Applicant Candidate { get; set; } = null!;
+        public int ApplicantId { get; set; } // Applicant Id
+        public Applicant Applicant { get; set; }
 
-        public Guid SkillId { get; set; }
+        public int SkillId { get; set; }
       
         public Skill Skill { get; set; } = null!;
 

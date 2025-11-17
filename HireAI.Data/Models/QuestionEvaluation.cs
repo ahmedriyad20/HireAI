@@ -8,9 +8,9 @@ namespace HireAI.Data.Models
 {
     public class QuestionEvaluation
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
-        public Guid ResponseId { get; set; } // Foreign Key to Response
+        public int ResponseId { get; set; } // Foreign Key to Response
 
         public bool IsCorrect { get; set; } = false;
 

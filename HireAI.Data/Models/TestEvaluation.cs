@@ -12,9 +12,9 @@ namespace HireAI.Data.Models
     {
 
 
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
-        public Guid TestAttemptId { get; set; }
+        public int TestAttemptId { get; set; }
         public TestAttempt TestAttempt { get; set; } = null!;
 
         public float TotalScore { get; set; }

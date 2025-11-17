@@ -11,7 +11,7 @@ namespace HireAI.Data.Models
     public class CV
     {
 
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string? Phone { get; set; }
         public string? LinkedInPath { get; set; }
         public string? GitHubPath { get; set; }
@@ -19,14 +19,11 @@ namespace HireAI.Data.Models
         public string? Education { get; set; }
         public string? Experience { get; set; }
         public float? YearsOfExperience { get; set; }
-        public string? Certifications { get; set; }
-        public Guid CandidateId { get; set; } 
-        public Applicant Candidate { get; set; } = null!;
-        public ICollection<CandidateCVSkill>? CandidateCVSkills { get; set; }
+        public List<string>? Certifications { get; set; }
 
-        public float? YearOfExperience { get; set; }
+        public int ApplicantId { get; set; }
 
-   
-        public Guid CandidatedId { get; set; }
+        //Navigation Property
+        public Applicant? Applicant { get; set; }
     }
 }

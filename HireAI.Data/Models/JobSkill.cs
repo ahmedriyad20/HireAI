@@ -8,12 +8,12 @@ namespace HireAI.Data.Models
 {
     public  class JobSkill
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
-        public Guid JobId { get; set; }
-        public Job Job { get; set; } = null!;
+        public int JobId { get; set; }
+        public JobOpening Job { get; set; } = null!;
 
-        public Guid SkillId { get; set; }
+        public int SkillId { get; set; }
 
         public Skill Skill { get; set; } = null!;
     }

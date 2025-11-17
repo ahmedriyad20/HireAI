@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 namespace HireAI.Data.Models
 {
     //just to upload this for the team 
-    public class Test
+    public class Exam
     {
 
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
 
-        public Guid CandidateId { get; set; } // Applicant Id
-        public Guid ApplicationId { get; set; }//foreign key to Application
+        public int ApplicantId { get; set; } // Applicant Id
+        public int ApplicationId { get; set; }//foreign key to Application
         public Application? Application { get; set; }
         public int NumberOfQuestions { get; set; }
         public int DurationInMinutes { get; set; }
@@ -23,7 +23,7 @@ namespace HireAI.Data.Models
         public bool IsAi { get; set; } = true;
 
 
-        private Test() { }
+        private Exam() { }
 
     }
 }

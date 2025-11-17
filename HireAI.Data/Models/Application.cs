@@ -8,13 +8,13 @@ namespace HireAI.Data.Models
 {
     public  class Application
     {
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
-        public Guid JobId { get; set; }
+        public int JobId { get; set; }
         
-        public Job Job { get; set; } = null!;
+        public JobOpening Job { get; set; } = null!;
 
-        public Guid ApplicantId { get; set; }
+        public int ApplicantId { get; set; }
         
         public Applicant Applicant { get; set; } = null!;
 
@@ -24,7 +24,7 @@ namespace HireAI.Data.Models
         public float? ScoreATS { get; set; }
 
         // Navigation
-        public ICollection<Test>? Tests { get; set; }
+        public ICollection<Exam>? Tests { get; set; }
         public ICollection<TestAttempt>? TestAttempts { get; set; }
     }
 }

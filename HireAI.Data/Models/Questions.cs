@@ -9,9 +9,9 @@ namespace HireAI.Data.Models
 {
     public class Question
     {
-        public Guid Id { get; set; }
-        public Guid TestId { get; set; } //foreign key to Test
-        public Test Test { get; set; } = null!;
+        public int Id { get; set; }
+        public int TestId { get; set; } //foreign key to Test
+        public Exam Test { get; set; } = null!;
         public string QuestionText { get; set; } = null!;
         public QuestionAnswers? Answer { get; set; }
 
@@ -19,6 +19,6 @@ namespace HireAI.Data.Models
         private Question() { }
 
         public ICollection<Answer>? Answers { get; set; }
-        public ICollection<CandidateResponse>? CandidateResponses { get; set; }
+        public ICollection<ApplicantResponse>? ApplicantResponses { get; set; }
     }
 }
