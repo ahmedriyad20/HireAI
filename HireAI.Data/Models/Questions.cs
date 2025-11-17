@@ -11,6 +11,7 @@ namespace HireAI.Data.Models
     {
         public Guid Id { get; set; }
         public Guid TestId { get; set; } //foreign key to Test
+        public Test Test { get; set; } = null!;
         public string QuestionText { get; set; } = null!;
         public QuestionAnswers? Answer { get; set; }
 
