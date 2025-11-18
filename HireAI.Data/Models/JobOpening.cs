@@ -25,11 +25,16 @@ namespace HireAI.Data.Models
         public int? ATSMinimumScore { get; set; }
         public bool AutoSend { get; set; } = false;
 
-        // Navigation
+        //Foreign Keys
         public int HRId { get; set; }
-        public HR HR { get; set; }
-        public ICollection<JobSkill>? JobSkills { get; set; }
-        public ICollection<Application>? Applications { get; set; }
-        public ICollection<TestAttempt>? TestAttempts { get; set; }
+
+
+        // Navigation Property
+        public HR? HR { get; set; }
+        public ICollection<JobSkill> JobSkills { get; set; } = new HashSet<JobSkill>();
+        public ICollection<Application> Applications { get; set; } = new HashSet<Application>();
+        public ICollection<ExamEvaluation> ExamEvaluations { get; set; } = new HashSet<ExamEvaluation>();
+        public ICollection<Applicant> Applicants { get; set; } = new HashSet<Applicant>();
+
     }
 }

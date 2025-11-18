@@ -13,7 +13,13 @@ namespace HireAI.Data.Models
         public  string Feedback { get; set; } = null!;
         public DateTime EvaluatedAt { get; set; } = DateTime.UtcNow;
 
-        public int ResponseId { get; set; } // Foreign Key to Response
+        //Foreign Keys
+        public int ApplicantResponseId { get; set; } // Foreign Key to Response
+        public int ExamEvaluationId { get; set; }
+
+        //Navigation Property
+        public ApplicantResponse? ApplicantResponse { get; set; }
+        public ExamEvaluation? ExamEvaluation { get; set; }
 
     }
 }

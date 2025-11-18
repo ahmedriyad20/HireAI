@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HireAI.Data.Models
 {
-    public class TestEvaluation
+    public class ExamEvaluation
     {
         public int Id { get; set; }
         public float TotalScore { get; set; }
@@ -17,8 +17,13 @@ namespace HireAI.Data.Models
         public DateTime? EvaluatedAt { get; set; }
         public int Status { get; set; }
 
-        public int TestAttemptId { get; set; }
-        public TestAttempt TestAttempt { get; set; } = null!;
+        //Foreign Keys
+        public int ExamSummaryId { get; set; }
+        public int JobId { get; set; }
 
+        //Navigation Property
+        public ExamSummary? ExamSummary { get; set; }
+        public JobOpening? JobOpening { get; set; }
+        public ICollection<QuestionEvaluation> QuestionEvaluations { get; set; } = new HashSet<QuestionEvaluation>();
     }
 }

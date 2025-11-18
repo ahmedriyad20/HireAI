@@ -20,9 +20,10 @@ namespace HireAI.Data.Models
         public float? YearsOfExperience { get; set; }
         public List<string>? Certifications { get; set; }
 
-
-         //Navigation to applicant 
+        //Foreign Keys
         public int ApplicantId { get; set; }
+
+        //Navigation Property
         public Applicant? Applicant { get; set; }
     }
 }

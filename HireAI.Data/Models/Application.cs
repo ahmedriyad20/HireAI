@@ -9,18 +9,24 @@ namespace HireAI.Data.Models
     public  class Application
     {
         public int Id { get; set; }
-        public int JobId { get; set; }
-        public JobOpening Job { get; set; } = null!;
         public int ApplicationStatus { get; set; }
         public DateTime DateApplied { get; set; } = DateTime.UtcNow;
         public string? CVFilePath { get; set; }
         public float? ScoreATS { get; set; }
 
-
-        // Navigation to tests , attempts and applicant
-        public ICollection<Exam>? Tests { get; set; }
-        public ICollection<TestAttempt>? TestAttempts { get; set; }
+        //Foreign Keys
+        public int HrId { get; set; }
         public int ApplicantId { get; set; }
-        public Applicant Applicant { get; set; } = null!;
+        public int JobId { get; set; }
+        public int ExamId { get; set; }
+
+        //Navigation Property
+        public HR? HR { get; set; }
+        public Applicant? Applicant { get; set; }
+        public JobOpening? AppliedJob { get; set; }
+        public Exam? Exam { get; set; }
+        public ExamSummary? ExamSummary { get; set; }
+        
+        
     }
 }

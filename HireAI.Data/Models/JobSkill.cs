@@ -10,11 +10,12 @@ namespace HireAI.Data.Models
     {
         public int Id { get; set; }
 
-        //Naviagations to JobOpening and Skill
+        //Foreign Keys
         public int JobId { get; set; }
-        public JobOpening Job { get; set; } = null!;
         public int SkillId { get; set; }
-        public Skill Skill { get; set; } = null!;
 
+        //Naviagation Property
+        public JobOpening? Job { get; set; }
+        public Skill? Skill { get; set; } 
     }
 }

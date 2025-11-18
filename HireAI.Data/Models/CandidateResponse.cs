@@ -16,7 +16,7 @@ namespace HireAI.Data.Models
         public int QuestionId { get; set; }
         public Question Question { get; set; } = null!;
         public int TestAttemptId { get; set; }
-        public TestAttempt TestAttempt { get; set; } = null!;
+        public ExamSummary TestAttempt { get; set; } = null!;
         public int AnswerNumber { get; set; }
 
         // Navigation

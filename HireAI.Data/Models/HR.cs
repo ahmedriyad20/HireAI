@@ -11,14 +11,14 @@ namespace HireAI.Data.Models
 { 
     public class HR : User
     {
-        public string CompanyName { get; set; } = null!;
+        public string CompanyName { get; set; } = default!;
         public AccountType AccountType { get; set; } = AccountType.Free;
         public DateTime? PremiumExpiry { get; set; }
 
 
-        // Navigation  oppenintJobs , Applications , Payments
-        public virtual ICollection<JobOpening>? HRJobs { get; set; } = new HashSet<JobOpening>(); // jobs created by HR users
-        public virtual ICollection<Application>? Applications { get; set; } = new HashSet<Application>();
+        // Navigation Property
+        public virtual ICollection<JobOpening> HRJobs { get; set; } = new HashSet<JobOpening>(); // jobs created by HR users
+        public virtual ICollection<Application> Applications { get; set; } = new HashSet<Application>();
         public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();
     }
 }

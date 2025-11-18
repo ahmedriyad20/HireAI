@@ -12,11 +12,11 @@ namespace HireAI.Data.Models
     public class User
     {
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
+        public string Name { get; set; } = default!;
+        public string Email { get; set; } = default!;
         public Role Role { get; set; }
         public bool IsPremium { get; set; } = false;
-        public AccountType PreminumPlans { get; set; } = AccountType.Free;
+        public AccountType AccountPlan { get; set; } = AccountType.Free;
         public string? Phone { get; set; }
         public string? Bio { get; set; }
         public string? Title { get; set; }

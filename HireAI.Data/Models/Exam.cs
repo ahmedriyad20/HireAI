@@ -10,16 +10,19 @@ namespace HireAI.Data.Models
     public class Exam
     {
         public int Id { get; set; }
-        public int ApplicantId { get; set; } // Applicant Id
-        public int ApplicationId { get; set; }//foreign key to Application
-        public Application? Application { get; set; }
         public int NumberOfQuestions { get; set; }
         public int DurationInMinutes { get; set; }
         public DateTime CreatedAt { get; set; }
-        public String TestName { get; set; } = null!;
+        public string TestName { get; set; } = default!;
         public bool IsAi { get; set; } = true;
 
-        //naviagation to Questions
+        //Foreign Keys
+        public int ApplicantId { get; set; }
+        public int ApplicationId { get; set; }
+
+        // Navigation Property
+        public Applicant? Applicant { get; set; }
+        public Application? Application { get; set; }
         public ICollection<Question> Questions { get; set; } = new HashSet<Question>();  
 
     }

@@ -10,14 +10,14 @@ namespace HireAI.Data.Models
     public   class ApplicantSkill
     {
         public int Id { get; set; }
-        public int SkillId { get; set; }
-        public Skill Skill { get; set; } = null!;
         public float? SkillRate { get; set; }
 
-        //navigations 
-        public int ApplicantId { get; set; } //fk
-        public Applicant Applicant { get; set; }
+        //Foreign Keys
+        public int ApplicantId { get; set; }
 
+        //Navigation Property
+        public Applicant? Applicant { get; set; }
+        public virtual ICollection<Skill> Skills { get; set; } = new HashSet<Skill>();
 
     }
 }

@@ -10,16 +10,17 @@ namespace HireAI.Data.Models
     public class Question
     {
         public int Id { get; set; }
-        public string QuestionText { get; set; } = null!;
+        public string QuestionText { get; set; } = default!;
         public QuestionAnswers? Answer { get; set; }
         public int QuestionNumber { get; set; }
-        
 
-        //Naviagtions to Answers and ApplictionResponses , Test
-        public ICollection<Answer>? Answers { get; set; }
-        public ICollection<ApplicantResponse>? ApplicantResponses { get; set; }
+        //Foreign Keys
+        public int ExamId { get; set; }
+        public int ApplicantResponseId { get; set; }
 
-        public int TestId { get; set; } //foreign key to Test
-        public Exam Test { get; set; } = null!;
+        //Navigation Property
+        public ApplicantResponse? ApplicantResponse { get; set; }
+        public Exam? Exam { get; set; }
+        public ICollection<Answer> Answers { get; set; } = new HashSet<Answer>();
     }
 }
