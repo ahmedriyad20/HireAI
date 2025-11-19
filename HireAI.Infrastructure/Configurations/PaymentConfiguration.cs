@@ -1,3 +1,4 @@
+using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -39,7 +40,25 @@ namespace HireAI.Data.Configurations
             builder.Property(p => p.BillingPeriod)
                 .IsRequired();
 
+            #region Type Conversion
+            builder.Property(u => u.Status)
+                  .HasConversion(
+                v => v.ToString(),// Converts the enum to string when saving to the database                  
+               v => (enPaymentStatus)Enum.Parse(typeof(enPaymentStatus), v)// Converts the string back to enum when reading from the database
+                );
 
+            builder.Property(u => u.UpgradeTo)
+                 .HasConversion(
+               v => v.ToString(),
+              v => (enAccountType)Enum.Parse(typeof(enAccountType), v)
+               );
+
+            builder.Property(u => u.BillingPeriod)
+                .HasConversion(
+              v => v.ToString(),               
+             v => (enBillingPeriod)Enum.Parse(typeof(enBillingPeriod), v)
+              );
+            #endregion
 
             // Unique constraint for PaymentIntentId
             builder.HasIndex(p => p.PaymentIntentId)

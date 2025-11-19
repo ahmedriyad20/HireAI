@@ -34,10 +34,11 @@ namespace HireAI.Data.Configurations
             builder.Property(u => u.IsPremium)
                 .HasDefaultValue(false);
 
-            builder.Property(u => u.AccountType)
+            //Type Conversion
+            builder.Property(u => u.Role)
                   .HasConversion(
                 v => v.ToString(),// Converts the enum to string when saving to the database                  
-               v => (enAccountType)Enum.Parse(typeof(enAccountType), v)// Converts the string back to enum when reading from the database
+               v => (enRole)Enum.Parse(typeof(enRole), v)// Converts the string back to enum when reading from the database
                 );
 
             builder.Property(u => u.IsActive)

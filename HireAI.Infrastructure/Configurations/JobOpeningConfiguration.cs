@@ -51,13 +51,27 @@ namespace HireAI.Data.Configurations
             builder.Property(j => j.AutoSend)
                 .HasDefaultValue(false);
 
-
+            //Type Conversion
             builder.Property(j => j.JobStatus)
-              .HasConversion(
-                v => v.ToString(),// Converts the enum to string when saving to the database                  
-               v => (enJobStatus)Enum.Parse(typeof(enJobStatus), v)// Converts the string back to enum when reading from the database
-                )
-              .HasDefaultValue(enJobStatus.Active);
+             .HasConversion(
+               v => v.ToString(),// Converts the enum to string when saving to the database                  
+              v => (enJobStatus)Enum.Parse(typeof(enJobStatus), v)// Converts the string back to enum when reading from the database
+               )
+             .HasDefaultValue(enJobStatus.Active);
+
+            builder.Property(u => u.ExperienceLevel)
+                .HasConversion(
+                    v => v.HasValue ? v.Value.ToString() : null, // enum? -> string (null preserved)
+                    v => string.IsNullOrEmpty(v) ? (enExperienceLevel?)null : (enExperienceLevel)Enum.Parse(typeof(enExperienceLevel), v) // string -> enum?
+                );
+
+            builder.Property(u => u.EmploymentType)
+                .HasConversion(
+                    v => v.HasValue ? v.Value.ToString() : null, // enum? -> string (null preserved)
+                    v => string.IsNullOrEmpty(v) ? (enEmploymentType?)null : (enEmploymentType)Enum.Parse(typeof(enEmploymentType), v) // string -> enum?
+                );
+
+
 
             // Foreign Key
             builder.HasOne(j => j.HR)

@@ -1,3 +1,5 @@
+using System;
+using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -12,10 +14,17 @@ namespace HireAI.Data.Configurations
 
             builder.Property(q => q.QuestionText)
                 .IsRequired()
-                .HasMaxLength(2000);
+                .HasMaxLength(200);
 
             builder.Property(q => q.QuestionNumber)
                 .IsRequired();
+
+            //Type Conversion (null-safe)
+            builder.Property(u => u.Answer)
+                .HasConversion(
+                    v => v.HasValue ? v.Value.ToString() : null, // enum? -> string (null preserved)
+                    v => string.IsNullOrEmpty(v) ? (enQuestionAnswers?)null : (enQuestionAnswers)Enum.Parse(typeof(enQuestionAnswers), v) // string -> enum?
+                );
 
             // Foreign Keys
             builder.HasOne(q => q.Exam)

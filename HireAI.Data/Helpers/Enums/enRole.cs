@@ -10,7 +10,7 @@ namespace HireAI.Data.Helpers.Enums
     public enum enRole
     {
         Admin,
-        Recruiter,
+        HR,
         Applicant
     }
 }

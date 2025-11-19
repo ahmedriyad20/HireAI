@@ -1,5 +1,7 @@
 using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
+using HireAI.Data.Models.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -7,10 +9,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HireAI.Infrastructure.Context
 {
-    public class HireAIDbContext : DbContext
+    public class HireAIDbContext : IdentityDbContext<ApplicationUser>
     {
-        public HireAIDbContext(DbContextOptions<HireAIDbContext> options) 
-            : base(options)
+        public HireAIDbContext(DbContextOptions options): base(options)
         {
         }
 
@@ -22,7 +23,6 @@ namespace HireAI.Infrastructure.Context
         public DbSet<Application> Applications { get; set; } = default!;
         public DbSet<Payment> Payments { get; set; } = default!;
         public DbSet<CV> CVs { get; set; } = default!;
-
         public DbSet<Answer> Answers { get; set; } = default!;
         public DbSet<ApplicantSkill> ApplicantSkills { get; set; } = default!;
         public DbSet<ApplicantResponse> ApplicantResponses { get; set; } = default!;
@@ -36,17 +36,14 @@ namespace HireAI.Infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // TPC
+            // TPT (Table Per Type) 
             modelBuilder.Entity<HR>().ToTable("HRs");
             modelBuilder.Entity<Applicant>().ToTable("Applicant");
 
             // Apply configuration classes from this assembly (IEntityTypeConfiguration implementations)
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(HireAIDbContext).Assembly);
 
-            // NOTE:
-            // Relationship configuration is defined in IEntityTypeConfiguration<> files.
-            // Remove duplicated relationship calls from here to avoid EF generating duplicate
-            // FKs (shadow properties like "HRId") which caused the migration error.
+            
             base.OnModelCreating(modelBuilder);
         }
 
