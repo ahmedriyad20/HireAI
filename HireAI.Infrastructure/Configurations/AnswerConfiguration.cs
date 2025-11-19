@@ -8,15 +8,18 @@ namespace HireAI.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Answer> builder)
         {
-   
             builder.Property(a => a.Text)
                 .HasColumnType("varchar(100)");
 
             builder.Property(a => a.IsCorrect)
                 .HasDefaultValue(false);
 
+            // Correct FK: Answer -> Question (many answers per question)
+            builder.HasOne(a => a.Question)
+                .WithMany(q => q.Answers)
+                .HasForeignKey(a => a.QuestionId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-       
             builder.HasIndex(a => a.QuestionId);
 
             // Index for quick lookup of correct answers

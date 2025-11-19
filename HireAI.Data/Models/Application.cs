@@ -15,7 +15,7 @@ namespace HireAI.Data.Models
         public float? ScoreATS { get; set; }
 
         //Foreign Keys
-        public int HrId { get; set; }
+        public int HRId { get; set; }
         public int ApplicantId { get; set; }
         public int JobId { get; set; }
         public int ExamId { get; set; }

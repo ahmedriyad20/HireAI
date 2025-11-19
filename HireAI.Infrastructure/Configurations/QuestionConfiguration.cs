@@ -22,7 +22,7 @@ namespace HireAI.Data.Configurations
                 .WithMany(e => e.Questions)
                 .HasForeignKey(q => q.ExamId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(q => q.ApplicantResponse)
                 .WithOne(ar => ar.Question)
@@ -34,7 +34,7 @@ namespace HireAI.Data.Configurations
             builder.HasMany(q => q.Answers)
                 .WithOne()
                 .HasForeignKey(a => a.QuestionId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Indexes
             builder.HasIndex(q => new { q.ExamId, q.QuestionNumber })

@@ -30,14 +30,14 @@ namespace HireAI.Data.Configurations
                 .WithOne(es => es.ExamEvaluation)
                 .HasForeignKey<ExamEvaluation>(ee => ee.ExamSummaryId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             // Navigation property
             builder.HasMany(ee => ee.QuestionEvaluations)
                 .WithOne(qe => qe.ExamEvaluation)
                 .HasForeignKey(qe => qe.ExamEvaluationId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Indexes
             builder.HasIndex(ee => ee.ExamSummaryId)

@@ -64,19 +64,19 @@ namespace HireAI.Data.Configurations
                 .WithMany(hr => hr.HRJobs)
                 .HasForeignKey(j => j.HRId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Navigation properties
       
             builder.HasMany(j => j.Applications)
                 .WithOne(a => a.AppliedJob)
                 .HasForeignKey(a => a.JobId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(j => j.ExamEvaluations)
                 .WithOne(ee => ee.JobOpening)
                 .HasForeignKey(ee => ee.JobId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
     
 

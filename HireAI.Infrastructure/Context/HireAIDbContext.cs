@@ -10,6 +10,7 @@ namespace HireAI.Infrastructure.Context
     public class HireAIDbContext : DbContext
     {
         public HireAIDbContext(DbContextOptions<HireAIDbContext> options) 
+            : base(options)
         {
         }
 
@@ -35,22 +36,24 @@ namespace HireAI.Infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           
-            //TPC
+            // TPC
             modelBuilder.Entity<HR>().ToTable("HRs");
             modelBuilder.Entity<Applicant>().ToTable("Applicant");
 
-            // Apply configuration classes from this assembly (your IEntityTypeConfiguration implementations)
+            // Apply configuration classes from this assembly (IEntityTypeConfiguration implementations)
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(HireAIDbContext).Assembly);
 
+            // NOTE:
+            // Relationship configuration is defined in IEntityTypeConfiguration<> files.
+            // Remove duplicated relationship calls from here to avoid EF generating duplicate
+            // FKs (shadow properties like "HRId") which caused the migration error.
             base.OnModelCreating(modelBuilder);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=HireAIDb;Trusted_Connection=True;TrustServerCertificate=True;\"\r\n");
-
+            optionsBuilder.UseSqlServer("Data Source =.; Initial Catalog = HireAIDb; Integrated Security = True; Encrypt = False");
         }
     }
 }

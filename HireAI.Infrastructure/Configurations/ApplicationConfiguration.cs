@@ -26,16 +26,16 @@ namespace HireAI.Data.Configurations
             // Foreign Keys
             builder.HasOne(a => a.HR)
                 .WithMany(hr => hr.Applications)
-                .HasForeignKey(a => a.HrId)
+                .HasForeignKey(a => a.HRId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
 
             builder.HasOne(a => a.Exam)
                 .WithOne(e => e.Application)
                 .HasForeignKey<Application>(a => a.ExamId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(a => a.ExamSummary)
                 .WithOne(es => es.Application)
@@ -44,7 +44,7 @@ namespace HireAI.Data.Configurations
                 .OnDelete(DeleteBehavior.SetNull);
 
             // Indexes
-            builder.HasIndex(a => a.HrId);
+            builder.HasIndex(a => a.HRId);
             builder.HasIndex(a => a.ApplicantId);
             builder.HasIndex(a => a.JobId);
             builder.HasIndex(a => new { a.ApplicantId, a.JobId })

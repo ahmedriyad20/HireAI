@@ -17,7 +17,7 @@ namespace HireAI.Data.Configurations
             builder.HasMany(a => a.ApplicantSkills)
                 .WithOne(asn => asn.Applicant)
                 .HasForeignKey(asn => asn.ApplicantId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Navigation properties
         builder
@@ -29,12 +29,12 @@ namespace HireAI.Data.Configurations
             builder.HasMany(a => a.Applications)
                 .WithOne(app => app.Applicant)
                 .HasForeignKey(app => app.ApplicantId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(a => a.Exams)
                 .WithOne(e => e.Applicant)
                 .HasForeignKey(e => e.ApplicantId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
         
         }
     }

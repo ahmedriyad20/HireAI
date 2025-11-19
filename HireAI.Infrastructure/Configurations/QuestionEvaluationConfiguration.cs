@@ -27,13 +27,13 @@ namespace HireAI.Data.Configurations
                 .WithOne(ar => ar.QuestionEvaluation)
                 .HasForeignKey<QuestionEvaluation>(qe => qe.ApplicantResponseId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(qe => qe.ExamEvaluation)
                 .WithMany(ee => ee.QuestionEvaluations)
                 .HasForeignKey(qe => qe.ExamEvaluationId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Composite index for common queries
             builder.HasIndex(qe => new { qe.ExamEvaluationId, qe.ApplicantResponseId });

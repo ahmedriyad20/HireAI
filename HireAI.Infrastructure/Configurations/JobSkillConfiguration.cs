@@ -15,13 +15,13 @@ namespace HireAI.Data.Configurations
                 .WithMany(j => j.JobSkills)
                 .HasForeignKey(js => js.JobId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(js => js.Skill)
                 .WithMany()
                 .HasForeignKey(js => js.SkillId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Composite unique constraint to prevent duplicate skill assignment to same job
             builder.HasIndex(js => new { js.JobId, js.SkillId })

@@ -18,23 +18,23 @@ namespace HireAI.Data.Configurations
                 .WithMany()
                 .HasForeignKey(ar => ar.QuestionId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(ar => ar.TestAttempt)
+            builder.HasOne(ar => ar.ExamSummary)
                 .WithMany()
-                .HasForeignKey(ar => ar.TestAttemptId)
+                .HasForeignKey(ar => ar.ExamSummaryId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Navigation property
             builder.HasOne(ar => ar.QuestionEvaluation)
                 .WithOne(qe => qe.ApplicantResponse)
                 .HasForeignKey<QuestionEvaluation>(qe => qe.ApplicantResponseId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Indexes
-            builder.HasIndex(ar => ar.TestAttemptId);
-            builder.HasIndex(ar => new { ar.TestAttemptId, ar.QuestionId })
+            builder.HasIndex(ar => ar.ExamSummaryId);
+            builder.HasIndex(ar => new { ar.ExamSummaryId, ar.QuestionId })
                 .IsUnique();
 
             // Check constraint

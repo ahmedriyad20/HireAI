@@ -12,12 +12,12 @@ namespace HireAI.Data.Models
 
         //Foreign Keys
         public int CVId { get; set; }
-        public  CV CV { get; set; }
 
         //Navigation Property
         public virtual ICollection<ApplicantSkill> ApplicantSkills { get; set; } = new HashSet<ApplicantSkill>();
         public virtual ICollection<Application> Applications { get; set; } = new HashSet<Application>();
         public virtual ICollection<Exam> Exams { get; set; } = new HashSet<Exam>();
-        public virtual ICollection<ExamSummary> ExamAttempts { get; set; } = new HashSet<ExamSummary>();
+        public virtual ICollection<ExamSummary> ExamSummarys { get; set; } = new HashSet<ExamSummary>();
+        public CV? CV { get; set; }
     }
 }

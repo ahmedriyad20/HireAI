@@ -17,25 +17,10 @@ namespace HireAI.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ApplicantSkillJoin", b =>
-                {
-                    b.Property<int>("ApplicantSkillsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SkillsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ApplicantSkillsId", "SkillsId");
-
-                    b.HasIndex("SkillsId");
-
-                    b.ToTable("ApplicantSkillJoin");
-                });
 
             modelBuilder.Entity("HireAI.Data.Models.Answer", b =>
                 {
@@ -53,6 +38,9 @@ namespace HireAI.Infrastructure.Migrations
                     b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("QuestionId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("varchar(100)");
@@ -60,6 +48,8 @@ namespace HireAI.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
+
+                    b.HasIndex("QuestionId1");
 
                     b.HasIndex("QuestionId", "IsCorrect");
 
@@ -77,17 +67,17 @@ namespace HireAI.Infrastructure.Migrations
                     b.Property<int>("AnswerNumber")
                         .HasColumnType("int");
 
-                    b.Property<int>("QuestionId")
+                    b.Property<int>("ExamSummaryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TestAttemptId")
+                    b.Property<int>("QuestionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TestAttemptId");
+                    b.HasIndex("ExamSummaryId");
 
-                    b.HasIndex("TestAttemptId", "QuestionId")
+                    b.HasIndex("ExamSummaryId", "QuestionId")
                         .IsUnique();
 
                     b.ToTable("ApplicantResponses", t =>
@@ -107,12 +97,17 @@ namespace HireAI.Infrastructure.Migrations
                     b.Property<int>("ApplicantId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SkillId")
+                        .HasColumnType("int");
+
                     b.Property<float?>("SkillRate")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicantId");
+
+                    b.HasIndex("SkillId");
 
                     b.ToTable("ApplicantSkills", t =>
                         {
@@ -146,7 +141,7 @@ namespace HireAI.Infrastructure.Migrations
                     b.Property<int>("ExamId")
                         .HasColumnType("int");
 
-                    b.Property<int>("HrId")
+                    b.Property<int>("HRId")
                         .HasColumnType("int");
 
                     b.Property<int>("JobId")
@@ -161,7 +156,7 @@ namespace HireAI.Infrastructure.Migrations
 
                     b.HasIndex("ApplicationStatus");
 
-                    b.HasIndex("HrId");
+                    b.HasIndex("HRId");
 
                     b.HasIndex("JobId");
 
@@ -246,6 +241,11 @@ namespace HireAI.Infrastructure.Migrations
                     b.Property<int>("DurationInMinutes")
                         .HasColumnType("int");
 
+                    b.Property<string>("ExamName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<bool>("IsAi")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -253,11 +253,6 @@ namespace HireAI.Infrastructure.Migrations
 
                     b.Property<int>("NumberOfQuestions")
                         .HasColumnType("int");
-
-                    b.Property<string>("TestName")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -339,7 +334,7 @@ namespace HireAI.Infrastructure.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<int>("ExamEvaluationId")
+                    b.Property<int?>("ExamEvaluationId")
                         .HasColumnType("int");
 
                     b.Property<int>("ExamId")
@@ -355,7 +350,8 @@ namespace HireAI.Infrastructure.Migrations
                     b.HasIndex("CreatedAt");
 
                     b.HasIndex("ExamEvaluationId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[ExamEvaluationId] IS NOT NULL");
 
                     b.HasIndex("ExamId");
 
@@ -532,7 +528,7 @@ namespace HireAI.Infrastructure.Migrations
                     b.Property<int?>("Answer")
                         .HasColumnType("int");
 
-                    b.Property<int>("ApplicantResponseId")
+                    b.Property<int?>("ApplicantResponseId")
                         .HasColumnType("int");
 
                     b.Property<int>("ExamId")
@@ -549,7 +545,8 @@ namespace HireAI.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicantResponseId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[ApplicantResponseId] IS NOT NULL");
 
                     b.HasIndex("ExamId");
 
@@ -728,39 +725,30 @@ namespace HireAI.Infrastructure.Migrations
                     b.ToTable("HRs", (string)null);
                 });
 
-            modelBuilder.Entity("ApplicantSkillJoin", b =>
-                {
-                    b.HasOne("HireAI.Data.Models.ApplicantSkill", null)
-                        .WithMany()
-                        .HasForeignKey("ApplicantSkillsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("HireAI.Data.Models.Skill", null)
-                        .WithMany()
-                        .HasForeignKey("SkillsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("HireAI.Data.Models.Answer", b =>
                 {
                     b.HasOne("HireAI.Data.Models.Question", null)
                         .WithMany("Answers")
                         .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("HireAI.Data.Models.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId1");
+
+                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("HireAI.Data.Models.ApplicantResponse", b =>
                 {
-                    b.HasOne("HireAI.Data.Models.ExamSummary", "TestAttempt")
+                    b.HasOne("HireAI.Data.Models.ExamSummary", "ExamSummary")
                         .WithMany()
-                        .HasForeignKey("TestAttemptId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ExamSummaryId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("TestAttempt");
+                    b.Navigation("ExamSummary");
                 });
 
             modelBuilder.Entity("HireAI.Data.Models.ApplicantSkill", b =>
@@ -768,10 +756,18 @@ namespace HireAI.Infrastructure.Migrations
                     b.HasOne("HireAI.Data.Models.Applicant", "Applicant")
                         .WithMany("ApplicantSkills")
                         .HasForeignKey("ApplicantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HireAI.Data.Models.Skill", "Skill")
+                        .WithMany("ApplicantSkills")
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Applicant");
+
+                    b.Navigation("Skill");
                 });
 
             modelBuilder.Entity("HireAI.Data.Models.Application", b =>
@@ -779,19 +775,19 @@ namespace HireAI.Infrastructure.Migrations
                     b.HasOne("HireAI.Data.Models.Applicant", "Applicant")
                         .WithMany("Applications")
                         .HasForeignKey("ApplicantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("HireAI.Data.Models.HR", "HR")
                         .WithMany("Applications")
-                        .HasForeignKey("HrId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("HRId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("HireAI.Data.Models.JobOpening", "AppliedJob")
                         .WithMany("Applications")
                         .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Applicant");
@@ -806,13 +802,13 @@ namespace HireAI.Infrastructure.Migrations
                     b.HasOne("HireAI.Data.Models.Applicant", "Applicant")
                         .WithMany("Exams")
                         .HasForeignKey("ApplicantId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("HireAI.Data.Models.Application", "Application")
                         .WithOne("Exam")
                         .HasForeignKey("HireAI.Data.Models.Exam", "ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Applicant");
@@ -825,7 +821,7 @@ namespace HireAI.Infrastructure.Migrations
                     b.HasOne("HireAI.Data.Models.JobOpening", "JobOpening")
                         .WithMany("ExamEvaluations")
                         .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("JobOpening");
@@ -834,13 +830,13 @@ namespace HireAI.Infrastructure.Migrations
             modelBuilder.Entity("HireAI.Data.Models.ExamSummary", b =>
                 {
                     b.HasOne("HireAI.Data.Models.Applicant", null)
-                        .WithMany("ExamAttempts")
+                        .WithMany("ExamSummarys")
                         .HasForeignKey("ApplicantId");
 
                     b.HasOne("HireAI.Data.Models.Application", "Application")
                         .WithOne("ExamSummary")
                         .HasForeignKey("HireAI.Data.Models.ExamSummary", "ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("HireAI.Data.Models.ExamEvaluation", "ExamEvaluation")
@@ -848,17 +844,17 @@ namespace HireAI.Infrastructure.Migrations
                         .HasForeignKey("HireAI.Data.Models.ExamSummary", "ExamEvaluationId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("HireAI.Data.Models.Exam", "Test")
+                    b.HasOne("HireAI.Data.Models.Exam", "Exam")
                         .WithMany()
                         .HasForeignKey("ExamId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Application");
 
-                    b.Navigation("ExamEvaluation");
+                    b.Navigation("Exam");
 
-                    b.Navigation("Test");
+                    b.Navigation("ExamEvaluation");
                 });
 
             modelBuilder.Entity("HireAI.Data.Models.JobOpening", b =>
@@ -866,7 +862,7 @@ namespace HireAI.Infrastructure.Migrations
                     b.HasOne("HireAI.Data.Models.HR", "HR")
                         .WithMany("HRJobs")
                         .HasForeignKey("HRId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("HR");
@@ -877,13 +873,13 @@ namespace HireAI.Infrastructure.Migrations
                     b.HasOne("HireAI.Data.Models.JobOpening", "Job")
                         .WithMany("JobSkills")
                         .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("HireAI.Data.Models.Skill", "Skill")
                         .WithMany()
                         .HasForeignKey("SkillId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Job");
@@ -896,7 +892,7 @@ namespace HireAI.Infrastructure.Migrations
                     b.HasOne("HireAI.Data.Models.HR", "HR")
                         .WithMany("Payments")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("HR");
@@ -912,7 +908,7 @@ namespace HireAI.Infrastructure.Migrations
                     b.HasOne("HireAI.Data.Models.Exam", "Exam")
                         .WithMany("Questions")
                         .HasForeignKey("ExamId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ApplicantResponse");
@@ -925,13 +921,13 @@ namespace HireAI.Infrastructure.Migrations
                     b.HasOne("HireAI.Data.Models.ApplicantResponse", "ApplicantResponse")
                         .WithOne("QuestionEvaluation")
                         .HasForeignKey("HireAI.Data.Models.QuestionEvaluation", "ApplicantResponseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("HireAI.Data.Models.ExamEvaluation", "ExamEvaluation")
                         .WithMany("QuestionEvaluations")
                         .HasForeignKey("ExamEvaluationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ApplicantResponse");
@@ -1019,13 +1015,18 @@ namespace HireAI.Infrastructure.Migrations
                     b.Navigation("Answers");
                 });
 
+            modelBuilder.Entity("HireAI.Data.Models.Skill", b =>
+                {
+                    b.Navigation("ApplicantSkills");
+                });
+
             modelBuilder.Entity("HireAI.Data.Models.Applicant", b =>
                 {
                     b.Navigation("ApplicantSkills");
 
                     b.Navigation("Applications");
 
-                    b.Navigation("ExamAttempts");
+                    b.Navigation("ExamSummarys");
 
                     b.Navigation("Exams");
                 });

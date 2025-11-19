@@ -121,7 +121,7 @@ namespace HireAI.Infrastructure.Migrations
                         column: x => x.HRId,
                         principalTable: "HRs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -149,7 +149,7 @@ namespace HireAI.Infrastructure.Migrations
                         column: x => x.UserId,
                         principalTable: "HRs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -206,7 +206,7 @@ namespace HireAI.Infrastructure.Migrations
                         column: x => x.JobId,
                         principalTable: "JobOpenings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -226,13 +226,13 @@ namespace HireAI.Infrastructure.Migrations
                         column: x => x.JobId,
                         principalTable: "JobOpenings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_JobSkills_Siklls_SkillId",
                         column: x => x.SkillId,
                         principalTable: "Siklls",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -242,7 +242,8 @@ namespace HireAI.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SkillRate = table.Column<float>(type: "real", nullable: true),
-                    ApplicantId = table.Column<int>(type: "int", nullable: false)
+                    ApplicantId = table.Column<int>(type: "int", nullable: false),
+                    SkillId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -253,7 +254,13 @@ namespace HireAI.Infrastructure.Migrations
                         column: x => x.ApplicantId,
                         principalTable: "Applicant",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ApplicantSkills_Siklls_SkillId",
+                        column: x => x.SkillId,
+                        principalTable: "Siklls",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -266,7 +273,7 @@ namespace HireAI.Infrastructure.Migrations
                     DateApplied = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     CVFilePath = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     ScoreATS = table.Column<float>(type: "real", nullable: true),
-                    HrId = table.Column<int>(type: "int", nullable: false),
+                    HRId = table.Column<int>(type: "int", nullable: false),
                     ApplicantId = table.Column<int>(type: "int", nullable: false),
                     JobId = table.Column<int>(type: "int", nullable: false),
                     ExamId = table.Column<int>(type: "int", nullable: false)
@@ -280,43 +287,19 @@ namespace HireAI.Infrastructure.Migrations
                         column: x => x.ApplicantId,
                         principalTable: "Applicant",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Applications_HRs_HrId",
-                        column: x => x.HrId,
+                        name: "FK_Applications_HRs_HRId",
+                        column: x => x.HRId,
                         principalTable: "HRs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Applications_JobOpenings_JobId",
                         column: x => x.JobId,
                         principalTable: "JobOpenings",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ApplicantSkillJoin",
-                columns: table => new
-                {
-                    ApplicantSkillsId = table.Column<int>(type: "int", nullable: false),
-                    SkillsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApplicantSkillJoin", x => new { x.ApplicantSkillsId, x.SkillsId });
-                    table.ForeignKey(
-                        name: "FK_ApplicantSkillJoin_ApplicantSkills_ApplicantSkillsId",
-                        column: x => x.ApplicantSkillsId,
-                        principalTable: "ApplicantSkills",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ApplicantSkillJoin_Siklls_SkillsId",
-                        column: x => x.SkillsId,
-                        principalTable: "Siklls",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -328,7 +311,7 @@ namespace HireAI.Infrastructure.Migrations
                     NumberOfQuestions = table.Column<int>(type: "int", nullable: false),
                     DurationInMinutes = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TestName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ExamName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     IsAi = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     ApplicantId = table.Column<int>(type: "int", nullable: false),
                     ApplicationId = table.Column<int>(type: "int", nullable: false)
@@ -343,13 +326,13 @@ namespace HireAI.Infrastructure.Migrations
                         column: x => x.ApplicantId,
                         principalTable: "Applicant",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Exams_Applications_ApplicationId",
                         column: x => x.ApplicationId,
                         principalTable: "Applications",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -361,7 +344,7 @@ namespace HireAI.Infrastructure.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     ApplicationId = table.Column<int>(type: "int", nullable: false),
                     ExamId = table.Column<int>(type: "int", nullable: false),
-                    ExamEvaluationId = table.Column<int>(type: "int", nullable: false),
+                    ExamEvaluationId = table.Column<int>(type: "int", nullable: true),
                     ApplicantId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -377,7 +360,7 @@ namespace HireAI.Infrastructure.Migrations
                         column: x => x.ApplicationId,
                         principalTable: "Applications",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ExamSummarys_ExamEvaluation_ExamEvaluationId",
                         column: x => x.ExamEvaluationId,
@@ -389,7 +372,7 @@ namespace HireAI.Infrastructure.Migrations
                         column: x => x.ExamId,
                         principalTable: "Exams",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -398,20 +381,20 @@ namespace HireAI.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    AnswerNumber = table.Column<int>(type: "int", nullable: false),
                     QuestionId = table.Column<int>(type: "int", nullable: false),
-                    TestAttemptId = table.Column<int>(type: "int", nullable: false),
-                    AnswerNumber = table.Column<int>(type: "int", nullable: false)
+                    ExamSummaryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ApplicantResponses", x => x.Id);
                     table.CheckConstraint("CK_ApplicantResponse_Answer", "[AnswerNumber] > 0");
                     table.ForeignKey(
-                        name: "FK_ApplicantResponses_ExamSummarys_TestAttemptId",
-                        column: x => x.TestAttemptId,
+                        name: "FK_ApplicantResponses_ExamSummarys_ExamSummaryId",
+                        column: x => x.ExamSummaryId,
                         principalTable: "ExamSummarys",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -434,13 +417,13 @@ namespace HireAI.Infrastructure.Migrations
                         column: x => x.ApplicantResponseId,
                         principalTable: "ApplicantResponses",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_QuestionEvaluations_ExamEvaluation_ExamEvaluationId",
                         column: x => x.ExamEvaluationId,
                         principalTable: "ExamEvaluation",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -453,7 +436,7 @@ namespace HireAI.Infrastructure.Migrations
                     Answer = table.Column<int>(type: "int", nullable: true),
                     QuestionNumber = table.Column<int>(type: "int", nullable: false),
                     ExamId = table.Column<int>(type: "int", nullable: false),
-                    ApplicantResponseId = table.Column<int>(type: "int", nullable: false)
+                    ApplicantResponseId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -469,7 +452,7 @@ namespace HireAI.Infrastructure.Migrations
                         column: x => x.ExamId,
                         principalTable: "Exams",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -480,7 +463,8 @@ namespace HireAI.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Text = table.Column<string>(type: "varchar(100)", nullable: false),
                     IsCorrect = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    QuestionId = table.Column<int>(type: "int", nullable: false)
+                    QuestionId = table.Column<int>(type: "int", nullable: false),
+                    QuestionId1 = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -490,7 +474,12 @@ namespace HireAI.Infrastructure.Migrations
                         column: x => x.QuestionId,
                         principalTable: "Questions",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Answers_Questions_QuestionId1",
+                        column: x => x.QuestionId1,
+                        principalTable: "Questions",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -502,6 +491,11 @@ namespace HireAI.Infrastructure.Migrations
                 name: "IX_Answers_QuestionId_IsCorrect",
                 table: "Answers",
                 columns: new[] { "QuestionId", "IsCorrect" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Answers_QuestionId1",
+                table: "Answers",
+                column: "QuestionId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Applicant_CVId",
@@ -516,25 +510,25 @@ namespace HireAI.Infrastructure.Migrations
                 column: "JobOpeningId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApplicantResponses_TestAttemptId",
+                name: "IX_ApplicantResponses_ExamSummaryId",
                 table: "ApplicantResponses",
-                column: "TestAttemptId");
+                column: "ExamSummaryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApplicantResponses_TestAttemptId_QuestionId",
+                name: "IX_ApplicantResponses_ExamSummaryId_QuestionId",
                 table: "ApplicantResponses",
-                columns: new[] { "TestAttemptId", "QuestionId" },
+                columns: new[] { "ExamSummaryId", "QuestionId" },
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ApplicantSkillJoin_SkillsId",
-                table: "ApplicantSkillJoin",
-                column: "SkillsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApplicantSkills_ApplicantId",
                 table: "ApplicantSkills",
                 column: "ApplicantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicantSkills_SkillId",
+                table: "ApplicantSkills",
+                column: "SkillId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Applications_ApplicantId",
@@ -553,9 +547,9 @@ namespace HireAI.Infrastructure.Migrations
                 column: "ApplicationStatus");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Applications_HrId",
+                name: "IX_Applications_HRId",
                 table: "Applications",
-                column: "HrId");
+                column: "HRId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Applications_JobId",
@@ -620,7 +614,8 @@ namespace HireAI.Infrastructure.Migrations
                 name: "IX_ExamSummarys_ExamEvaluationId",
                 table: "ExamSummarys",
                 column: "ExamEvaluationId",
-                unique: true);
+                unique: true,
+                filter: "[ExamEvaluationId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExamSummarys_ExamId",
@@ -679,7 +674,8 @@ namespace HireAI.Infrastructure.Migrations
                 name: "IX_Questions_ApplicantResponseId",
                 table: "Questions",
                 column: "ApplicantResponseId",
-                unique: true);
+                unique: true,
+                filter: "[ApplicantResponseId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Questions_ExamId",
@@ -717,7 +713,7 @@ namespace HireAI.Infrastructure.Migrations
                 name: "Answers");
 
             migrationBuilder.DropTable(
-                name: "ApplicantSkillJoin");
+                name: "ApplicantSkills");
 
             migrationBuilder.DropTable(
                 name: "JobSkills");
@@ -730,9 +726,6 @@ namespace HireAI.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Questions");
-
-            migrationBuilder.DropTable(
-                name: "ApplicantSkills");
 
             migrationBuilder.DropTable(
                 name: "Siklls");

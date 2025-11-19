@@ -19,7 +19,7 @@ namespace HireAI.Data.Configurations
             builder.Property(e => e.CreatedAt)
                 .IsRequired();
 
-            builder.Property(e => e.TestName)
+            builder.Property(e => e.ExamName)
                 .IsRequired()
                 .HasMaxLength(200);
 
@@ -34,7 +34,7 @@ namespace HireAI.Data.Configurations
                 .WithOne(a => a.Exam)
                 .HasForeignKey<Exam>(e => e.ApplicationId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Navigation property
        

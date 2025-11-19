@@ -18,13 +18,11 @@ namespace HireAI.Data.Configurations
             builder.Property(hr => hr.PremiumExpiry)
                 .IsRequired(false);
 
-   
-
 
             builder.HasMany(hr => hr.Payments)
                 .WithOne(p => p.HR)
                 .HasForeignKey(p => p.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Indexes
             builder.HasIndex(hr => hr.CompanyName);
