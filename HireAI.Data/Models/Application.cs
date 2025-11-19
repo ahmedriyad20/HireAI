@@ -27,6 +27,6 @@ namespace HireAI.Data.Models
         public Exam? Exam { get; set; }
         public ExamSummary? ExamSummary { get; set; }
         
-        public 
+         
     }
 }

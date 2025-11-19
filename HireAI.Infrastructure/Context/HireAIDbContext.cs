@@ -8,7 +8,7 @@ namespace HireAI.Infrastructure.Context
 {
     public class HireAIDbContext : DbContext
     {
-        public HireAIDbContext(DbContextOptions<HireAIDbContext> options) : base(options)
+        public HireAIDbContext(DbContextOptions<HireAIDbContext> options) 
         {
         }
 

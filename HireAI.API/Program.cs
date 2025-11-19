@@ -1,4 +1,7 @@
 
+using HireAI.Infrastructure.Context;
+using Microsoft.EntityFrameworkCore;
+
 namespace HireAI.API
 {
     public class Program
@@ -15,6 +18,7 @@ namespace HireAI.API
 
             // Add Swagger generation service
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<HireAIDbContext>();
 
             var app = builder.Build();
 
