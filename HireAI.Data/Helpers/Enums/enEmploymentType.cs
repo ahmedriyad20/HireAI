@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace HireAI.Data.Helpers.Enums
 {
-    public enum BillingPeriod
+    public enum enEmploymentType
     {
-        Monthly,
-        Yearly
+        FullTime, 
+        PartTime,
+        FreeLance 
+
     }
 }

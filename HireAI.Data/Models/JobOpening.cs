@@ -14,10 +14,11 @@ namespace HireAI.Data.Models
         public string Title { get; set; } = null!;
         public string? Description { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public JobStatus Status { get; set; } = JobStatus.Open;
+        public enJobStatus JobStatus { get; set; } 
+
         public int? ExamDurationMinutes { get; set; } // in minutes
-        public int? ExperienceLevel { get; set; }
-        public int? EmploymentType { get; set; }
+        public enExperienceLevel? ExperienceLevel { get; set; }
+        public enEmploymentType? EmploymentType { get; set; }
         public string? Location { get; set; }
         public string? SalaryRange { get; set; }
         public int? NumberOfQuestions { get; set; }

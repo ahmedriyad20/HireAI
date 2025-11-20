@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace HireAI.Data.Helpers.Enums
 {
-    public enum ApplicationStatus
+
+    public enum enRole
     {
-        accepted , rejected , pending , under_review
+        Admin,
+        HR,
+        Applicant
     }
 }

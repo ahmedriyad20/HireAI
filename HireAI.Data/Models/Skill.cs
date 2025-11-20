@@ -12,5 +12,8 @@ namespace HireAI.Data.Models
         public string Title { get; set; } = null!;
         public string? Description { get; set; }
 
+        //add to solve circular reference issue
+        public ICollection<ApplicantSkill> ApplicantSkills { get; set; } = new HashSet<ApplicantSkill>();
+
     }
 }

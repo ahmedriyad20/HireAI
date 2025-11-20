@@ -23,7 +23,7 @@ namespace HireAI.Data.Models
         //Foreign Keys
         public int ApplicantId { get; set; }
 
-        //Navigation Property
-        public Applicant? Applicant { get; set; }
+        // navigation back to Applicant
+        public virtual Applicant? Applicant { get; set; }
     }
 }

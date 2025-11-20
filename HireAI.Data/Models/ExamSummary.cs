@@ -18,11 +18,11 @@ namespace HireAI.Data.Models
         //Foreign Keys
         public int ApplicationId { get; set; }
         public int ExamId { get; set; }
-        public int ExamEvaluationId { get; set; }
+        public int? ExamEvaluationId { get; set; }
 
         //Navigation Property
         public Application Application { get; set; } = null!;
-        public Exam Test { get; set; } = null!;
+        public Exam Exam { get; set; } = null!;
         public ExamEvaluation? ExamEvaluation { get; set; }
 
     }

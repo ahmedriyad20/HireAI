@@ -14,19 +14,19 @@ namespace HireAI.Data.Models
         public string PaymentIntentId { get; set; } // Stripe/PayPal ID
         public decimal Amount { get; set; }
         public string Currency { get; set; } = "USD";
-        public PaymentStatus Status { get; set; }
+        public enPaymentStatus Status { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? CompletedAt { get; set; }
 
         // What they're upgrading to
-        public AccountType UpgradeTo { get; set; }
-        public BillingPeriod BillingPeriod { get; set; }
+        public enAccountType UpgradeTo { get; set; }
+        public enBillingPeriod BillingPeriod { get; set; }
 
         //Foreign Keys
         public int UserId { get; set; }
 
         //Navigation Property
-        public User? User { get; set; }
+        public HR? HR { get; set; }
 
     }
 }

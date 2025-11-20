@@ -13,7 +13,7 @@ namespace HireAI.Data.Models
         public int NumberOfQuestions { get; set; }
         public int DurationInMinutes { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string TestName { get; set; } = default!;
+        public string ExamName { get; set; } = default!;
         public bool IsAi { get; set; } = true;
 
         //Foreign Keys

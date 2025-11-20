@@ -5,14 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace HireAI.Data.Helpers.Enums
-
-
 {
-
-    public enum Role
+    public enum enApplicationStatus
     {
-        Admin,
-        Recruiter,
-        Applicant
+        accepted , rejected , pending , under_review
     }
 }

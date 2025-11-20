@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="AppMetaData\" />
-    <Folder Include="Helpers\DTOs\" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.11" />
   </ItemGroup>
+
 
 </Project>

@@ -1,4 +1,9 @@
 
+using HireAI.Data.Models.Identity;
+using HireAI.Infrastructure.Context;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 namespace HireAI.API
 {
     public class Program
@@ -15,6 +20,38 @@ namespace HireAI.API
 
             // Add Swagger generation service
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<HireAIDbContext>();
+
+            #region Register DbContext and Services in the DI Container
+            builder.Services.AddDbContext<HireAIDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("HireAiDB"));
+            });
+
+            //REGISTER ApplicationUser and IdentityRole with the DI Container
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireDigit = true;
+
+                //Lockout Settings
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.AllowedForNewUsers = true;
+
+                // User settings.
+                options.User.AllowedUserNameCharacters =
+                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
+            })
+                .AddEntityFrameworkStores<HireAIDbContext>()
+                .AddDefaultTokenProviders();
+
+            #endregion
 
             var app = builder.Build();
 

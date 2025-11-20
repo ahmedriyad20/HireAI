@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace HireAI.Data.Helpers.Enums
 {
-    public enum AccountType
+    public enum enBillingPeriod
     {
-        Free = 1,      // $0
-        Premium = 2,   // $3
-        Pro = 3        // $5
+        Monthly,
+        Yearly
     }
 }
