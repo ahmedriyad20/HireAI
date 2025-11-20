@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HireAI.Infrastructure.Repositories
 {
-    public class ExamEvaluationRepository : Repository<ExamEvaluation>, IExamEvaluationRepository
+    public class ExamEvaluationRepository : GenericRepositoryAsync<ExamEvaluation>, IExamEvaluationRepository
     {
         public ExamEvaluationRepository(HireAIDbContext db) : base(db) { }
     }

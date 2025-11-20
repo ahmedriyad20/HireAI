@@ -3,5 +3,5 @@ using HireAI.Infrastructure.GenaricBasies;
 
 namespace HireAI.Infrastructure.GenericBase
 {
-    public interface ICVRepository : IRepository<CV> { }
+    public interface ICVRepository : IGenericRepositoryAsync<CV> { }
 }

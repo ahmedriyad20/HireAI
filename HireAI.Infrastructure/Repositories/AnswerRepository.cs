@@ -7,16 +7,11 @@ using Microsoft.Identity.Client;
 
 namespace HireAI.Infrastructure.Repositories
 {
-    public class AnswerRepository : Repository<Answer>, IAnswerRepository
+    public class AnswerRepository : GenericRepositoryAsync<Answer>, IAnswerRepository
     {
         public AnswerRepository(HireAIDbContext db) : base(db) { 
         
         
-        }
-
-        public void hhh()
-        {
-            
         }
     }
 }

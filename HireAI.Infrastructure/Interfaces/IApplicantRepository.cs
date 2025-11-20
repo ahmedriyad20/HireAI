@@ -3,8 +3,7 @@ using HireAI.Infrastructure.GenaricBasies;
 
 namespace HireAI.Infrastructure.GenericBase
 {
-    public interface IApplicantRepository : IRepository<Applicant>
+    public interface IApplicantRepository : IGenericRepositoryAsync<Applicant>
     {
-        // Add applicant-specific methods here if needed
     }
 }

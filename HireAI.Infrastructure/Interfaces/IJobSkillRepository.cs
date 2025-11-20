@@ -3,5 +3,5 @@ using HireAI.Infrastructure.GenaricBasies;
 
 namespace HireAI.Infrastructure.GenericBase
 {
-    public interface IJobSkillRepository : IRepository<JobSkill> { }
+    public interface IJobSkillRepository : IGenericRepositoryAsync<JobSkill> { }
 }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HireAI.Infrastructure.Repositories
 {
-    public class ExamRepository : Repository<Exam>, IExamRepository
+    public class ExamRepository : GenericRepositoryAsync<Exam>, IExamRepository
     {
         public ExamRepository(HireAIDbContext db) : base(db) { }
     }

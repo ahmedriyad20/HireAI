@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HireAI.Infrastructure.Repositories
 {
-    public class HRRepository : Repository<HR>, IHRRepository
+    public class HRRepository : GenericRepositoryAsync<HR>, IHRRepository
     {
         public HRRepository(HireAIDbContext db) : base(db)
         {

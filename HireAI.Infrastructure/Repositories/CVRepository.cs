@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HireAI.Infrastructure.Repositories
 {
-    public class CVRepository : Repository<CV>, ICVRepository
+    public class CVRepository : GenericRepositoryAsync<CV>, ICVRepository
     {
         public CVRepository(HireAIDbContext db) : base(db) { }
     }

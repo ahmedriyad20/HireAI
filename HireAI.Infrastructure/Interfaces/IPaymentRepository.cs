@@ -3,5 +3,5 @@ using HireAI.Infrastructure.GenaricBasies;
 
 namespace HireAI.Infrastructure.GenericBase
 {
-    public interface IPaymentRepository : IRepository<Payment> { }
+    public interface IPaymentRepository : IGenericRepositoryAsync<Payment> { }
 }

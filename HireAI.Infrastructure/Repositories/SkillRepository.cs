@@ -6,8 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HireAI.Infrastructure.Repositories
 {
-    public class SkillRepository : Repository<Skill>, ISkillRepository
+    public class SkillRepository : GenericRepositoryAsync<Skill>, ISkillRepository
     {
-        public SkillRepository(HireAIDbContext db) : base(db) { }
+        
+
+        public SkillRepository(HireAIDbContext context) : base(context)
+        {
+
+        }
     }
 }

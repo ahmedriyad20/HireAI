@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HireAI.Infrastructure.Repositories
 {
-    public class JobSkillRepository : Repository<JobSkill>, IJobSkillRepository
+    public class JobSkillRepository : GenericRepositoryAsync<JobSkill>, IJobSkillRepository
     {
         public JobSkillRepository(HireAIDbContext db) : base(db) { }
     }

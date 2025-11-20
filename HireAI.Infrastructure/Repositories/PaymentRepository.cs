@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HireAI.Infrastructure.Repositories
 {
-    public class PaymentRepository : Repository<Payment>, IPaymentRepository
+    public class PaymentRepository : GenericRepositoryAsync<Payment>, IPaymentRepository
     {
         public PaymentRepository(HireAIDbContext db) : base(db) { }
     }

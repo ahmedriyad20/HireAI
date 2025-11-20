@@ -3,5 +3,5 @@ using HireAI.Infrastructure.GenaricBasies;
 
 namespace HireAI.Infrastructure.GenericBase
 {
-    public interface IApplicationRepository : IRepository<Application> { }
+    public interface IApplicationRepository : IGenericRepositoryAsync<Application> { }
 }
