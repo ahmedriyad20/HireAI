@@ -16,7 +16,6 @@ namespace HireAI.Infrastructure.Context
         }
 
         // DbSets for concrete entities
-        public DbSet<User> Users { get; set; } = default!;
         public DbSet<Applicant> Applicants { get; set; } = default!;
         public DbSet<HR> HRs { get; set; } = default!;
         public DbSet<JobOpening> JobOpenings { get; set; } = default!;
@@ -37,8 +36,9 @@ namespace HireAI.Infrastructure.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // TPT (Table Per Type) 
+            modelBuilder.Entity<User>().UseTpcMappingStrategy();
             modelBuilder.Entity<HR>().ToTable("HRs");
-            modelBuilder.Entity<Applicant>().ToTable("Applicant");
+            modelBuilder.Entity<Applicant>().ToTable("Applicants");
 
             // Apply configuration classes from this assembly (IEntityTypeConfiguration implementations)
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(HireAIDbContext).Assembly);

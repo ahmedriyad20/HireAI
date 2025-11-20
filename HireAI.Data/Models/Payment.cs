@@ -23,7 +23,7 @@ namespace HireAI.Data.Models
         public enBillingPeriod BillingPeriod { get; set; }
 
         //Foreign Keys
-        public int UserId { get; set; }
+        public int HrId { get; set; }
 
         //Navigation Property
         public HR? HR { get; set; }
