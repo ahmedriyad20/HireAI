@@ -21,4 +21,8 @@
     <ProjectReference Include="..\HireAI.Data\HireAI.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
