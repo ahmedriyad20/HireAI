@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HireAI.Infrastructure.Migrations
 {
-    /// <inheritdoc />
-    public partial class Migrate_User_To_TPC : Migration
+
+    public partial class InitiatingTablesandAdd_Identity_Tables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -157,7 +157,8 @@ namespace HireAI.Infrastructure.Migrations
                     CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpgradeTo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BillingPeriod = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+
+                    HrId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -165,8 +166,8 @@ namespace HireAI.Infrastructure.Migrations
                     table.CheckConstraint("CK_Payment_Amount", "[Amount] > 0");
                     table.CheckConstraint("CK_Payment_Currency", "LEN([Currency]) = 3");
                     table.ForeignKey(
-                        name: "FK_Payments_HRs_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Payments_HRs_HrId",
+                        column: x => x.HrId,
                         principalTable: "HRs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -888,15 +889,15 @@ namespace HireAI.Infrastructure.Migrations
                 column: "SkillId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Payments_HrId_CreatedAt",
+                table: "Payments",
+                columns: new[] { "HrId", "CreatedAt" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Payments_PaymentIntentId",
                 table: "Payments",
                 column: "PaymentIntentId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Payments_UserId_CreatedAt",
-                table: "Payments",
-                columns: new[] { "UserId", "CreatedAt" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_QuestionEvaluations_ApplicantResponseId",

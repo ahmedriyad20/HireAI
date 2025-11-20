@@ -29,8 +29,12 @@ namespace HireAI.Data.Configurations
 
             builder.HasMany(hr => hr.Payments)
                 .WithOne(p => p.HR)
+
                 .HasForeignKey(p => p.
                 Id)
+
+                .HasForeignKey(p => p.HrId)
+
                 .OnDelete(DeleteBehavior.Restrict);
            
             // Indexes
