@@ -610,6 +610,9 @@ namespace HireAI.Infrastructure.Migrations
                         .HasColumnType("nvarchar(3)")
                         .HasDefaultValue("USD");
 
+                    b.Property<int>("HrId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PaymentIntentId")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -623,15 +626,12 @@ namespace HireAI.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("PaymentIntentId")
                         .IsUnique();
 
-                    b.HasIndex("UserId", "CreatedAt");
+                    b.HasIndex("HrId", "CreatedAt");
 
                     b.ToTable("Payments", t =>
                         {
@@ -1176,7 +1176,7 @@ namespace HireAI.Infrastructure.Migrations
                 {
                     b.HasOne("HireAI.Data.Models.HR", "HR")
                         .WithMany("Payments")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("HrId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

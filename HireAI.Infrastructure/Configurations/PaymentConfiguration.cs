@@ -64,8 +64,8 @@ namespace HireAI.Data.Configurations
             builder.HasIndex(p => p.PaymentIntentId)
                 .IsUnique();
 
-            // Unique constraint for UserId and CreatedAt combination
-            builder.HasIndex(p => new { p.UserId, p.CreatedAt });
+            // Unique constraint for HrId and CreatedAt combination
+            builder.HasIndex(p => new { p.HrId, p.CreatedAt });
 
             // Add check constraint for positive amount
             builder.ToTable(t => t.HasCheckConstraint("CK_Payment_Amount", "[Amount] > 0"));

@@ -35,13 +35,14 @@ namespace HireAI.Infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+
             // TPC (Table Per Concrete class) 
-            //configure root 
+     
             modelBuilder.Entity<User>().UseTpcMappingStrategy();
-            //map concrete type 
+     
             modelBuilder.Entity<HR>().ToTable("HRs");
             modelBuilder.Entity<Applicant>().ToTable("Applicants");
-
 
             // Apply configuration classes from this assembly (IEntityTypeConfiguration implementations)
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(HireAIDbContext).Assembly);
