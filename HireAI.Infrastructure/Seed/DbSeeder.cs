@@ -53,6 +53,8 @@ namespace HireAI.Seeder
                 HRId = hr.Id,
                 CreatedAt = DateTime.UtcNow.AddDays(-30),
                 JobStatus = enJobStatus.Active
+                ,
+                CompanyName = "Acme Corp"
             };
 
             var job2 = new JobOpening
@@ -61,7 +63,9 @@ namespace HireAI.Seeder
                 Description = "Lead features",
                 HRId = hr.Id,
                 CreatedAt = DateTime.UtcNow.AddDays(-60),
-                JobStatus = enJobStatus.Active
+                JobStatus = enJobStatus.Active,
+                CompanyName = "Acme Corp"
+
             };
 
             context.JobOpenings.AddRange(job1, job2);

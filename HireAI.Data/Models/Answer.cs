@@ -13,9 +13,9 @@ namespace HireAI.Data.Models
         public bool IsCorrect { get; set; } = false;
 
         //Foreign Keys
-        public int QuestionId { get; set; }  
+        public int QuestionId { get; set; }
 
         //Navigation Property
-        public Question? Question { get; set; }
+        public Question Question { get; set; }
     }
 }

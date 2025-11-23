@@ -9,7 +9,11 @@ namespace HireAI.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<JobOpening> builder)
         {
-            builder.HasKey(j => j.Id);
+          
+
+            builder.Property(j => j.Id)
+                .ValueGeneratedOnAdd();
+           
 
             builder.Property(j => j.Title)
                 .HasMaxLength(200);
@@ -27,12 +31,10 @@ namespace HireAI.Data.Configurations
             builder.Property(j => j.SalaryRange)
                 .HasMaxLength(50);
 
-            //Type Conversion
+
             builder.Property(j => j.JobStatus)
-             .HasConversion(
-               v => v.ToString(),// Converts the enum to string when saving to the database                  
-              v => (enJobStatus)Enum.Parse(typeof(enJobStatus), v)// Converts the string back to enum when reading from the database
-               )
+             .HasConversion<int>()
+                                                                                                                           // )
              .HasDefaultValue(enJobStatus.Active);
 
             builder.Property(u => u.ExperienceLevel)
@@ -40,6 +42,8 @@ namespace HireAI.Data.Configurations
                     v => v.HasValue ? v.Value.ToString() : null, // enum? -> string (null preserved)
                     v => string.IsNullOrEmpty(v) ? (enExperienceLevel?)null : (enExperienceLevel)Enum.Parse(typeof(enExperienceLevel), v) // string -> enum?
                 );
+            
+
 
             builder.Property(u => u.EmploymentType)
                 .HasConversion(

@@ -74,27 +74,45 @@ namespace HireAI.API
 
 
             var app = builder.Build();
-
-            // Apply migrations & seed database
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-
                 try
                 {
-                    // Apply migrations
+                    var logger = services.GetRequiredService<ILogger<Program>>();
                     var context = services.GetRequiredService<HireAIDbContext>();
-                    await context.Database.MigrateAsync();
 
-                    // Seed data
+                    // Check if there are any pending migrations first (safe & fast)
+                    var pending = await context.Database.GetPendingMigrationsAsync();
+                    if (pending.Any())
+                    {
+                        logger.LogInformation("Applying {Count} pending migrations...", pending.Count());
+                        await context.Database.MigrateAsync();
+                        logger.LogInformation("Database migrated successfully.");
+
+                        await DbSeeder.SeedAsync(services);
+                        Console.WriteLine("Database seeded successfully.");
+                    }
+                    else
+                    {
+                        logger.LogInformation("No pending migrations.");
+                    }
+
+                    // Optional: call your seed method here
                     await DbSeeder.SeedAsync(services);
-                    Console.WriteLine("Database seeded successfully.");
+                    logger.LogInformation("Database seeding finished.");
+
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"An error occurred while seeding the database: {ex.Message}");
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+                    // In production you might rethrow or stop startup depending on policy.
+                    // throw;
                 }
             }
+
+            
 
 
             // Configure the HTTP request pipeline.

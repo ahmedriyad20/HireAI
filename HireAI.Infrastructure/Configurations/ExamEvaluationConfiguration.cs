@@ -23,7 +23,7 @@ namespace HireAI.Data.Configurations
                v => v.ToString(),// Converts the enum to string when saving to the database                  
               v => (enExamEvaluationStatus)Enum.Parse(typeof(enExamEvaluationStatus), v)// Converts the string back to enum when reading from the database
                )
-             .HasDefaultValue(enAccountType.Free);
+             .HasDefaultValue(enExamEvaluationStatus.Pending);
 
             // Navigation property
             builder.HasMany(ee => ee.QuestionEvaluations)
