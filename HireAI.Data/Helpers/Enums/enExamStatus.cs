@@ -6,10 +6,8 @@ using System.Threading.Tasks;
 
 namespace HireAI.Data.Helpers.Enums
 {
-    public enum enApplicationStatus
+    public enum enExamStatus
     {
-
-        ExamSent, ATSPassed, UnderReview, Completed, Rejected
-
+        completed, waiting, notTaken    
     }
 }

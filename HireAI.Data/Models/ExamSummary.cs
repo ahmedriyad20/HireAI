@@ -15,6 +15,7 @@ namespace HireAI.Data.Models
         public int Id { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        public float TotalScroe { get; set; }
         //Foreign Keys
         public int ApplicationId { get; set; }
         public int ExamId { get; set; }

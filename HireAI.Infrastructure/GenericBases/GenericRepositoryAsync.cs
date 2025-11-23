@@ -19,9 +19,11 @@ namespace HireAI.Infrastructure.GenaricBasies
             _dbSet = _context.Set<T>();
         }
 
+
         public virtual  IQueryable<T> GetAll()
         {
-            return  _dbSet.AsQueryable();
+            return _dbSet.AsQueryable();
+
         }
 
         public virtual async Task<T?> GetByIdAsync(int id)
