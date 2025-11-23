@@ -71,3 +71,5 @@ node_modules/
 # =========================
 
 
+/HireAI.Infrastructure/Migrations/20251120124954_Initiating Tables and Add_Identity_Tables.cs
+/HireAI.Infrastructure/Migrations/HireAIDbContextModelSnapshot.cs
