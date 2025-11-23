@@ -12,6 +12,7 @@ namespace HireAI.Data.Models
         public int Id { get; set; }
   
         public string Title { get; set; } = null!;
+        public string CompanyName { get; set; } = default!;
         public string? Description { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public enJobStatus JobStatus { get; set; } 
@@ -27,7 +28,7 @@ namespace HireAI.Data.Models
         public bool AutoSend { get; set; } = false;
 
         //Foreign Keys
-        public int HRId { get; set; }
+        public int? HRId { get; set; }
 
 
         // Navigation Property

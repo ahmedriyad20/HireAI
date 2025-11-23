@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace HireAI.Data.Helpers.Enums
 {
-    public enum enApplicationStatus
+    public enum enExamEvaluationStatus
     {
-        Completed , Rejected , Pending , UnderReview
+        Pending,
+        Completed
     }
 }

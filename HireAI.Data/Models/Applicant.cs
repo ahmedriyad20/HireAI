@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HireAI.Data.Helpers.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,10 @@ namespace HireAI.Data.Models
     public class Applicant: User
     {
         public string ResumeUrl { get; set; } = default!;
+        public enSkillLevel? SkillLevel { get; set; } = enSkillLevel.Beginner;
 
         //Foreign Keys
-        public int CVId { get; set; }
+        public int? CVId { get; set; }
 
         //Navigation Property
         public virtual ICollection<ApplicantSkill> ApplicantSkills { get; set; } = new HashSet<ApplicantSkill>();

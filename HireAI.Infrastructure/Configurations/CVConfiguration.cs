@@ -28,14 +28,11 @@ namespace HireAI.Data.Configurations
             builder.Property(cv => cv.Experience)
                 .HasMaxLength(2000);
 
-            builder.Property(cv => cv.YearsOfExperience)
-                .IsRequired(false);
-
             // Foreign Key
             builder
-     .HasOne(a => a.Applicant)
-     .WithOne(c => c.CV)
-     .HasForeignKey<Applicant>(c => c.CVId);
+             .HasOne(a => a.Applicant)
+             .WithOne(c => c.CV)
+             .HasForeignKey<Applicant>(c => c.CVId);
 
             // Index
             builder.HasIndex(cv => cv.ApplicantId)

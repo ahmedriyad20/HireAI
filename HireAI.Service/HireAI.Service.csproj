@@ -11,8 +11,4 @@
     <ProjectReference Include="..\HireAI.Infrastructure\HireAI.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Abstractions\" />
-  </ItemGroup>
-
 </Project>

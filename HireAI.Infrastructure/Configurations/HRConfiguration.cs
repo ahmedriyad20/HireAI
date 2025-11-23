@@ -15,9 +15,6 @@ namespace HireAI.Data.Configurations
             builder.Property(hr => hr.AccountType)
                  .HasDefaultValue(enAccountType.Free); //type convertions 
 
-            builder.Property(hr => hr.PremiumExpiry)
-                .IsRequired(false);
-
 
             //Type Conversion
             builder.Property(j => j.AccountType)

@@ -7,11 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HireAI.Service\HireAI.Service.csproj" />
+    <Compile Remove="MiddleWare\**" />
+    <EmbeddedResource Remove="MiddleWare\**" />
+    <None Remove="MiddleWare\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="MiddleWare\" />
+    <ProjectReference Include="..\HireAI.Service\HireAI.Service.csproj" />
   </ItemGroup>
 
 </Project>

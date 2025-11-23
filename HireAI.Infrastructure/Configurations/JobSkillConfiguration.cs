@@ -14,7 +14,6 @@ namespace HireAI.Data.Configurations
             builder.HasOne(js => js.Job)
                 .WithMany(j => j.JobSkills)
                 .HasForeignKey(js => js.JobId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(js => js.Skill)

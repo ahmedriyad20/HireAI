@@ -1,3 +1,4 @@
+using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,34 +11,28 @@ namespace HireAI.Data.Configurations
         {
             builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.NumberOfQuestions)
-                .IsRequired();
-
-            builder.Property(e => e.DurationInMinutes)
-                .IsRequired();
-
-            builder.Property(e => e.CreatedAt)
-                .IsRequired();
-
             builder.Property(e => e.ExamName)
-                .IsRequired()
                 .HasMaxLength(200);
 
             builder.Property(e => e.IsAi)
-                .IsRequired()
                 .HasDefaultValue(true);
 
             // Foreign Keys
-           
-
             builder.HasOne(e => e.Application)
                 .WithOne(a => a.Exam)
                 .HasForeignKey<Exam>(e => e.ApplicationId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            //Type Conversion
+            builder.Property(e => e.ExamType)
+             .HasConversion(
+               v => v.ToString(),// Converts the enum to string when saving to the database                  
+              v => (enExamType)Enum.Parse(typeof(enExamType), v)// Converts the string back to enum when reading from the database
+               )
+             .HasDefaultValue(enExamType.MockExam);
+
             // Navigation property
-       
+
 
             // Indexes
             builder.HasIndex(e => e.ApplicantId);

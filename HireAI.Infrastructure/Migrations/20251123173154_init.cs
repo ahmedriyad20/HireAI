@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HireAI.Infrastructure.Migrations
 {
-
-    public partial class InitiatingTablesandAdd_Identity_Tables : Migration
+    /// <inheritdoc />
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -42,7 +42,7 @@ namespace HireAI.Infrastructure.Migrations
                     Experience = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     YearsOfExperience = table.Column<float>(type: "real", nullable: true),
                     Certifications = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ApplicantId = table.Column<int>(type: "int", nullable: false)
+                    ApplicantId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -116,6 +116,7 @@ namespace HireAI.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(3000)", maxLength: 3000, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     JobStatus = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "Active"),
@@ -127,8 +128,8 @@ namespace HireAI.Infrastructure.Migrations
                     NumberOfQuestions = table.Column<int>(type: "int", nullable: true),
                     ApplicationDeadline = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ATSMinimumScore = table.Column<int>(type: "int", nullable: true),
-                    AutoSend = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    HRId = table.Column<int>(type: "int", nullable: false)
+                    AutoSend = table.Column<bool>(type: "bit", nullable: false),
+                    HRId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -157,7 +158,6 @@ namespace HireAI.Infrastructure.Migrations
                     CompletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UpgradeTo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BillingPeriod = table.Column<string>(type: "nvarchar(max)", nullable: false),
-
                     HrId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -189,7 +189,8 @@ namespace HireAI.Infrastructure.Migrations
                     LastLogin = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ResumeUrl = table.Column<string>(type: "varchar(200)", nullable: false),
-                    CVId = table.Column<int>(type: "int", nullable: false),
+                    SkillLevel = table.Column<int>(type: "int", nullable: true),
+                    CVId = table.Column<int>(type: "int", nullable: true),
                     JobOpeningId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -199,8 +200,7 @@ namespace HireAI.Infrastructure.Migrations
                         name: "FK_Applicants_CVs_CVId",
                         column: x => x.CVId,
                         principalTable: "CVs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Applicants_JobOpenings_JobOpeningId",
                         column: x => x.JobOpeningId,
@@ -209,7 +209,7 @@ namespace HireAI.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExamEvaluation",
+                name: "ExamEvaluations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -224,10 +224,10 @@ namespace HireAI.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExamEvaluation", x => x.Id);
+                    table.PrimaryKey("PK_ExamEvaluations", x => x.Id);
                     table.CheckConstraint("CK_ExamEvaluation_Scores", "[TotalScore] >= 0 AND [MaxTotal] > 0 AND [TotalScore] <= [MaxTotal]");
                     table.ForeignKey(
-                        name: "FK_ExamEvaluation_JobOpenings_JobId",
+                        name: "FK_ExamEvaluations_JobOpenings_JobId",
                         column: x => x.JobId,
                         principalTable: "JobOpenings",
                         principalColumn: "Id",
@@ -267,6 +267,8 @@ namespace HireAI.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SkillRate = table.Column<float>(type: "real", nullable: true),
+                    ImprovementPercentage = table.Column<float>(type: "real", nullable: true),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ApplicantId = table.Column<int>(type: "int", nullable: false),
                     SkillId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -294,19 +296,19 @@ namespace HireAI.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ApplicationStatus = table.Column<int>(type: "int", nullable: false),
+                    ApplicationStatus = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DateApplied = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     CVFilePath = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    ScoreATS = table.Column<float>(type: "real", nullable: true),
-                    HRId = table.Column<int>(type: "int", nullable: false),
-                    ApplicantId = table.Column<int>(type: "int", nullable: false),
-                    JobId = table.Column<int>(type: "int", nullable: false),
-                    ExamId = table.Column<int>(type: "int", nullable: false)
+                    AtsScore = table.Column<float>(type: "real", nullable: true),
+                    HRId = table.Column<int>(type: "int", nullable: true),
+                    ApplicantId = table.Column<int>(type: "int", nullable: true),
+                    JobId = table.Column<int>(type: "int", nullable: true),
+                    ExamId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Applications", x => x.Id);
-                    table.CheckConstraint("CK_Application_Score", "([ScoreATS] >= 0 AND [ScoreATS] <= 100) OR [ScoreATS] IS NULL");
+                    table.CheckConstraint("CK_Application_Score", "([AtsScore] >= 0 AND [AtsScore] <= 100) OR [AtsScore] IS NULL");
                     table.ForeignKey(
                         name: "FK_Applications_Applicants_ApplicantId",
                         column: x => x.ApplicantId,
@@ -376,8 +378,9 @@ namespace HireAI.Infrastructure.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ExamName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     IsAi = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    ApplicantId = table.Column<int>(type: "int", nullable: false),
-                    ApplicationId = table.Column<int>(type: "int", nullable: false)
+                    ExamType = table.Column<string>(type: "nvarchar(max)", nullable: false, defaultValue: "MockExam"),
+                    ApplicantId = table.Column<int>(type: "int", nullable: true),
+                    ApplicationId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -536,9 +539,9 @@ namespace HireAI.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ExamSummarys_ExamEvaluation_ExamEvaluationId",
+                        name: "FK_ExamSummarys_ExamEvaluations_ExamEvaluationId",
                         column: x => x.ExamEvaluationId,
-                        principalTable: "ExamEvaluation",
+                        principalTable: "ExamEvaluations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
@@ -593,9 +596,9 @@ namespace HireAI.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_QuestionEvaluations_ExamEvaluation_ExamEvaluationId",
+                        name: "FK_QuestionEvaluations_ExamEvaluations_ExamEvaluationId",
                         column: x => x.ExamEvaluationId,
-                        principalTable: "ExamEvaluation",
+                        principalTable: "ExamEvaluations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -719,7 +722,8 @@ namespace HireAI.Infrastructure.Migrations
                 name: "IX_Applications_ApplicantId_JobId",
                 table: "Applications",
                 columns: new[] { "ApplicantId", "JobId" },
-                unique: true);
+                unique: true,
+                filter: "[ApplicantId] IS NOT NULL AND [JobId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Applications_ApplicationStatus",
@@ -789,22 +793,23 @@ namespace HireAI.Infrastructure.Migrations
                 name: "IX_CVs_ApplicantId",
                 table: "CVs",
                 column: "ApplicantId",
-                unique: true);
+                unique: true,
+                filter: "[ApplicantId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamEvaluation_ExamSummaryId",
-                table: "ExamEvaluation",
+                name: "IX_ExamEvaluations_ExamSummaryId",
+                table: "ExamEvaluations",
                 column: "ExamSummaryId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamEvaluation_JobId",
-                table: "ExamEvaluation",
+                name: "IX_ExamEvaluations_JobId",
+                table: "ExamEvaluations",
                 column: "JobId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExamEvaluation_Status",
-                table: "ExamEvaluation",
+                name: "IX_ExamEvaluations_Status",
+                table: "ExamEvaluations",
                 column: "Status");
 
             migrationBuilder.CreateIndex(
@@ -821,7 +826,8 @@ namespace HireAI.Infrastructure.Migrations
                 name: "IX_Exams_ApplicationId",
                 table: "Exams",
                 column: "ApplicationId",
-                unique: true);
+                unique: true,
+                filter: "[ApplicationId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExamSummarys_ApplicantId",
@@ -995,7 +1001,7 @@ namespace HireAI.Infrastructure.Migrations
                 name: "ExamSummarys");
 
             migrationBuilder.DropTable(
-                name: "ExamEvaluation");
+                name: "ExamEvaluations");
 
             migrationBuilder.DropTable(
                 name: "Exams");

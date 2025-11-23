@@ -1,3 +1,4 @@
+using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -10,38 +11,36 @@ namespace HireAI.Data.Configurations
         {
             builder.HasKey(a => a.Id);
 
-            builder.Property(a => a.ApplicationStatus)
-                .IsRequired();
 
             builder.Property(a => a.DateApplied)
-                .IsRequired()
                 .HasDefaultValueSql("GETUTCDATE()");
 
             builder.Property(a => a.CVFilePath)
                 .HasMaxLength(500);
 
-            builder.Property(a => a.ScoreATS)
-                .IsRequired(false);
-
             // Foreign Keys
             builder.HasOne(a => a.HR)
                 .WithMany(hr => hr.Applications)
                 .HasForeignKey(a => a.HRId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
 
             builder.HasOne(a => a.Exam)
                 .WithOne(e => e.Application)
                 .HasForeignKey<Application>(a => a.ExamId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(a => a.ExamSummary)
                 .WithOne(es => es.Application)
                 .HasForeignKey<Application>(a => a.Id)
-                .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            //Type Conversion
+            builder.Property(a => a.ApplicationStatus)
+            .HasConversion(
+              v => v.ToString(),// Converts the enum to string when saving to the database                  
+             v => (enApplicationStatus)Enum.Parse(typeof(enApplicationStatus), v)// Converts the string back to enum when reading from the database
+              );
 
             // Indexes
             builder.HasIndex(a => a.HRId);
@@ -52,7 +51,7 @@ namespace HireAI.Data.Configurations
             builder.HasIndex(a => a.ApplicationStatus);
 
             // Check constraint
-            builder.ToTable(t => t.HasCheckConstraint("CK_Application_Score", "([ScoreATS] >= 0 AND [ScoreATS] <= 100) OR [ScoreATS] IS NULL"));
+            builder.ToTable(t => t.HasCheckConstraint("CK_Application_Score", "([AtsScore] >= 0 AND [AtsScore] <= 100) OR [AtsScore] IS NULL"));
         }
     }
 }

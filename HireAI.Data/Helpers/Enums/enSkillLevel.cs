@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace HireAI.Data.Helpers.Enums
 {
-    public enum enApplicationStatus
+    public enum enSkillLevel
     {
-        Completed , Rejected , Pending , UnderReview
+        Beginner,
+        Intermediate,
+        Advanced,
+        Expert
     }
 }

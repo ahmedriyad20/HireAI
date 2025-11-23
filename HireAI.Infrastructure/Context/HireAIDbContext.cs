@@ -26,7 +26,7 @@ namespace HireAI.Infrastructure.Context
         public DbSet<ApplicantSkill> ApplicantSkills { get; set; } = default!;
         public DbSet<ApplicantResponse> ApplicantResponses { get; set; } = default!;
         public DbSet<Exam> Exams { get; set; } = default!;
-        public DbSet<ExamEvaluation> ExamEvaluation { get; set; } = default!;
+        public DbSet<ExamEvaluation> ExamEvaluations { get; set; } = default!;
         public DbSet<ExamSummary> ExamSummarys { get; set; } = default!;
         public DbSet<JobSkill> JobSkills { get; set; } = default!;
         public DbSet<QuestionEvaluation> QuestionEvaluations { get; set; } = default!;
@@ -54,7 +54,7 @@ namespace HireAI.Infrastructure.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Data Source =(localdb)\\MSSQLLocalDB; Initial Catalog = HireAIDb; Integrated Security = True; Encrypt = False");
+            optionsBuilder.UseSqlServer("Data Source =.; Initial Catalog = HireAIDb; Integrated Security = True; Encrypt = False");
         }
     }
 }

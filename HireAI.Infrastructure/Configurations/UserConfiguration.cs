@@ -14,11 +14,9 @@ namespace HireAI.Data.Configurations
             builder.HasKey(u => u.Id);
 
             builder.Property(u => u.Name)
-                .IsRequired()
                 .HasMaxLength(100);
 
             builder.Property(u => u.Email)
-                .IsRequired()
                 .HasMaxLength(255);
 
             builder.Property(u => u.Phone)
@@ -30,9 +28,6 @@ namespace HireAI.Data.Configurations
             builder.Property(u => u.Title)
                 .HasMaxLength(100);
 
-            builder.Property(u => u.Role)
-                .IsRequired();
-
             builder.Property(u => u.IsPremium)
                 .HasDefaultValue(false);
 
@@ -43,14 +38,6 @@ namespace HireAI.Data.Configurations
                v => (enRole)Enum.Parse(typeof(enRole), v)// Converts the string back to enum when reading from the database
                 );
 
-            builder.Property(u => u.IsActive)
-                .IsRequired();
-
-            builder.Property(u => u.CreatedAt)
-                .IsRequired();
-
-            builder.Property(u => u.LastLogin)
-                .IsRequired(false);
 
             // Unique constraint for Email
             builder.HasIndex(u => u.Email)

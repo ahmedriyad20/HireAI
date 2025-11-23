@@ -11,28 +11,23 @@ namespace HireAI.Data.Configurations
             builder.HasKey(qe => qe.Id);
 
             builder.Property(qe => qe.IsCorrect)
-                .IsRequired()
                 .HasDefaultValue(false);
 
             builder.Property(qe => qe.Feedback)
-                .IsRequired()
                 .HasMaxLength(2000);
 
             builder.Property(qe => qe.EvaluatedAt)
-                .IsRequired()
                 .HasDefaultValueSql("GETUTCDATE()");
 
             // Foreign Keys
             builder.HasOne(qe => qe.ApplicantResponse)
                 .WithOne(ar => ar.QuestionEvaluation)
                 .HasForeignKey<QuestionEvaluation>(qe => qe.ApplicantResponseId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(qe => qe.ExamEvaluation)
                 .WithMany(ee => ee.QuestionEvaluations)
                 .HasForeignKey(qe => qe.ExamEvaluationId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Composite index for common queries
