@@ -16,10 +16,10 @@ namespace HireAI.Data.Models
         public float? AtsScore { get; set; }
 
         //Foreign Keys
-        public int HRId { get; set; }
-        public int ApplicantId { get; set; }
-        public int JobId { get; set; }
-        public int ExamId { get; set; }
+        public int? HRId { get; set; }
+        public int? ApplicantId { get; set; }
+        public int? JobId { get; set; }
+        public int? ExamId { get; set; }
 
         //Navigation Property
         public HR? HR { get; set; }

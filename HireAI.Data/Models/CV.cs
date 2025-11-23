@@ -21,7 +21,7 @@ namespace HireAI.Data.Models
         public List<string>? Certifications { get; set; }
 
         //Foreign Keys
-        public int ApplicantId { get; set; }
+        public int? ApplicantId { get; set; }
 
         // navigation back to Applicant
         public virtual Applicant? Applicant { get; set; }

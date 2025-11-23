@@ -11,28 +11,16 @@ namespace HireAI.Data.Configurations
         {
             builder.HasKey(e => e.Id);
 
-            builder.Property(e => e.NumberOfQuestions)
-                .IsRequired();
-
-            builder.Property(e => e.DurationInMinutes)
-                .IsRequired();
-
-            builder.Property(e => e.CreatedAt)
-                .IsRequired();
-
             builder.Property(e => e.ExamName)
-                .IsRequired()
                 .HasMaxLength(200);
 
             builder.Property(e => e.IsAi)
-                .IsRequired()
                 .HasDefaultValue(true);
 
             // Foreign Keys
             builder.HasOne(e => e.Application)
                 .WithOne(a => a.Exam)
                 .HasForeignKey<Exam>(e => e.ApplicationId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             //Type Conversion

@@ -3,6 +3,7 @@ using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
 using HireAI.Infrastructure.Context;
 using HireAI.Infrastructure.GenericBase;
+using HireAI.Infrastructure.Repositories;
 using HireAI.Service.Abstractions;
 using HireAI.Service.DTOs;
 using Microsoft.EntityFrameworkCore;
@@ -20,16 +21,19 @@ namespace HireAI.Service.Implementation
         private readonly IExamRepository _examRepository;
         private readonly IExamEvaluationRepository _examEvaluationRepository;
         private readonly IApplicantRepository _applicantRepository;
+        private readonly IApplicantSkillRepository _applicantSkillRepository;
         private readonly HireAIDbContext _context;
         private readonly IMapper _mapper;
 
         public ApplicantDashboardService(IApplicationRepository applicationRepository, IExamRepository examRepository,
-            IExamEvaluationRepository examEvaluationRepository, IApplicantRepository applicantRepository, HireAIDbContext context, IMapper mapper)
+            IExamEvaluationRepository examEvaluationRepository, IApplicantRepository applicantRepository,
+            IApplicantSkillRepository applicantSkillRepository, HireAIDbContext context, IMapper mapper)
         {
             _applicationRepository = applicationRepository;
             _examRepository = examRepository;
             _examEvaluationRepository = examEvaluationRepository;
             _applicantRepository = applicantRepository;
+            _applicantSkillRepository = applicantSkillRepository;
             _context = context;
             _mapper = mapper;
         }
@@ -87,9 +91,15 @@ namespace HireAI.Service.Implementation
             return ApplicationsTimeline;
         }
 
-        Task<IEnumerable<ApplicationTimelineItemDto>> IApplicantDashboardService.GetApplicationTimelinePerApplicantAsync(int applicantId)
+        public async Task<IEnumerable<ApplicantSkillImprovementDto>> GetApplicantSkillImprovementScoreAsync(int applicantId)
         {
-            throw new NotImplementedException();
+            var applicantSkills = await _applicantSkillRepository.GetAll()
+                .AsNoTracking()
+                .Include(s => s.Skill)
+                .Where(s => s.ApplicantId == applicantId)
+                .ToListAsync();
+
+            return _mapper.Map<IEnumerable<ApplicantSkillImprovementDto>>(applicantSkills);
         }
     }
 }

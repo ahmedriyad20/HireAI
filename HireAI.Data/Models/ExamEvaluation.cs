@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HireAI.Data.Helpers.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,9 +14,9 @@ namespace HireAI.Data.Models
         public int Id { get; set; }
         public float TotalScore { get; set; }
         public float MaxTotal { get; set; }
-        public bool Passed { get; set; }
+        public bool IsPassed { get; set; }
         public DateTime? EvaluatedAt { get; set; }
-        public int Status { get; set; }
+        public enExamEvaluationStatus Status { get; set; } = enExamEvaluationStatus.Pending;
 
         //Foreign Keys
         public int ExamSummaryId { get; set; }

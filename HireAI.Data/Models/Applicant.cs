@@ -13,7 +13,7 @@ namespace HireAI.Data.Models
         public enSkillLevel? SkillLevel { get; set; } = enSkillLevel.Beginner;
 
         //Foreign Keys
-        public int CVId { get; set; }
+        public int? CVId { get; set; }
 
         //Navigation Property
         public virtual ICollection<ApplicantSkill> ApplicantSkills { get; set; } = new HashSet<ApplicantSkill>();

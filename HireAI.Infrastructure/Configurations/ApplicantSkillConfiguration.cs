@@ -10,8 +10,6 @@ namespace HireAI.Data.Configurations
         {
             builder.HasKey(asn => asn.Id);
 
-            builder.Property(asn => asn.SkillRate)
-                .IsRequired(false);
 
             // Applicant (many ApplicantSkill per Applicant)
             builder.HasOne(asn => asn.Applicant)

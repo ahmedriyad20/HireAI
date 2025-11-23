@@ -12,44 +12,20 @@ namespace HireAI.Data.Configurations
             builder.HasKey(j => j.Id);
 
             builder.Property(j => j.Title)
-                .IsRequired()
                 .HasMaxLength(200);
 
             builder.Property(j => j.Description)
                 .HasMaxLength(3000);
 
             builder.Property(j => j.CreatedAt)
-                .IsRequired()
                 .HasDefaultValueSql("GETUTCDATE()");
 
-
-
-            builder.Property(j => j.ExamDurationMinutes)
-                .IsRequired(false);
-
-            builder.Property(j => j.ExperienceLevel)
-                .IsRequired(false);
-
-            builder.Property(j => j.EmploymentType)
-                .IsRequired(false);
 
             builder.Property(j => j.Location)
                 .HasMaxLength(200);
 
             builder.Property(j => j.SalaryRange)
                 .HasMaxLength(50);
-
-            builder.Property(j => j.NumberOfQuestions)
-                .IsRequired(false);
-
-            builder.Property(j => j.ApplicationDeadline)
-                .IsRequired(false);
-
-            builder.Property(j => j.ATSMinimumScore)
-                .IsRequired(false);
-
-            builder.Property(j => j.AutoSend)
-                .HasDefaultValue(false);
 
             //Type Conversion
             builder.Property(j => j.JobStatus)
@@ -77,7 +53,6 @@ namespace HireAI.Data.Configurations
             builder.HasOne(j => j.HR)
                 .WithMany(hr => hr.HRJobs)
                 .HasForeignKey(j => j.HRId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Navigation properties

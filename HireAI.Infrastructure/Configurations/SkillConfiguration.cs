@@ -11,7 +11,6 @@ namespace HireAI.Data.Configurations
             builder.HasKey(s => s.Id);
 
             builder.Property(s => s.Title)
-                .IsRequired()
                 .HasMaxLength(100);
 
             builder.Property(s => s.Description)

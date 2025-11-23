@@ -11,20 +11,17 @@ namespace HireAI.Data.Configurations
             builder.HasKey(es => es.Id);
 
             builder.Property(es => es.CreatedAt)
-                .IsRequired()
                 .HasDefaultValueSql("GETUTCDATE()");
 
             // Foreign Keys
             builder.HasOne(es => es.Application)
                 .WithOne(a => a.ExamSummary)
                 .HasForeignKey<ExamSummary>(es => es.ApplicationId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(es => es.Exam)
                 .WithMany()
                 .HasForeignKey(es => es.ExamId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(es => es.ExamEvaluation)

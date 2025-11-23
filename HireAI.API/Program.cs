@@ -1,6 +1,10 @@
 using HireAI.Data.Models.Identity;
 using HireAI.Infrastructure.Context;
+using HireAI.Infrastructure.GenericBase;
 using HireAI.Infrastructure.Mappings;
+using HireAI.Infrastructure.Repositories;
+using HireAI.Service.Abstractions;
+using HireAI.Service.Implementation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -51,6 +55,13 @@ namespace HireAI.API
                 .AddEntityFrameworkStores<HireAIDbContext>()
                 .AddDefaultTokenProviders();
 
+            builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
+            builder.Services.AddScoped<IExamRepository, ExamRepository>();
+            builder.Services.AddScoped<IExamEvaluationRepository, ExamEvaluationRepository>();
+            builder.Services.AddScoped<IApplicantRepository, ApplicantRepository>();
+            builder.Services.AddScoped<IApplicantSkillRepository, ApplicantSkillRepository>();
+            builder.Services.AddScoped<IApplicantDashboardService, ApplicantDashboardService>();
+            builder.Services.AddScoped<ApplicantDashboardService>();
             #endregion
 
             #region Add AutoMapper service

@@ -19,8 +19,8 @@ namespace HireAI.Data.Models
         public enExamType ExamType { get; set; } = enExamType.MockExam;
 
         //Foreign Keys
-        public int ApplicantId { get; set; }
-        public int ApplicationId { get; set; }
+        public int? ApplicantId { get; set; }
+        public int? ApplicationId { get; set; }
 
         // Navigation Property
         public Applicant? Applicant { get; set; }

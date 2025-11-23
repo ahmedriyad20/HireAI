@@ -11,6 +11,8 @@ namespace HireAI.Data.Models
     {
         public int Id { get; set; }
         public float? SkillRate { get; set; }
+        public float? ImprovementPercentage { get; set; }
+        public string? Notes { get; set; }
 
         //Foreign Keys
         public int ApplicantId { get; set; }

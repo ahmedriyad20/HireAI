@@ -13,11 +13,7 @@ namespace HireAI.Data.Configurations
             builder.HasKey(q => q.Id);
 
             builder.Property(q => q.QuestionText)
-                .IsRequired()
                 .HasMaxLength(200);
-
-            builder.Property(q => q.QuestionNumber)
-                .IsRequired();
 
             //Type Conversion (null-safe)
             builder.Property(u => u.Answer)
@@ -30,13 +26,11 @@ namespace HireAI.Data.Configurations
             builder.HasOne(q => q.Exam)
                 .WithMany(e => e.Questions)
                 .HasForeignKey(q => q.ExamId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(q => q.ApplicantResponse)
                 .WithOne(ar => ar.Question)
                 .HasForeignKey<Question>(q => q.ApplicantResponseId)
-                .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
 
             // Navigation property for answers

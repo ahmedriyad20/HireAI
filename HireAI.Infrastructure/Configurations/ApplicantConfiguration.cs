@@ -1,3 +1,4 @@
+using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -13,6 +14,13 @@ namespace HireAI.Data.Configurations
                 .HasColumnType("varchar(200)");
 
 
+            //Type Conversion
+            builder.Property(u => u.SkillLevel)
+                .HasConversion(
+                    v => v.HasValue ? v.Value.ToString() : null, // enum? -> string (null preserved)
+                    v => string.IsNullOrEmpty(v) ? (enSkillLevel?)null : (enSkillLevel)Enum.Parse(typeof(enSkillLevel), v) // string -> enum?
+                );
+
             // Navigation properties
             builder.HasMany(a => a.ApplicantSkills)
                 .WithOne(asn => asn.Applicant)
@@ -20,10 +28,10 @@ namespace HireAI.Data.Configurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Navigation properties
-        builder
-      .HasOne(a => a.CV)
-      .WithOne(c => c.Applicant)
-      .HasForeignKey<CV>(c => c.ApplicantId);   // CV is the dependent
+                builder
+              .HasOne(a => a.CV)
+              .WithOne(c => c.Applicant)
+              .HasForeignKey<CV>(c => c.ApplicantId);   // CV is the dependent
      
 
             builder.HasMany(a => a.Applications)

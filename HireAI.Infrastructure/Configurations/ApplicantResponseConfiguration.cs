@@ -10,20 +10,16 @@ namespace HireAI.Data.Configurations
         {
             builder.HasKey(ar => ar.Id);
 
-            builder.Property(ar => ar.AnswerNumber)
-                .IsRequired();
 
             // Foreign Keys
             builder.HasOne(ar => ar.Question)
                 .WithMany()
                 .HasForeignKey(ar => ar.QuestionId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(ar => ar.ExamSummary)
                 .WithMany()
                 .HasForeignKey(ar => ar.ExamSummaryId)
-                .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Navigation property
