@@ -19,6 +19,8 @@ namespace HireAI.Infrastructure.Mappings
               .ForMember(dest => dest.AppliedAt, opt => opt.MapFrom(src => src.DateApplied))
               .ForMember(dest => dest.AtsScore, opt => opt.MapFrom(src => src.AtsScore))
               .ForMember(dest => dest.ApplicationStatus, opt => opt.MapFrom(src => src.ApplicationStatus));
+
+            CreateMap<JobOpening, JobOpeningDTO>();
         }
     }
 }
