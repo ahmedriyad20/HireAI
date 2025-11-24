@@ -72,3 +72,4 @@ node_modules/
 
 
 /HireAI.API/appsettings.json
+HireAI.Infrastructure/Migrations

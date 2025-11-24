@@ -1,6 +1,11 @@
 using HireAI.Data.Models.Identity;
 using HireAI.Infrastructure.Context;
+using HireAI.Infrastructure.GenaricBasies;
+using HireAI.Infrastructure.GenericBase;
 using HireAI.Infrastructure.Mappings;
+using HireAI.Infrastructure.Repositories;
+using HireAI.Service.Abstractions;
+using HireAI.Service.Implementation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,7 +25,7 @@ namespace HireAI.API
 
             // Add Swagger generation service
             builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<HireAIDbContext>();
+            //builder.Services.AddDbContext<HireAIDbContext>();
 
             #region Register DbContext and Services in the DI Container
             builder.Services.AddDbContext<HireAIDbContext>(options =>
@@ -50,6 +55,8 @@ namespace HireAI.API
             })
                 .AddEntityFrameworkStores<HireAIDbContext>()
                 .AddDefaultTokenProviders();
+            builder.Services.AddScoped<IJobOpeningRepository,JobOpeningRepository>();
+            builder.Services.AddScoped<IApplicantJobOpeningService,ApplicantJobOpeningService>();
 
             #endregion
 

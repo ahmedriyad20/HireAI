@@ -60,7 +60,7 @@ namespace HireAI.Data.Configurations
             builder.HasIndex(a => a.ApplicationStatus);
 
             // Check constraint
-            builder.ToTable(t => t.HasCheckConstraint("CK_Application_Score", "([ScoreATS] >= 0 AND [ScoreATS] <= 100) OR [ScoreATS] IS NULL"));
+            builder.ToTable(t => t.HasCheckConstraint("CK_Application_Score", "([AtsScore] >= 0 AND [AtsScore] <= 100) OR [AtsScore] IS NULL"));
         }
     }
 }

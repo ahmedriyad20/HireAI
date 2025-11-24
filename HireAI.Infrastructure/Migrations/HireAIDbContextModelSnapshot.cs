@@ -128,8 +128,12 @@ namespace HireAI.Infrastructure.Migrations
                     b.Property<int>("ApplicantId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ApplicationStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("ApplicationStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<float?>("AtsScore")
+                        .HasColumnType("real");
 
                     b.Property<string>("CVFilePath")
                         .HasMaxLength(500)
@@ -149,9 +153,6 @@ namespace HireAI.Infrastructure.Migrations
                     b.Property<int>("JobId")
                         .HasColumnType("int");
 
-                    b.Property<float?>("ScoreATS")
-                        .HasColumnType("real");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicantId");
@@ -167,7 +168,7 @@ namespace HireAI.Infrastructure.Migrations
 
                     b.ToTable("Applications", t =>
                         {
-                            t.HasCheckConstraint("CK_Application_Score", "([ScoreATS] >= 0 AND [ScoreATS] <= 100) OR [ScoreATS] IS NULL");
+                            t.HasCheckConstraint("CK_Application_Score", "([AtsScore] >= 0 AND [AtsScore] <= 100) OR [AtsScore] IS NULL");
                         });
                 });
 
@@ -248,6 +249,12 @@ namespace HireAI.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("ExamType")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("MockExam");
+
                     b.Property<bool>("IsAi")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
@@ -311,7 +318,7 @@ namespace HireAI.Infrastructure.Migrations
 
                     b.HasIndex("Status");
 
-                    b.ToTable("ExamEvaluation", t =>
+                    b.ToTable("ExamEvaluations", t =>
                         {
                             t.HasCheckConstraint("CK_ExamEvaluation_Scores", "[TotalScore] >= 0 AND [MaxTotal] > 0 AND [TotalScore] <= [MaxTotal]");
                         });
@@ -497,6 +504,10 @@ namespace HireAI.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
+
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -949,6 +960,9 @@ namespace HireAI.Infrastructure.Migrations
                     b.Property<string>("ResumeUrl")
                         .IsRequired()
                         .HasColumnType("varchar(200)");
+
+                    b.Property<int?>("SkillLevel")
+                        .HasColumnType("int");
 
                     b.HasIndex("CVId")
                         .IsUnique()
