@@ -4,7 +4,6 @@ using HireAI.Infrastructure.Context;
 using HireAI.Infrastructure.GenericBase;
 using HireAI.Infrastructure.Mappings;
 using HireAI.Infrastructure.Repositories;
-using HireAI.Service.Abstractions;
 using HireAI.Service.Implementation;
 
 using HireAI.Seeder;
@@ -12,7 +11,6 @@ using HireAI.Seeder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using HireAI.Service.Interfaces;
-using HireAI.Service.Implementions;
 
 namespace HireAI.API
 {

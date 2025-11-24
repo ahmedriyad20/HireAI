@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HireAI.Service.Implementions
+namespace HireAI.Service.Implementation
 {
     public class HRDashBoardService : IHrDashboardService
     {
@@ -82,7 +82,7 @@ namespace HireAI.Service.Implementions
         {
             var query =  _applications.GetAll(); 
             return await query
-                .Where(a => a.HRId == hrId && (a.ApplicationStatus == enApplicationStatus.UnderReview))
+                .Where(a => a.HRId == hrId && a.ApplicationStatus == enApplicationStatus.UnderReview)
                 .GroupBy(a => a.DateApplied.Month)
                 .Select(a => new { Month = a.Key, Count = a.Count() })
                 .ToDictionaryAsync(x => x.Month, x => x.Count);

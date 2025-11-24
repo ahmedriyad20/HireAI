@@ -1,6 +1,6 @@
 ﻿using HireAI.Service.DTOs;
 
-namespace HireAI.Service.Abstractions
+namespace HireAI.Service.Interfaces
 {
     public interface IApplicantDashboardService
     {
