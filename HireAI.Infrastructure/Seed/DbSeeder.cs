@@ -32,6 +32,8 @@ namespace HireAI.Seeder
                 return;
 
             // ======== Create HR ========
+
+
             var hr = new HR
             {
                 Name = "HR One",

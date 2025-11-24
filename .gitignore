@@ -72,5 +72,7 @@ node_modules/
 # EF Core Migrations temp
 Migrations/
 MigrationsBackup/
-
 /HireAI.Infrastructure/Migrations
+/HireAI.API/appsettings.json
+/Migrations
+
