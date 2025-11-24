@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HireAI.Service.DTOs
+namespace HireAI.Data.DTOs
 {
     public class JobOpeningDTO
     {

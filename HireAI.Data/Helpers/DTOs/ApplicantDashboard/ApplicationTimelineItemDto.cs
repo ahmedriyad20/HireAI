@@ -2,7 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace HireAI.Service.DTOs
+namespace HireAI.Data.DTOs.ApplicantDashboard
 {
     public class ApplicationTimelineItemDto
     {

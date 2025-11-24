@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HireAI.Data.Models;
-using HireAI.Service.DTOs;
+using HireAI.Data.DTOs;
+using HireAI.Data.DTOs.ApplicantDashboard;
 using System;
 using System.Collections.Generic;
 using System.Linq;

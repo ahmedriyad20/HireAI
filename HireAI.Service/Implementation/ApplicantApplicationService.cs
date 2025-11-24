@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using HireAI.Infrastructure.Context;
 using HireAI.Infrastructure.GenericBase;
-using HireAI.Service.DTOs;
+using HireAI.Data.DTOs.ApplicantDashboard;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

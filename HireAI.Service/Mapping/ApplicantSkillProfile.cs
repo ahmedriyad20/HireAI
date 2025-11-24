@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using HireAI.Data.Models;
-using HireAI.Service.DTOs;
+using HireAI.Data.DTOs.ApplicantDashboard;
 
 namespace HireAI.Service.Mapping
 {
