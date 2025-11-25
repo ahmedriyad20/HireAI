@@ -54,7 +54,7 @@ namespace HireAI.Infrastructure.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseSqlServer("Data Source =.; Initial Catalog = HireAIDb; Integrated Security = True; Encrypt = False");
+            optionsBuilder.UseSqlServer("Data Source =(localdb)\\MSSQLLocalDB; Initial Catalog = HireAIDb; Integrated Security = True; Encrypt = False");
         }
     }
 }
