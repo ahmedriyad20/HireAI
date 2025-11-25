@@ -8,7 +8,9 @@ namespace HireAI.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ExamSummary> builder)
         {
-            builder.HasKey(es => es.Id);
+            builder.Property(a => a.Id)
+               .ValueGeneratedOnAdd();
+
 
             builder.Property(es => es.CreatedAt)
                 .HasDefaultValueSql("GETUTCDATE()");

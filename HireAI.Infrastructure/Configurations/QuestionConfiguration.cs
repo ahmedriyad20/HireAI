@@ -10,7 +10,9 @@ namespace HireAI.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Question> builder)
         {
-            builder.HasKey(q => q.Id);
+            builder.Property(a => a.Id)
+               .ValueGeneratedOnAdd();
+
 
             builder.Property(q => q.QuestionText)
                 .HasMaxLength(200);
@@ -33,11 +35,7 @@ namespace HireAI.Data.Configurations
                 .HasForeignKey<Question>(q => q.ApplicantResponseId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Navigation property for answers
-            builder.HasMany(q => q.Answers)
-                .WithOne()
-                .HasForeignKey(a => a.QuestionId)
-                .OnDelete(DeleteBehavior.Restrict);
+            
 
             // Indexes
             builder.HasIndex(q => new { q.ExamId, q.QuestionNumber })

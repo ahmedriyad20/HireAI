@@ -1,4 +1,4 @@
-﻿using HireAI.Service.Abstractions;
+﻿using HireAI.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

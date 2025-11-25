@@ -1,14 +1,9 @@
 ﻿using AutoMapper;
 using HireAI.Infrastructure.Context;
-using HireAI.Infrastructure.Intefaces;
-using HireAI.Service.Abstractions;
-using HireAI.Service.DTOs;
+using HireAI.Infrastructure.Intrefaces;
+using HireAI.Data.DTOs;
+using HireAI.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HireAI.Service.Implementation
 {

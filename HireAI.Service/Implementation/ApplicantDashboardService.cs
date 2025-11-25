@@ -2,16 +2,11 @@
 using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
 using HireAI.Infrastructure.Context;
-using HireAI.Infrastructure.Intefaces;
-using HireAI.Infrastructure.Repositories;
-using HireAI.Service.Abstractions;
-using HireAI.Service.DTOs;
+using HireAI.Infrastructure.Intrefaces;
+using HireAI.Data.DTOs.ApplicantDashboard;
+using HireAI.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace HireAI.Service.Implementation
 {
@@ -44,7 +39,7 @@ namespace HireAI.Service.Implementation
             .CountAsync(a =>
                 a.ApplicantId == applicantId &&
                 (a.ApplicationStatus == enApplicationStatus.UnderReview ||
-                 a.ApplicationStatus == enApplicationStatus.Pending));
+                 a.ApplicationStatus == enApplicationStatus.UnderReview));
         }
 
         public async Task<int> GetMockExamsTakenNumberPerApplicantAsync(int applicantId)

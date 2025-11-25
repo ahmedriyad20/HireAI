@@ -1,7 +1,7 @@
 using HireAI.Data.Models;
 using HireAI.Infrastructure.GenaricBasies;
 
-namespace HireAI.Infrastructure.Intefaces
+namespace HireAI.Infrastructure.Intrefaces
 {
     public interface IApplicantResponseRepository : IGenericRepositoryAsync<ApplicantResponse> { }
 }

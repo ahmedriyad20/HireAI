@@ -8,7 +8,9 @@ namespace HireAI.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ApplicantResponse> builder)
         {
-            builder.HasKey(ar => ar.Id);
+            builder.Property(a => a.Id)
+                .ValueGeneratedOnAdd();
+
 
 
             // Foreign Keys

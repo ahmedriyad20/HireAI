@@ -8,7 +8,9 @@ namespace HireAI.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ApplicantSkill> builder)
         {
-            builder.HasKey(asn => asn.Id);
+            builder.Property(a => a.Id)
+               .ValueGeneratedOnAdd();
+
 
 
             // Applicant (many ApplicantSkill per Applicant)

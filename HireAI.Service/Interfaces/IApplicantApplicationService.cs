@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HireAI.Data.Helpers.Enums
+namespace HireAI.Service.Interfaces
 {
-    public enum enApplicationStatus
+    public interface IApplicantApplicationService
     {
-
-        ExamSent, ATSPassed, UnderReview, Completed, Rejected
 
     }
 }

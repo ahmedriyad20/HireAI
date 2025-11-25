@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HireAI.Service.Abstractions
+namespace HireAI.Data.Helpers.Enums
 {
-    public interface IApplicantApplicationService
+    public enum enExamStatus
     {
-
+        completed, waiting, notTaken    
     }
 }

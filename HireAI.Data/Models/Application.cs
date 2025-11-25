@@ -27,7 +27,10 @@ namespace HireAI.Data.Models
         public JobOpening? AppliedJob { get; set; }
         public Exam? Exam { get; set; }
         public ExamSummary? ExamSummary { get; set; }
-        
-         
+
+        //add this exam status
+        public enExamStatus? ExamStatus { get; set; }
+
+
     }
 }

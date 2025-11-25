@@ -1,20 +1,19 @@
 using HireAI.Data.Models.Identity;
 using HireAI.Infrastructure.Context;
-using HireAI.Infrastructure.Intefaces;
+using HireAI.Infrastructure.Intrefaces;
 using HireAI.Infrastructure.Mappings;
 using HireAI.Infrastructure.Repositories;
-using HireAI.Service.Abstractions;
 using HireAI.Service.Implementation;
-
-
+using HireAI.Seeder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using HireAI.Service.Interfaces;
 
 namespace HireAI.API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -66,13 +65,55 @@ namespace HireAI.API
             builder.Services.AddScoped<IApplicantSkillRepository, ApplicantSkillRepository>();
             builder.Services.AddScoped<IApplicantDashboardService, ApplicantDashboardService>();
             builder.Services.AddScoped<ApplicantDashboardService>();
+            builder.Services.AddScoped<IJobOpeningRepository, JobOpeningRepository>();
+            builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
+            builder.Services.AddScoped<IHrDashboardService, HRDashBoardService>(); 
             #endregion
 
             #region Add AutoMapper service
             builder.Services.AddAutoMapper(cfg => { }, typeof(ApplicationProfile).Assembly);
             #endregion
 
+
             var app = builder.Build();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    var context = services.GetRequiredService<HireAIDbContext>();
+
+                    // Check if there are any pending migrations first (safe & fast)
+                    var pending = await context.Database.GetPendingMigrationsAsync();
+                    if (pending.Any())
+                    {
+                        logger.LogInformation("Applying {Count} pending migrations...", pending.Count());
+                        await context.Database.MigrateAsync();
+                        logger.LogInformation("Database migrated successfully.");
+
+                    }
+                    else
+                    {
+                        logger.LogInformation("No pending migrations.");
+                    }
+
+                    // Optional: call your seed method here
+                    await DbSeeder.SeedAsync(services);
+                    logger.LogInformation("Database seeding finished.");
+
+                }
+                catch (Exception ex)
+                {
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+                    // In production you might rethrow or stop startup depending on policy.
+                    // throw;
+                }
+            }
+
+            
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

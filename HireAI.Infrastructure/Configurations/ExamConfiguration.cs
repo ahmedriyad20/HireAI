@@ -9,7 +9,9 @@ namespace HireAI.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Exam> builder)
         {
-            builder.HasKey(e => e.Id);
+            builder.Property(a => a.Id)
+               .ValueGeneratedOnAdd();
+
 
             builder.Property(e => e.ExamName)
                 .HasMaxLength(200);

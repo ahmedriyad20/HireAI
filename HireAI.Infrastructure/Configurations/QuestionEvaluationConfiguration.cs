@@ -8,7 +8,9 @@ namespace HireAI.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<QuestionEvaluation> builder)
         {
-            builder.HasKey(qe => qe.Id);
+            builder.Property(a => a.Id)
+               .ValueGeneratedOnAdd();
+
 
             builder.Property(qe => qe.IsCorrect)
                 .HasDefaultValue(false);

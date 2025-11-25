@@ -8,7 +8,9 @@ namespace HireAI.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<CV> builder)
         {
-            builder.HasKey(cv => cv.Id);
+            builder.Property(a => a.Id)
+                .ValueGeneratedOnAdd();
+
 
             builder.Property(cv => cv.Phone)
                 .HasMaxLength(20);
