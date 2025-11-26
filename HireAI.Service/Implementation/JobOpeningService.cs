@@ -38,6 +38,30 @@ namespace HireAI.Service.Implementation
             }
              await _jobOpeningRepository.DeleteAsync(jobOpeningEntity);
         }
+
+        public async Task<ICollection<JopOpeingRequestDto>> GetJopOpeningForHrAsync(int hrid)
+        {
+
+            var jopopeing = await _jobOpeningRepository.GetJobOpeningForHrAsync(hrid);
+            if (jopopeing == null || !jopopeing.Any())
+            {
+                return Array.Empty<JopOpeingRequestDto>();
+            }   
+            return _mapper.Map<ICollection<JopOpeingRequestDto>>(jopopeing);
+        }
+
+        public async Task UpdateJopOppenAsny(int id, JopOpeingRequestDto jopOpeingRequestDto)
+        {
+            var existingEntity = await _jobOpeningRepository.GetByIdAsync(id);
+
+            if (existingEntity == null)
+                throw new Exception("Job Opening not found");
+
+          
+            _mapper.Map(jopOpeingRequestDto, existingEntity);
+
+            await _jobOpeningRepository.UpdateAsync(existingEntity);
+        }
     }
 
      

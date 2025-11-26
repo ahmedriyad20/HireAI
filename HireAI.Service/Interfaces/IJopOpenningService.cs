@@ -12,5 +12,9 @@ namespace HireAI.Service.Interfaces
     {
         public  Task CreateJopOppenAsny(JopOpeingRequestDto jopOpeingRequestDto);
         public Task DeleteJopOppenAsny(int id);
+
+        public Task<ICollection<JopOpeingRequestDto>> GetJopOpeningForHrAsync(int hrid);
+
+        public Task UpdateJopOppenAsny(int id, JopOpeingRequestDto jopOpeingRequestDto);    
     }
 }
