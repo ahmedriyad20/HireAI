@@ -21,5 +21,11 @@ namespace HireAI.API.Controllers
           return Ok(examDTO);
 
         }
+        [HttpGet("taken/{applicantId:int}")]
+        public async Task<IActionResult> GetExamsTakenByApplicant(int applicantId, int pageNumber = 1, int pageSize = 5)
+        {
+            var examsDTO = await _examService.GetExamsTakenByApplicant(applicantId, pageNumber, pageSize);
+            return Ok(examsDTO);
+        }
     }
 }

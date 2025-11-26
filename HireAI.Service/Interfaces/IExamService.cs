@@ -11,6 +11,7 @@ namespace HireAI.Service.Interfaces
     public interface IExamService
     {
         public Task<ExamDTO?> GetExamByApplicantIdAsync(int applicantId);
-        public void GetExamsTakenByApplicant(int aplicantID);
+        public Task<ICollection<ExamDTO>> GetExamsTakenByApplicant(int aplicantId, int pageNumber = 1, int pageSize = 5)
+       ;
     }
 }

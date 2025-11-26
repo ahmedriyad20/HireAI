@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HireAI.Data.Helpers.DTOs.ExamDTOS.Respones;
+using HireAI.Data.Models;
 using HireAI.Infrastructure.GenericBase;
 using HireAI.Service.Interfaces;
 using System;
@@ -15,11 +16,12 @@ namespace HireAI.Service.Implementation
 
         private readonly IExamRepository _examRepository;
         private readonly IMapper _mapper;
-        public ExamService(IExamRepository examRepository ,IMapper mapper) { 
-            _examRepository = examRepository; 
+        public ExamService(IExamRepository examRepository, IMapper mapper)
+        {
+            _examRepository = examRepository;
             _mapper = mapper;
-        } 
-        
+        }
+
         public async Task<ExamDTO?> GetExamByApplicantIdAsync(int applicantId)
         {
             var exam = await _examRepository.GetExamByApplicanIdAsync(applicantId);
@@ -30,9 +32,13 @@ namespace HireAI.Service.Implementation
             return examDTO;
         }
 
-        public void GetExamsTakenByApplicant(int aplicantID)
+        public async Task<ICollection<ExamDTO>> GetExamsTakenByApplicant(int aplicantId ,int pageNumber =1 , int pageSize=5)
         {
-            throw new NotImplementedException();
+            var exams = await _examRepository.GetExamsByApplicantIdAsync(aplicantId, pageNumber ,pageSize) ?? new List<Exam>();
+        
+            return   exams.Select(e => _mapper.Map<ExamDTO>(e)).ToList();
+
         }
+
     }
 }

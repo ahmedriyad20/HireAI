@@ -19,5 +19,15 @@ namespace HireAI.Infrastructure.Repositories
                                .Where(e => e.ApplicantId == id)
                                .FirstOrDefaultAsync();  
         }
+
+        public async Task<ICollection<Exam>?> GetExamsByApplicantIdAsync(int applicantId, int pageNumber =1, int pageSize  =5)
+        {
+
+            return await _dbSet.Include(e => e.Questions)
+                               .ThenInclude(q => q.Answers)
+                               .Skip(pageSize * (pageNumber - 1))
+                               .Take(pageSize)
+                               .Where(e => e.ApplicantId == applicantId).ToListAsync();                
+        }
     }
 }
