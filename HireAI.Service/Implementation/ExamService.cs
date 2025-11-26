@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HireAI.Data.Helpers.DTOs.ExamDTOS.Respones;
 using HireAI.Infrastructure.GenericBase;
+using HireAI.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace HireAI.Service.Implementation
 {
-     public class ExamService
+    public class ExamService : IExamService
     {
 
         private readonly IExamRepository _examRepository;
@@ -24,8 +25,14 @@ namespace HireAI.Service.Implementation
             var exam = await _examRepository.GetExamByApplicanIdAsync(applicantId);
             if (exam == null) return null;
             var examDTO = _mapper.Map<ExamDTO>(exam);
+            Console.WriteLine(examDTO.ExamName);
 
             return examDTO;
+        }
+
+        public void GetExamsTakenByApplicant(int aplicantID)
+        {
+            throw new NotImplementedException();
         }
     }
 }

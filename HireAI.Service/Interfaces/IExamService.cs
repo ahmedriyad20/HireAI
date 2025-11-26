@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+﻿using HireAI.Data.Helpers.DTOs.ExamDTOS.Respones;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace HireAI.Service.Interfaces
 {
     public interface IExamService
     {
-        public void GetExamForApplicant(int aplicantID);
+        public Task<ExamDTO?> GetExamByApplicantIdAsync(int applicantId);
         public void GetExamsTakenByApplicant(int aplicantID);
     }
 }
