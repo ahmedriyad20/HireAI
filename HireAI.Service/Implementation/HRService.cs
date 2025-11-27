@@ -1,4 +1,5 @@
-﻿using HireAI.Data.Helpers.DTOs.Respones;
+﻿using HireAI.Data.Helpers.DTOs.HRDTOS;
+using HireAI.Data.Helpers.DTOs.Respones;
 using HireAI.Data.Helpers.DTOs.Respones.HRDashboardDto;
 using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
@@ -18,17 +19,19 @@ using System.Threading.Tasks;
 
 namespace HireAI.Service.Implementation
 {
-    public class HRDashBoardService : IHrDashboardService
+    public class HRService : IHRService
     {
         private readonly IApplicationRepository _applications;
 
         private readonly IJobOpeningRepository _jobOpening;
-        public HRDashBoardService(IJobOpeningRepository jobOpeningRepository, IApplicationRepository applications)
+        private readonly IHRRepository _hr;
+        public HRService(IJobOpeningRepository jobOpeningRepository, IApplicationRepository applications , IHRRepository hr)
         {
             _applications = applications;
  
 
             _jobOpening = jobOpeningRepository;
+            _hr = hr;
         }
         public async Task<HRDashboardDto> GetDashboardAsync(int hrId)
         {
@@ -46,6 +49,36 @@ namespace HireAI.Service.Implementation
 
             };
         }
+
+        public async Task<HRResponseDto> GetHRAsync(int hrId)
+        {;
+            var hr = await _hr.GetByIdAsync(hrId);
+
+            if (hr == null)
+            {
+                throw new ArgumentNullException(nameof(hrId), "HR not found");
+            }
+            var hrResponseDto = new HRResponseDto
+            {
+                Id = hr.Id,
+                Name = hr.Name,
+                Email = hr.Email,
+                Role = hr.Role,
+                IsPremium = hr.IsPremium,
+                Phone = hr.Phone,
+                Bio = hr.Bio,
+                Title = hr.Title,
+                IsActive = hr.IsActive,
+                LastLogin = hr.LastLogin,
+                CreatedAt = hr.CreatedAt,
+                CompanyName = hr.CompanyName,
+                AccountType = hr.AccountType,
+                PremiumExpiry = hr.PremiumExpiry
+            };
+            return hrResponseDto;
+
+        }  
+        
         private  async Task<int> GetToTalApplicantsAsync(int hrId)
         {
             var query =    _applications.GetAll();
