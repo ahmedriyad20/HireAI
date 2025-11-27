@@ -19,114 +19,85 @@ using System.Threading.Tasks;
 
 namespace HireAI.Service.Implementation
 {
+
     public class HRService : IHRService
     {
         private readonly IApplicationRepository _applications;
-
         private readonly IJobOpeningRepository _jobOpening;
         private readonly IHRRepository _hr;
-        public HRService(IJobOpeningRepository jobOpeningRepository, IApplicationRepository applications , IHRRepository hr)
+
+        public HRService(IJobOpeningRepository jobOpeningRepository,
+                         IApplicationRepository applications,
+                         IHRRepository hr)
         {
             _applications = applications;
- 
-
             _jobOpening = jobOpeningRepository;
             _hr = hr;
         }
+
         public async Task<HRDashboardDto> GetDashboardAsync(int hrId)
         {
-      
-
             return new HRDashboardDto
             {
-                TotalApplicants = await GetToTalApplicantsAsync(hrId).ConfigureAwait(false),
+                TotalApplicants = await GetTotalApplicantsAsync(hrId),
                 TotalExamTaken = await GetTotalExamTakenAsync(hrId),
                 TotalTopCandidates = await GetTotalTopCandidatesAsync(hrId),
                 MonthlyApplicants = await GetMonthlyNumberOfApplicationsAsync(hrId),
                 ATSPassedRateMonthly = await GetMonthlyOfTotalATSPassedAsync(hrId),
                 RecentApplications = await GetRecentApplicantsAsync(hrId),
                 ActiveJopPostings = await GetActiveJobPostingsAsync(hrId)
-
             };
         }
 
-        public async Task<HRResponseDto> GetHRAsync(int hrId)
-        {;
-            var hr = await _hr.GetByIdAsync(hrId);
-
-            if (hr == null)
-            {
-                throw new ArgumentNullException(nameof(hrId), "HR not found");
-            }
-            var hrResponseDto = new HRResponseDto
-            {
-                Id = hr.Id,
-                Name = hr.Name,
-                Email = hr.Email,
-                Role = hr.Role,
-                IsPremium = hr.IsPremium,
-                Phone = hr.Phone,
-                Bio = hr.Bio,
-                Title = hr.Title,
-                IsActive = hr.IsActive,
-                LastLogin = hr.LastLogin,
-                CreatedAt = hr.CreatedAt,
-                CompanyName = hr.CompanyName,
-                AccountType = hr.AccountType,
-                PremiumExpiry = hr.PremiumExpiry
-            };
-            return hrResponseDto;
-
-        }  
-        
-        private  async Task<int> GetToTalApplicantsAsync(int hrId)
+        public async Task<int> GetTotalApplicantsAsync(int hrId)
         {
-            var query =    _applications.GetAll();
-
-            var filtered = query.Where(a => a.HRId == hrId);
-
-            return await filtered.CountAsync();
+            return await _applications.GetAll()
+                .Where(a => a.HRId == hrId)
+                .CountAsync();
         }
 
-        private async Task<int> GetTotalExamTakenAsync(int hrId)
+        public async Task<int> GetTotalExamTakenAsync(int hrId)
         {
-            var query =  _applications.GetAll(); 
-            var filtered = query.Where(a => a.HRId == hrId && a.ExamStatus == enExamStatus.completed); 
-            return await filtered.CountAsync(); 
+            return await _applications.GetAll()
+                .Where(a => a.HRId == hrId && a.ExamStatus == enExamStatus.completed)
+                .CountAsync();
         }
 
-        private async Task<int> GetTotalTopCandidatesAsync(int hrId)
+        public async Task<int> GetTotalTopCandidatesAsync(int hrId)
         {
-            var applicationQuery =  _applications.GetAll(); //no sql yet
-            return await applicationQuery.Where(a => a.ExamSummary != null && a.ExamSummary.TotalScroe <80 && a.AtsScore < 80).CountAsync();
+            return await _applications.GetAll()
+                .Where(a => a.HRId == hrId &&
+                            a.ExamSummary != null &&
+                            a.ExamSummary.TotalScroe >= 80 &&
+                            a.AtsScore >= 80)
+                .CountAsync();
         }
 
-        private async Task<Dictionary<int, int>> GetMonthlyNumberOfApplicationsAsync(int hrId)
+        public async Task<Dictionary<int, int>> GetMonthlyNumberOfApplicationsAsync(int hrId)
         {
-            var query =  _applications.GetAll(); //no sql yet
-            return await query
-                .Where(a => a.HRId == hrId && a.DateApplied > DateTime.UtcNow.AddYears(-1))
+            return await _applications.GetAll()
+                .Where(a => a.HRId == hrId &&
+                            a.DateApplied > DateTime.UtcNow.AddYears(-1))
                 .GroupBy(a => a.DateApplied.Month)
-                .Select(g => new { Month = g.Key, Count = g.Count() })
-                .ToDictionaryAsync(x => x.Month, x => x.Count);
+                .Select(g => new { g.Key, Count = g.Count() })
+                .ToDictionaryAsync(x => x.Key, x => x.Count);
         }
 
-        private async Task<Dictionary<int, int>> GetMonthlyOfTotalATSPassedAsync(int hrId)
+        public async Task<Dictionary<int, int>> GetMonthlyOfTotalATSPassedAsync(int hrId)
         {
-            var query =  _applications.GetAll(); 
-            return await query
-                .Where(a => a.HRId == hrId && a.ApplicationStatus == enApplicationStatus.UnderReview)
+            return await _applications.GetAll()
+                .Where(a => a.HRId == hrId &&
+                            a.ApplicationStatus == enApplicationStatus.UnderReview)
                 .GroupBy(a => a.DateApplied.Month)
-                .Select(a => new { Month = a.Key, Count = a.Count() })
-                .ToDictionaryAsync(x => x.Month, x => x.Count);
+                .Select(g => new { g.Key, Count = g.Count() })
+                .ToDictionaryAsync(x => x.Key, x => x.Count);
         }
 
-        private async Task<List<RecentApplicationDto>> GetRecentApplicantsAsync(int hrId, int take = 5)
+        public async Task<List<RecentApplicationDto>> GetRecentApplicantsAsync(int hrId, int take = 5)
         {
-            var query =  _applications.GetAll();
-            return await
-                query.Where(a => a.HRId == hrId).Select
-                (a => new RecentApplicationDto
+            return await _applications.GetAll()
+                .Where(a => a.HRId == hrId)
+                .Select(a => new RecentApplicationDto
                 {
                     ApplicantName = a.Applicant.Name,
                     ApplicantCVlink = a.CVFilePath,
@@ -134,29 +105,35 @@ namespace HireAI.Service.Implementation
                     ATSScore = a.AtsScore ?? 0,
                     Position = a.AppliedJob.Title,
                     JobStatus = a.AppliedJob.JobStatus,
-                    ExamResultLink = a.ExamSummary != null ? $"/examsummary/{a.ExamSummary.Id}" : " "
-
-                }).Take(take).ToListAsync();
-
+                    ExamResultLink = a.ExamSummary != null
+                                       ? $"/examsummary/{a.ExamSummary.Id}"
+                                       : ""
+                })
+                .OrderByDescending(a => a.AppliedOn)
+                .Take(take)
+                .ToListAsync();
         }
 
-        private async Task<List<ActiveJopPosting>> GetActiveJobPostingsAsync(int hrId)
+        public async Task<List<ActiveJopPosting>> GetActiveJobPostingsAsync(int hrId)
         {
-            var query = _jobOpening.GetAll();
-            return await 
-                query.Where(a => a.HRId == hrId && a.JobStatus == enJobStatus.Active).Select
-                (a => new ActiveJopPosting
+            return await _jobOpening.GetAll()
+                .Where(j => j.HRId == hrId && j.JobStatus == enJobStatus.Active)
+                .Select(j => new ActiveJopPosting
                 {
-                    JobTitle = a.Title,
-                    ApplicationTotalCount = a.Applications.Count , 
-                    JobStatus = a.JobStatus,
+                    JobTitle = j.Title,
+                    ApplicationTotalCount = j.Applications.Count,
+                    JobStatus = j.JobStatus,
+                    TakenExamCount = j.Applications.Count(a => a.ExamStatus == enExamStatus.completed),
+                    JobPostLink = $"/jobopenings/{j.Id}"
+                })
+                .ToListAsync();
+        }
 
-                    TakenExamCount = a.Applications.Where(app => app.ExamStatus == enExamStatus.completed).Count(),
-
-
-                    JobPostLink = $"/jobopenings/{a.Id}"
-
-                }).Distinct().ToListAsync();
+        public Task<HRResponseDto> GetHRAsync(int hrId)
+        {
+            throw new NotImplementedException();
         }
     }
+
+
 }
