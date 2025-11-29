@@ -23,7 +23,7 @@ namespace HireAI.Data.Configurations
             builder.HasOne(e => e.Application)
                 .WithOne(a => a.Exam)
                 .HasForeignKey<Exam>(e => e.ApplicationId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             //Type Conversion
             builder.Property(e => e.ExamType)

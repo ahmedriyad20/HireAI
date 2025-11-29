@@ -3,5 +3,7 @@ using HireAI.Infrastructure.GenaricBasies;
 
 namespace HireAI.Infrastructure.Intrefaces
 {
-    public interface IJobOpeningRepository : IGenericRepositoryAsync<JobOpening> { }
+    public interface IJobOpeningRepository : IGenericRepositoryAsync<JobOpening> { 
+        public Task<ICollection<JobOpening>?>  GetJobOpeningForHrAsync(int hrid); 
+    }
 }

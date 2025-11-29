@@ -22,6 +22,7 @@ namespace HireAI.Data.Configurations
                 .WithMany(e => e.Questions)
                 .HasForeignKey(q => q.ExamId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             
 
             // Indexes

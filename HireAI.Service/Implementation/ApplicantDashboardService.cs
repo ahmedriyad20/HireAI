@@ -3,6 +3,7 @@ using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
 using HireAI.Infrastructure.Context;
 using HireAI.Infrastructure.Intrefaces;
+using HireAI.Infrastructure.Repositories;
 using HireAI.Data.DTOs.ApplicantDashboard;
 using HireAI.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
