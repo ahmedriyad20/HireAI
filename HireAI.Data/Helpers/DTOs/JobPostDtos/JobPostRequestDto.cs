@@ -6,10 +6,11 @@ using System.ComponentModel.DataAnnotations;
 namespace HireAI.Data.Helpers.DTOs.JopOpening.Request
 {
     /// <summary>
-    /// DTO used to create a JobOpening.
+    /// DTO used to create a 
+    /// .
     /// Contains the fields relevant for creation and simple validation attributes.
     /// </summary>
-    public class CreateJopOpeingRequestDto
+    public class JobPostRequestDto
     {
         [Required]
         [MaxLength(200)]

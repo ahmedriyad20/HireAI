@@ -61,15 +61,14 @@ namespace HireAI.Service.Implementation
         public async Task<HRResponseDto> UpdateHRAsync(int hrId, HRUpdateDto hrUpdateDto)
         {
             var hr = await _hr.GetByIdAsync(hrId);
-
             if (hr == null)
             {
                 throw new Exception($"HR with ID {hrId} not found.");
             }
             _map.Map(hrUpdateDto, hr);
             await _hr.UpdateAsync(hr);
-
-            return _map.Map<HRResponseDto>(hr);
+            var hrResponse = _map.Map<HRResponseDto>(hr);
+            return hrResponse;
         }
 
         

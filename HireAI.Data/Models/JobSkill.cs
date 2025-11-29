@@ -15,7 +15,7 @@ namespace HireAI.Data.Models
         public int SkillId { get; set; }
 
         //Naviagation Property
-        public JobOpening? Job { get; set; }
+        public JobPost? Job { get; set; }
         public Skill? Skill { get; set; } 
     }
 }

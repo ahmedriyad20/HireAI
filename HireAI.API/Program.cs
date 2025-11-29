@@ -62,8 +62,8 @@ namespace HireAI.API
             })
                 .AddEntityFrameworkStores<HireAIDbContext>()
                 .AddDefaultTokenProviders();
-            builder.Services.AddScoped<IJobOpeningRepository,JobOpeningRepository>();
-            builder.Services.AddScoped<IApplicantJobOpeningService,ApplicantJobOpeningService>();
+            builder.Services.AddScoped<IJobPostRepository, JobPostRepository>();
+            builder.Services.AddScoped<IApplicantJobPostService,ApplicantJobPostService>();
 
             builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
             builder.Services.AddScoped<IExamRepository, ExamRepository>();
@@ -72,8 +72,6 @@ namespace HireAI.API
             builder.Services.AddScoped<IApplicantSkillRepository, ApplicantSkillRepository>();
             builder.Services.AddScoped<IApplicantDashboardService, ApplicantDashboardService>();
             builder.Services.AddScoped<ApplicantDashboardService>();
-            builder.Services.AddScoped<IJobOpeningRepository, JobOpeningRepository>();
-            builder.Services.AddScoped<IJopOpenningService, JobOpeningService>();
             builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 
             builder.Services.AddScoped<IHRService, HRService>();
@@ -84,8 +82,6 @@ namespace HireAI.API
             builder.Services.AddScoped<IHRDashboardService, HRDashboardService>();
 
 
-            builder.Services.AddScoped<IJobOpeningRepository, JobOpeningRepository>();
-            builder.Services.AddScoped<IJopOpenningService, JobOpeningService>();
 
             #endregion
 

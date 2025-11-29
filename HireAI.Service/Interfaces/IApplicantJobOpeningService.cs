@@ -1,4 +1,5 @@
 ﻿using HireAI.Data.DTOs;
+using HireAI.Data.Helpers.DTOs.JopOpeningDtos.Response.HireAI.Data.Helpers.DTOs.JopOpeningDtos.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace HireAI.Service.Interfaces
 {
-    public interface IApplicantJobOpeningService
+    public interface IApplicantJobPostService
     {
-        public Task<List<JobOpeningDTO>> GetAllJobOpeningAsync();
+        Task<List<JobPostResponseDto>> GetAllJobPostAsync();
     }
 }

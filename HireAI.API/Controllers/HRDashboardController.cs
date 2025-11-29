@@ -16,7 +16,12 @@ namespace HireAI.API.Controllers
             _hrDashboardService = dashboardService;
         }
 
-
+        [HttpGet("{hrId:int}")]   
+        public async Task<IActionResult> GetDashboard(int hrId)
+        {
+            var dashboardDto = await _hrDashboardService.GetDashboardAsync(hrId);
+            return Ok(dashboardDto);
+        }   
         // -------------------------------
         // Individual metric endpoints
         // -------------------------------

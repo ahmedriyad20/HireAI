@@ -29,7 +29,7 @@ namespace HireAI.Seeder
             }
 
             // If already seeded, exit
-            if (await context.JobOpenings.AnyAsync() || await context.Applicants.AnyAsync())
+            if (await context.JobPosts.AnyAsync() || await context.Applicants.AnyAsync())
                 return;
 
             var rnd = new Random();
@@ -49,7 +49,7 @@ namespace HireAI.Seeder
             await context.SaveChangesAsync();
 
             // ======== Create one JobOpening for that HR ========
-            var job = new JobOpening
+            var job = new JobPost
             {
                 Title = "Software Engineer",
                 CompanyName = hr.CompanyName,
@@ -62,7 +62,7 @@ namespace HireAI.Seeder
                 ApplicationDeadline = DateTime.UtcNow.AddMonths(1),
                 ATSMinimumScore = 60
             };
-            context.JobOpenings.Add(job);
+            context.JobPosts.Add(job);
             await context.SaveChangesAsync();
 
             // ======== Create some Skills and link to Job ========

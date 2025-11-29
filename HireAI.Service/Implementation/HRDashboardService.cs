@@ -3,6 +3,7 @@ using HireAI.Data.Helpers.DTOs.Respones;
 using HireAI.Data.Helpers.DTOs.Respones.HRDashboardDto;
 using HireAI.Data.Helpers.Enums;
 using HireAI.Infrastructure.GenericBase;
+using HireAI.Infrastructure.Repositories;
 using HireAI.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,16 +17,16 @@ namespace HireAI.Service.Implementation
     public class HRDashboardService : IHRDashboardService
     {
         private readonly IApplicationRepository _applications;
-        private readonly IJobOpeningRepository _jobOpening;
+        private readonly IJobPostRepository _JobPostRepository;
         private readonly IHRRepository _hr;
         private readonly IMapper _map;
 
-        public HRDashboardService(IJobOpeningRepository jobOpeningRepository,
+        public HRDashboardService(IJobPostRepository jobOpeningRepository,
                          IApplicationRepository applications,
                          IHRRepository hr, IMapper mapper)
         {
             _applications = applications;
-            _jobOpening = jobOpeningRepository;
+           _JobPostRepository = jobOpeningRepository;
             _hr = hr;
             _map = mapper;
         }
@@ -112,7 +113,7 @@ namespace HireAI.Service.Implementation
 
         public async Task<List<ActiveJopPosting>> GetActiveJobPostingsAsync(int hrId)
         {
-            return await _jobOpening.GetAll()
+            return await _JobPostRepository.GetAll()
                 .Where(j => j.HRId == hrId && j.JobStatus == enJobStatus.Active)
                 .Select(j => new ActiveJopPosting
                 {

@@ -9,8 +9,8 @@ namespace HireAI.API.Controllers
     [ApiController]
     public class AvailableJobsController : ControllerBase
     {
-        private readonly IApplicantJobOpeningService _applicantJobOpeningService;
-        public AvailableJobsController(IApplicantJobOpeningService applicantJobOpeningService)
+        private readonly IApplicantJobPostService _applicantJobOpeningService;
+        public AvailableJobsController(IApplicantJobPostService applicantJobOpeningService)
         {
             _applicantJobOpeningService = applicantJobOpeningService;
         }
@@ -18,7 +18,7 @@ namespace HireAI.API.Controllers
         public async Task<IActionResult> GetAllJobOpenings()
         {
 
-            var JobOpenings = await _applicantJobOpeningService.GetAllJobOpeningAsync();
+            var JobOpenings = await _applicantJobOpeningService.GetAllJobPostAsync();
             // Placeholder implementation
             return Ok(JobOpenings);
         }

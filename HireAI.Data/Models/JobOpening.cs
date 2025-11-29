@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HireAI.Data.Models
 {
-    public class JobOpening
+    public class JobPost
     {
         public int Id { get; set; }
   
@@ -15,6 +15,7 @@ namespace HireAI.Data.Models
         public string CompanyName { get; set; } = default!;
         public string? Description { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
         public enJobStatus JobStatus { get; set; } 
 
         public int? ExamDurationMinutes { get; set; } // in minutes

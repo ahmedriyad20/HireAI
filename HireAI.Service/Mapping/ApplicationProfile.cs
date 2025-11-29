@@ -7,7 +7,6 @@ using HireAI.Data.Helpers.DTOs.ExamDTOS.Respones;
 using HireAI.Data.Helpers.DTOs.ExamResponseDTOS.Request;
 using HireAI.Data.Helpers.DTOs.HRDTOS;
 using HireAI.Data.Helpers.DTOs.JopOpening.Request;
-using HireAI.Data.Helpers.DTOs.JopOpening.ResonsetDto;
 using HireAI.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -38,20 +37,14 @@ namespace HireAI.Infrastructure.Mappings
             CreateMap<AnswerRequestDTO, Answer>();
 
 
-            CreateMap<JobOpening, JobOpeningDTO>();
+         
 
-            CreateMap<JopOpeingRequestDto, JobOpening>();
+            CreateMap<JobPostRequestDto, JobPost>();
 
             // POST / PUT mapping
-            CreateMap<CreateJopOpeingRequestDto, JobOpening>();
+            CreateMap<JobPostRequestDto, JobPost>();
 
-            // GET mapping (response)
-            CreateMap<JobOpening, JobOpeningResponseDto>();
-
-            // Optional: if you have other DTOs
-            CreateMap<JobOpening, JobOpeningDTO>();
-
-            //map hr 
+          
 
             CreateMap<HR , HRResponseDto>();
        

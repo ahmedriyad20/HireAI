@@ -24,7 +24,7 @@ namespace HireAI.Data.Models
 
         //Navigation Property
         public ExamSummary? ExamSummary { get; set; }
-        public JobOpening? JobOpening { get; set; }
+        public JobPost? JobPost { get; set; }
         public ICollection<QuestionEvaluation> QuestionEvaluations { get; set; } = new HashSet<QuestionEvaluation>();
     }
 }

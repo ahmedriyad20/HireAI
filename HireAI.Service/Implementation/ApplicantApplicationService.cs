@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using HireAI.Data.DTOs.ApplicantDashboard;
 using HireAI.Infrastructure.Context;
 using HireAI.Infrastructure.GenericBase;
-using HireAI.Data.DTOs.ApplicantDashboard;
+using HireAI.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace HireAI.Service.Implementation
 {
     public class ApplicantApplicationService
     {
-        private readonly IJobOpeningRepository _jobOpeningRepository;
+        private readonly IJobPostRepository _jobPostRepository;
         private readonly IApplicationRepository _applicationRepository;
         private readonly IExamRepository _examRepository;
         private readonly IExamEvaluationRepository _examEvaluationRepository;
@@ -22,11 +23,11 @@ namespace HireAI.Service.Implementation
         private readonly HireAIDbContext _context;
         private readonly IMapper _mapper;
 
-        public ApplicantApplicationService(IJobOpeningRepository jobOpeningRepository, IApplicationRepository applicationRepository, IExamRepository examRepository,
+        public ApplicantApplicationService(IJobPostRepository jobOpeningRepository, IApplicationRepository applicationRepository, IExamRepository examRepository,
             IExamEvaluationRepository examEvaluationRepository, IApplicantRepository applicantRepository,
             IApplicantSkillRepository applicantSkillRepository, HireAIDbContext context, IMapper mapper)
         {
-            _jobOpeningRepository = jobOpeningRepository;
+            _jobPostRepository = jobOpeningRepository;
             _applicationRepository = applicationRepository;
             _examRepository = examRepository;
             _examEvaluationRepository = examEvaluationRepository;

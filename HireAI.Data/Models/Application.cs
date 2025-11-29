@@ -24,7 +24,7 @@ namespace HireAI.Data.Models
         //Navigation Property
         public HR? HR { get; set; }
         public Applicant? Applicant { get; set; }
-        public JobOpening? AppliedJob { get; set; }
+        public JobPost? AppliedJob { get; set; }
         public Exam? Exam { get; set; }
         public ExamSummary? ExamSummary { get; set; }
 

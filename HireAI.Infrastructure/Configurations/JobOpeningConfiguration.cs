@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HireAI.Data.Configurations
 {
-    public class JobOpeningConfiguration : IEntityTypeConfiguration<JobOpening>
+    public class JobPostConfiguration : IEntityTypeConfiguration<JobPost>
     {
-        public void Configure(EntityTypeBuilder<JobOpening> builder)
+        public void Configure(EntityTypeBuilder<JobPost> builder)
         {
           
 
@@ -67,7 +67,7 @@ namespace HireAI.Data.Configurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasMany(j => j.ExamEvaluations)
-                .WithOne(ee => ee.JobOpening)
+                .WithOne(ee => ee.JobPost)
                 .HasForeignKey(ee => ee.JobId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -77,9 +77,9 @@ namespace HireAI.Data.Configurations
             builder.HasIndex(j => j.HRId);
 
             // Check constraints
-            builder.ToTable(t => t.HasCheckConstraint("CK_JobOpening_ExamDuration", "[ExamDurationMinutes] > 0 OR [ExamDurationMinutes] IS NULL"));
-            builder.ToTable(t => t.HasCheckConstraint("CK_JobOpening_Questions", "[NumberOfQuestions] > 0 OR [NumberOfQuestions] IS NULL"));
-            builder.ToTable(t => t.HasCheckConstraint("CK_JobOpening_ATSScore", "([ATSMinimumScore] >= 0 AND [ATSMinimumScore] <= 100) OR [ATSMinimumScore] IS NULL"));
+            builder.ToTable(t => t.HasCheckConstraint("CK_JobPost_ExamDuration", "[ExamDurationMinutes] > 0 OR [ExamDurationMinutes] IS NULL"));
+            builder.ToTable(t => t.HasCheckConstraint("CK_JobPost_Questions", "[NumberOfQuestions] > 0 OR [NumberOfQuestions] IS NULL"));
+            builder.ToTable(t => t.HasCheckConstraint("CK_JobPost_ATSScore", "([ATSMinimumScore] >= 0 AND [ATSMinimumScore] <= 100) OR [ATSMinimumScore] IS NULL"));
         }
     }
 }

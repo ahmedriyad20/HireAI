@@ -18,7 +18,7 @@ namespace HireAI.Infrastructure.Context
         // DbSets for concrete entities
         public DbSet<Applicant> Applicants { get; set; } = default!;
         public DbSet<HR> HRs { get; set; } = default!;
-        public DbSet<JobOpening> JobOpenings { get; set; } = default!;
+        public DbSet<JobPost> JobPosts { get; set; } = default!;
         public DbSet<Application> Applications { get; set; } = default!;
         public DbSet<Payment> Payments { get; set; } = default!;
         public DbSet<CV> CVs { get; set; } = default!;
