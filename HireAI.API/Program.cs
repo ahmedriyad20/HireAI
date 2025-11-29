@@ -59,37 +59,9 @@ namespace HireAI.API
                 .AddEntityFrameworkStores<HireAIDbContext>()
                 .AddDefaultTokenProviders();
 
-            builder.Services.AddScoped<IJobPostRepository, JobPostRepository>();
-            builder.Services.AddScoped<IApplicantJobPostService,ApplicantJobPostService>();
-
-
-
-            builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
-            builder.Services.AddScoped<IExamRepository, ExamRepository>();
-            builder.Services.AddScoped<IExamEvaluationRepository, ExamEvaluationRepository>();
-            builder.Services.AddScoped<IApplicantRepository, ApplicantRepository>();
-            builder.Services.AddScoped<IApplicantSkillRepository, ApplicantSkillRepository>();
-            builder.Services.AddScoped<IApplicantDashboardService, ApplicantDashboardService>();
-            builder.Services.AddScoped<ApplicantDashboardService>();
-
-            builder.Services.AddScoped<IApplicantApplicationService, ApplicantApplicationService>();
-            builder.Services.AddScoped<ApplicantApplicationService>();
-            builder.Services.AddScoped<IMockExamService, MockExamService>();
-            builder.Services.AddScoped<MockExamService>();
-
-      
-            builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
-
-            builder.Services.AddScoped<IHRService, HRService>();
-            builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
-
-            builder.Services.AddScoped<IHRRepository, HRRepository>();
-            builder.Services.AddScoped<IExamService, ExamService>();
-
-            builder.Services.AddScoped<IJobPostService, JopPostService>();
-            builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();  
-            builder.Services.AddScoped<IHrDashboardService, HRDashboardService>();
-            #endregion
+            // Register repositories and services using extension methods
+            builder.Services.AddApplicationRepositories();
+            builder.Services.AddApplicationServices();
 
             #region Add AutoMapper service
             builder.Services.AddAutoMapper(cfg => { },  typeof(ApplicationProfile).Assembly);
