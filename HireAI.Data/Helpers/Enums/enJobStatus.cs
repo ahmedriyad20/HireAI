@@ -8,6 +8,10 @@ namespace HireAI.Data.Helpers.Enums
 {
     public enum enJobStatus
     {
-        NotSet  = 0, Active = 1, Close = 2
+        //NotSet  = 0, Active = 1, Close = 2
+        Draft = 1,
+        Active = 2,
+        Closed = 3,
+        Expired = 4
     }
 }

@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HireAI.Infrastructure.GenaricBasies;
+using HireAI.Data.Models;
+using System.Linq.Expressions;
 
 namespace HireAI.Infrastructure.GenaricBasies
 {

@@ -8,7 +8,8 @@ namespace HireAI.Data.Helpers.Enums
 {
     public enum enBillingPeriod
     {
-        Monthly,
-        Yearly
+        Monthly=1,
+        Yearly=2,
+        oneTime=3
     }
 }

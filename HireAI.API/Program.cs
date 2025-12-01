@@ -1,20 +1,22 @@
+using HireAI.Data.Helpers;
+using HireAI.Data.Models;
 using HireAI.Data.Models.Identity;
 using HireAI.Infrastructure.Context;
-
 using HireAI.Infrastructure.GenaricBasies;
-
 using HireAI.Infrastructure.GenericBase;
 using HireAI.Infrastructure.Mappings;
 using HireAI.Infrastructure.Repositories;
+using HireAI.Seeder;
 using HireAI.Service.Abstractions;
 using HireAI.Service.Implementation;
-
-using HireAI.Seeder;
-
+using HireAI.Service.Implementions;
+using HireAI.Service.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using HireAI.Service.Interfaces;
-using HireAI.Service.Implementions;
+using Stripe;
+using System;
+
+
 
 namespace HireAI.API
 {
@@ -25,11 +27,9 @@ namespace HireAI.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
-
             // Add Swagger generation service
             builder.Services.AddSwaggerGen();
             //builder.Services.AddDbContext<HireAIDbContext>();
@@ -38,6 +38,7 @@ namespace HireAI.API
             builder.Services.AddDbContext<HireAIDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("HireAiDB"));
+
             });
 
             //REGISTER ApplicationUser and IdentityRole with the DI Container
@@ -74,12 +75,37 @@ namespace HireAI.API
             builder.Services.AddScoped<ApplicantDashboardService>();
             builder.Services.AddScoped<IJobOpeningRepository, JobOpeningRepository>();
             builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
-            builder.Services.AddScoped<IHrDashboardService, HRDashBoardService>(); 
+            builder.Services.AddScoped<IHrDashboardService, HRDashBoardService>();
             #endregion
+
 
             #region Add AutoMapper service
             builder.Services.AddAutoMapper(cfg => { }, typeof(ApplicationProfile).Assembly);
             #endregion
+
+
+            #region service and repository for payment system
+            // Add Stripe configuration
+            //builder.Services.Configure<StripeSettings>(builder.Configuration.Identity.GetSection("Stripe"));
+            //builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+            //builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection(key: "Stripe"));
+            builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
+
+
+            // Register repositories
+            builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
+            builder.Services.AddScoped<IGenericRepositoryAsync<SubscriptionPlan>, GenericRepositoryAsync<SubscriptionPlan>>();
+            builder.Services.AddScoped<IGenericRepositoryAsync<BillingInfo>, GenericRepositoryAsync<BillingInfo>>();
+            builder.Services.AddScoped<IGenericRepositoryAsync<HR>, GenericRepositoryAsync<HR>>();
+
+            // Register services
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
+
+            // Add HttpClient for Stripe API calls
+            builder.Services.AddHttpClient();
+
+            #endregion
+
 
 
             var app = builder.Build();
@@ -120,7 +146,11 @@ namespace HireAI.API
                 }
             }
 
-            
+          
+
+
+
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

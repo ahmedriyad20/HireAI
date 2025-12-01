@@ -8,10 +8,11 @@ namespace HireAI.Data.Helpers.Enums
 {
     public enum  enPaymentStatus
     {
-        Pending,
-        Completed,
-        Failed,
-        Refunded
-
+        Pending = 1,
+        Completed =2,
+        Failed =3,
+        Refunded =4,
+        canceled = 5,
+        Paid = 6
     }
 }

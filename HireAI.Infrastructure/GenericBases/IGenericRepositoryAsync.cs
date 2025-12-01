@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace HireAI.Infrastructure.GenaricBasies
@@ -12,5 +13,7 @@ namespace HireAI.Infrastructure.GenaricBasies
         Task<T> AddAsync(T entity);
         Task<T> UpdateAsync(T entity);
         Task DeleteAsync(T entity);
+
+  
     }
 }
