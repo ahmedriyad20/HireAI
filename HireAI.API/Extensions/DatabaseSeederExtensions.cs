@@ -1,5 +1,6 @@
 using HireAI.Infrastructure.Context;
 using HireAI.Seeder;
+using Microsoft.EntityFrameworkCore;
 
 namespace HireAI.API.Extensions
 {
