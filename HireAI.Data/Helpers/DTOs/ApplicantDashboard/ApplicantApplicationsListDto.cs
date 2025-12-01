@@ -6,6 +6,7 @@ namespace HireAI.Data.DTOs.ApplicantDashboard
 {
     public class ApplicantApplicationsListDto
     {
+        public int ApplicationId { get; set; }
         public string JobTitle { get; set; } = default!;
         public string CompanyName { get; set; } = default!;
         public string CompanyLocation { get; set; } = default!;

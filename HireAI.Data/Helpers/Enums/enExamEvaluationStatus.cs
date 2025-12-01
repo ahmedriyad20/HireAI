@@ -9,6 +9,7 @@ namespace HireAI.Data.Helpers.Enums
     public enum enExamEvaluationStatus
     {
         Pending,
-        Completed
+        Passed,
+        Failed
     }
 }

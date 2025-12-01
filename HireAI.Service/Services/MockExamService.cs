@@ -14,37 +14,45 @@ namespace HireAI.Service.Implementation
         private readonly IApplicationRepository _applicationRepository;
         private readonly IExamRepository _examRepository;
         private readonly IApplicantRepository _applicantRepository;
+        private readonly IExamSummaryRepository _examSummaryRepository;
         private readonly HireAIDbContext _context;
         private readonly IMapper _mapper;
 
         public MockExamService(IApplicationRepository applicationRepository, IExamRepository examRepository,
-             IApplicantRepository applicantRepository, HireAIDbContext context, IMapper mapper)
+             IApplicantRepository applicantRepository, IExamSummaryRepository examSummaryRepository, HireAIDbContext context, IMapper mapper)
         {
             _applicationRepository = applicationRepository;
             _examRepository = examRepository;
             _applicantRepository = applicantRepository;
+            _examSummaryRepository = examSummaryRepository;
             _context = context;
             _mapper = mapper;
         }
 
         public async Task<int> GetMockExamsTakenNumberPerApplicantAsync(int applicantId)
         {
-            return await _examRepository.GetAll().CountAsync(e =>
-            e.ApplicantId == applicantId && e.ExamType == enExamType.MockExam);
+            return await _examSummaryRepository.GetAll()
+                .AsNoTracking()
+                .Include(es => es.Application)
+                .Where(es => es.Application.ApplicantId == applicantId &&
+                             es.Exam.ExamType == enExamType.MockExam)
+                .CountAsync();
         }
 
         public async Task<int> GetMockExamsTakenNumberForCurrentMonthPerApplicantAsync(int applicantId)
         {
-            var currentMonth = DateTime.UtcNow.Month;
-            var currentYear = DateTime.UtcNow.Year;
+            var currentMonth = DateTime.Now.Month;
+            var currentYear = DateTime.Now.Year;
 
-            return await (from exam in _context.Set<Exam>()
-                          join app in _context.Set<Application>() on exam.ApplicationId equals app.Id
-                          where exam.ApplicantId == applicantId &&
-                                exam.ExamType == enExamType.MockExam &&
-                                app.DateApplied.Month == currentMonth &&
-                                app.DateApplied.Year == currentYear
-                          select exam).CountAsync();
+            return await _examSummaryRepository.GetAll()
+                .AsNoTracking()
+                .Include(es => es.Application)
+                .Include(es => es.Exam)
+                .Where(es => es.Application.ApplicantId == applicantId &&
+                             es.Exam.ExamType == enExamType.MockExam &&
+                             es.AppliedAt.Month == currentMonth &&
+                             es.AppliedAt.Year == currentYear)
+                .CountAsync();
         }
 
         public async Task<double> GetAverageExamsTakenScorePerApplicantAsync(int applicantId)
@@ -56,31 +64,25 @@ namespace HireAI.Service.Implementation
                              join es in _context.Set<ExamSummary>() on ev.ExamSummaryId equals es.Id
                              join app in _context.Set<Application>() on es.ApplicationId equals app.Id
                              where app.ApplicantId == applicantId
-                             select (double?)ev.TotalScore).AverageAsync();
+                             select (double?)ev.ExamTotalScore).AverageAsync();
 
             return avg ?? 0.0;
         }
 
         public async Task<double> GetAverageExamsTakenScoreImprovementPerApplicantAsync(int applicantId)
         {
-            var applicationsWithScores = await (from app in _context.Set<Application>()
-                                                where app.ApplicantId == applicantId
-                                                select new
-                                                {
-                                                    ApplicationId = app.Id,
-                                                    Scores = (from ev in _context.ExamEvaluations
-                                                              join es in _context.Set<ExamSummary>() on ev.ExamSummaryId equals es.Id
-                                                              where es.ApplicationId == app.Id
-                                                              orderby es.CreatedAt
-                                                              select ev.TotalScore).ToList()
-                                                }).ToListAsync();
+            var scores = await (from ev in _context.ExamEvaluations
+                                join es in _context.Set<ExamSummary>() on ev.ExamSummaryId equals es.Id
+                                join app in _context.Set<Application>() on es.ApplicationId equals app.Id
+                                where app.ApplicantId == applicantId
+                                orderby es.AppliedAt
+                                select ev.ExamTotalScore).ToListAsync();
 
-            var improvements = applicationsWithScores
-                .Where(x => x.Scores.Count >= 2)
-                .Select(x => x.Scores.Last() - x.Scores.First())
-                .ToList();
+            if (scores.Count < 2)
+                return 0.0;
 
-            return improvements.Any() ? improvements.Average() : 0.0;
+            // Calculate improvement from first exam to last exam
+            return scores.Last() - scores.First();
         }
 
         public async Task<IEnumerable<MockExamDto>> GetRecommendedMockExamsPerApplicantAsync(int applicantId)

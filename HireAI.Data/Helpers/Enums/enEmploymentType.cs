@@ -10,6 +10,7 @@ namespace HireAI.Data.Helpers.Enums
     {
         FullTime, 
         PartTime,
+        Internship,
         FreeLance 
 
     }

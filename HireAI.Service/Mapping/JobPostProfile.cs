@@ -6,6 +6,7 @@ using HireAI.Data.Helpers.DTOs.JopOpeningDtos.Response.HireAI.Data.Helpers.DTOs.
 using HireAI.Data.Helpers.DTOs.SkillDtos;
 using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
+using HireAI.Data.DTOs;
 
 namespace HireAI.Service.Mapping
 {
@@ -78,7 +79,7 @@ namespace HireAI.Service.Mapping
                     src.Applications != null ? src.Applications.Count : 0))
                 .ForMember(dest => dest.ExamsCompleted, opt => opt.MapFrom(src => 
                     src.Applications != null 
-                        ? src.Applications.Count(a => a.ExamStatus == enExamStatus.completed) 
+                        ? src.Applications.Count(a => a.ExamStatus == enExamStatus.Completed) 
                         : 0));
 
             // ==================== REVERSE MAPPINGS ====================
@@ -94,6 +95,24 @@ namespace HireAI.Service.Mapping
                 .ForMember(dest => dest.SkillIds, opt => opt.MapFrom(src => src.Skills != null 
                     ? src.Skills.Select(s => s.Id).ToList() 
                     : new List<int>()));
+
+
+            // ==================== JOB OPENING DTO MAPPINGS ====================
+            // JobPost -> JobOpeningDTO (Public job listing view with enums as strings)
+            CreateMap<JobPost, JobOpeningDTO>()
+                .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
+                .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.CompanyName))
+                .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt))
+                .ForMember(dest => dest.JobStatus, opt => opt.MapFrom(src => src.JobStatus))
+                .ForMember(dest => dest.ExamDurationMinutes, opt => opt.MapFrom(src => src.ExamDurationMinutes))
+                .ForMember(dest => dest.ExperienceLevel, opt => opt.MapFrom(src => src.ExperienceLevel))
+                .ForMember(dest => dest.EmploymentType, opt => opt.MapFrom(src => src.EmploymentType))
+                .ForMember(dest => dest.Location, opt => opt.MapFrom(src => src.Location))
+                .ForMember(dest => dest.SalaryRange, opt => opt.MapFrom(src => src.SalaryRange))
+                .ForMember(dest => dest.NumberOfQuestions, opt => opt.MapFrom(src => src.NumberOfQuestions))
+                .ForMember(dest => dest.ApplicationDeadline, opt => opt.MapFrom(src => src.ApplicationDeadline))
+                .ForMember(dest => dest.ATSMinimumScore, opt => opt.MapFrom(src => src.ATSMinimumScore));
         }
     }
 }

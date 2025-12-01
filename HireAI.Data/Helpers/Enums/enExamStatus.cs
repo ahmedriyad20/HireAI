@@ -8,6 +8,6 @@ namespace HireAI.Data.Helpers.Enums
 {
     public enum enExamStatus
     {
-        completed, waiting, notTaken    
+        Completed, Pending, NotTaken    
     }
 }

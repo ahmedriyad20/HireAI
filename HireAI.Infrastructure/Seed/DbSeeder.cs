@@ -140,7 +140,7 @@ namespace HireAI.Seeder
                     DateApplied = DateTime.UtcNow.AddDays(-rnd.Next(0, 180)), // spread dates
                     AtsScore = (float?)rnd.Next(40, 101),
                     ApplicationStatus = (enApplicationStatus)(rnd.Next(0, Enum.GetValues(typeof(enApplicationStatus)).Length)),
-                    ExamStatus = rnd.NextDouble() > 0.3 ? enExamStatus.completed : enExamStatus.notTaken // ~70% completed
+                    ExamStatus = rnd.NextDouble() > 0.3 ? enExamStatus.Completed : enExamStatus.NotTaken // ~70% completed
                 };
                 // set CV file path from applicant resume
                 ap.CVFilePath = applicants[i].ResumeUrl;
@@ -157,7 +157,7 @@ namespace HireAI.Seeder
             var applicantResponses = new List<ApplicantResponse>();
 
             //int examCounter = 0;
-            foreach (var appItem in applications.Where(a => a.ExamStatus == enExamStatus.completed))
+            foreach (var appItem in applications.Where(a => a.ExamStatus == enExamStatus.Completed))
             {
                 //examCounter++;
                 //var exam = new Exam
@@ -180,7 +180,7 @@ namespace HireAI.Seeder
             foreach (var ex in exams)
             {
                 // update corresponding application
-                var relatedApp = applications.First(a => a.Id == ex.ApplicationId);
+                var relatedApp = applications.First(a => a.ExamId == ex.Id);
                 relatedApp.ExamId = ex.Id;
                 context.Applications.Update(relatedApp);
 
@@ -189,8 +189,8 @@ namespace HireAI.Seeder
                 {
                     ApplicationId = relatedApp.Id,
                     ExamId = ex.Id,
-                    CreatedAt = ex.CreatedAt.AddDays(1),
-                    TotalScroe = (float)rnd.Next(50, 101)
+                    AppliedAt = ex.CreatedAt.AddDays(1),
+                    ApplicantExamScore = (float)rnd.Next(50, 101)
                 };
                 summaries.Add(summary);
 
@@ -257,11 +257,10 @@ namespace HireAI.Seeder
                     {
                         ExamSummaryId = s.Id,
                         JobId = job.Id,
-                        TotalScore = s.TotalScroe,
-                        MaxTotal = 100f,
-                        IsPassed = s.TotalScroe >= 60f,
-                        EvaluatedAt = s.CreatedAt.AddDays(1),
-                        Status = enExamEvaluationStatus.Completed
+                        ApplicantExamScore = s.ApplicantExamScore,
+                        ExamTotalScore = 100f,
+                        EvaluatedAt = s.AppliedAt.AddDays(1),
+                        Status = enExamEvaluationStatus.Passed
                     };
                     examEvaluations.Add(ev);
                 }
@@ -358,7 +357,85 @@ namespace HireAI.Seeder
                     PaymentIntentId = Guid.NewGuid().ToString()
                 }
             };
+
             context.Payments.AddRange(payments);
+
+            // Check if test data already exists
+            var existingData = context.Set<Application>()
+                .Any(a => a.ApplicantId == 2 && a.ExamStatus == enExamStatus.Completed);
+
+            if (existingData)
+                return; // Already seeded
+
+            // First exam for ApplicantId = 2
+            var app1 = new Application
+            {
+                ApplicantId = 2,
+                ApplicationStatus = enApplicationStatus.ATSPassed,
+                DateApplied = DateTime.UtcNow.AddDays(-30),
+                ExamStatus = enExamStatus.Completed,
+                JobId = 1,
+                ExamId = 1
+            };
+            context.Applications.Add(app1);
+            await context.SaveChangesAsync();
+
+            var examSummary1 = new ExamSummary
+            {
+                ApplicationId = app1.Id,
+                ExamId = 1,
+                AppliedAt = DateTime.UtcNow.AddDays(-30),
+                ApplicantExamScore = 70.0f
+            };
+            context.ExamSummarys.Add(examSummary1);
+            await context.SaveChangesAsync();
+
+            var examEval1 = new ExamEvaluation
+            {
+                ExamSummaryId = examSummary1.Id,
+                JobId = 1,
+                ExamTotalScore = 75.0f,
+                ApplicantExamScore = 70.0f,
+                Status = enExamEvaluationStatus.Passed,
+                EvaluatedAt = DateTime.UtcNow.AddDays(-30)
+            };
+            context.ExamEvaluations.Add(examEval1);
+
+            // Second exam for ApplicantId = 2
+            var app2 = new Application
+            {
+                ApplicantId = 2,
+                ApplicationStatus = enApplicationStatus.UnderReview,
+                DateApplied = DateTime.UtcNow.AddDays(-15),
+                ExamStatus = enExamStatus.Completed,
+                JobId = 1,
+                ExamId = 2
+            };
+            context.Applications.Add(app2);
+            await context.SaveChangesAsync();
+
+            var examSummary2 = new ExamSummary
+            {
+                ApplicationId = app2.Id,
+                ExamId = 2,
+                AppliedAt = DateTime.UtcNow.AddDays(-15),
+                ApplicantExamScore = 85.0f
+            };
+            context.ExamSummarys.Add(examSummary2);
+            await context.SaveChangesAsync();
+
+            var examEval2 = new ExamEvaluation
+            {
+                ExamSummaryId = examSummary2.Id,
+                JobId = 1,
+                ExamTotalScore = 92.0f,
+                ApplicantExamScore = 85.0f,
+                Status = enExamEvaluationStatus.Passed,
+                EvaluatedAt = DateTime.UtcNow.AddDays(-15)
+            };
+            context.ExamEvaluations.Add(examEval2);
+
+            
             await context.SaveChangesAsync();
         }
     }

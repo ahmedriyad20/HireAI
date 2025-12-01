@@ -27,6 +27,7 @@ namespace HireAI.Infrastructure.Mappings
               .ForMember(dest => dest.ApplicationStatus, opt => opt.MapFrom(src => src.ApplicationStatus.ToString())); // Convert enum to string
 
             CreateMap<Application, ApplicantApplicationsListDto>()
+                .ForMember(dest => dest.ApplicationId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.JobTitle, opt => opt.MapFrom(src => src.AppliedJob!.Title))
                 .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.AppliedJob!.CompanyName))
                 .ForMember(dest => dest.CompanyLocation, opt => opt.MapFrom(src => src.AppliedJob!.Location))
@@ -67,14 +68,18 @@ namespace HireAI.Infrastructure.Mappings
 
 
             CreateMap<Application, ApplicationDetailsDto>()
+                 .ForMember(dest => dest.ApplicationId, opt => opt.MapFrom(src => src.Id))
                  .ForMember(dest => dest.JobTitle, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.Title : string.Empty))
                  .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.CompanyName : string.Empty))
                  .ForMember(dest => dest.CompanyLocation, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.Location : string.Empty))
                  .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.CreatedAt : DateTime.UtcNow))
-                 .ForMember(dest => dest.NumberOfApplicants, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.Applications.Count : 0))
+                 .ForMember(dest => dest.IntrviewDate, opt => opt.Ignore()) // Set this manually or add to Application model
+                 .ForMember(dest => dest.ExperienceLevel, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.ExperienceLevel : enExperienceLevel.EntryLevel))
+                 .ForMember(dest => dest.SalaryRange, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.SalaryRange : string.Empty))
+                 .ForMember(dest => dest.ExamScore, opt => opt.MapFrom(src => src.ExamSummary != null ? (int?)src.ExamSummary.ApplicantExamScore : null))
+                 .ForMember(dest => dest.NumberOfApplicants, opt => opt.Ignore())
                  .ForMember(dest => dest.AtsScore, opt => opt.MapFrom(src => src.AtsScore))
                  .ForMember(dest => dest.ApplicationStatus, opt => opt.MapFrom(src => src.ApplicationStatus))
-                 .ForMember(dest => dest.IsPassed, opt => opt.MapFrom(src => src.ExamSummary != null && src.ExamSummary.ExamEvaluation != null ? src.ExamSummary.ExamEvaluation.IsPassed : false))
                  .ForMember(dest => dest.ExamEvaluationStatus, opt => opt.MapFrom(src => src.ExamSummary != null && src.ExamSummary.ExamEvaluation != null ? src.ExamSummary.ExamEvaluation.Status : enExamEvaluationStatus.Pending));
 
             // Add mapping for ApplicantSkill to ApplicantSkillImprovementDto

@@ -38,11 +38,6 @@ namespace HireAI.Data.Configurations
                 .WithOne(app => app.Applicant)
                 .HasForeignKey(app => app.ApplicantId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasMany(a => a.Exams)
-                .WithOne(e => e.Applicant)
-                .HasForeignKey(e => e.ApplicantId)
-                .OnDelete(DeleteBehavior.Restrict);
         
         }
     }

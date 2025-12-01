@@ -2,10 +2,7 @@
 using HireAI.Data.DTOs.ApplicantDashboard;
 using HireAI.Infrastructure.Context;
 using HireAI.Infrastructure.GenericBase;
-using HireAI.Infrastructure.Repositories;
-
 using HireAI.Infrastructure.Intrefaces;
-using HireAI.Data.DTOs.ApplicantDashboard;
 using Microsoft.EntityFrameworkCore;
 using HireAI.Data.Helpers.DTOs.ApplicantApplication;
 using HireAI.Service.Interfaces;
@@ -45,7 +42,7 @@ namespace HireAI.Service.Implementation
                 .AsNoTracking()
                 .Include(a => a.AppliedJob)
                 .Include(a => a.ExamSummary)
-                .ThenInclude(e => e.ExamEvaluation)
+                    .ThenInclude(e => e.ExamEvaluation)
                 .Where(a => a.Id == applicationId && a.ApplicantId == applicantId)
                 .FirstOrDefaultAsync();
 
@@ -54,7 +51,17 @@ namespace HireAI.Service.Implementation
                 throw new KeyNotFoundException("Application not found.");
             }
 
-            return _mapper.Map<ApplicationDetailsDto>(application);
+            var dto = _mapper.Map<ApplicationDetailsDto>(application);
+
+            // Get the accurate count using a separate query (prevents Cartesian explosion)
+            if (application.JobId.HasValue)
+            {
+                dto.NumberOfApplicants = await _applicationRepository.GetAll()
+                    .AsNoTracking()
+                    .CountAsync(a => a.JobId == application.JobId);
+            }
+
+            return dto;
         }
     }
 }

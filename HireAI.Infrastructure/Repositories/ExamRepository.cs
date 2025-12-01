@@ -15,19 +15,24 @@ namespace HireAI.Infrastructure.Repositories
         //Get Exam by Applicant Id with Questions and Answers
         public async Task<Exam?> GetExamByApplicanIdAsync(int id)
         {
-
-            return await _dbSet.Include(e=>e.Questions)
-                               .Where(e => e.ApplicantId == id)
-                               .FirstOrDefaultAsync();  
+            return await _dbSet
+                .Include(e => e.Questions)
+                .Include(e => e.Applications)
+                .Where(e => e.Applications.Any(a => a.ApplicantId == id))
+                .FirstOrDefaultAsync();
         }
 
-        public async Task<ICollection<Exam>?> GetExamsByApplicantIdAsync(int applicantId, int pageNumber =1, int pageSize  =5)
+        // Get Exams by Applicant Id with pagination
+        public async Task<ICollection<Exam>?> GetExamsByApplicantIdAsync(int applicantId, int pageNumber = 1, int pageSize = 5)
         {
-
-            return await _dbSet.Include(e => e.Questions)
-                               .Skip(pageSize * (pageNumber - 1))
-                               .Take(pageSize)
-                               .Where(e => e.ApplicantId == applicantId).ToListAsync();                
+            return await _dbSet
+                .Include(e => e.Questions)
+                .Include(e => e.Applications)
+                .Where(e => e.Applications.Any(a => a.ApplicantId == applicantId))
+                .OrderByDescending(e => e.CreatedAt)
+                .Skip(pageSize * (pageNumber - 1))
+                .Take(pageSize)
+                .ToListAsync();
         }
 
         public async Task CreateExamAsncy(Exam exam)

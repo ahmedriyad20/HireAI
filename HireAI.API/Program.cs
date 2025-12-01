@@ -1,15 +1,11 @@
+using HireAI.API.Extensions;
 using HireAI.Data.Models.Identity;
 using HireAI.Infrastructure.Context;
-using HireAI.Infrastructure.Intrefaces;
 using HireAI.Infrastructure.Mappings;
-using HireAI.Infrastructure.Repositories;
-using HireAI.Service.Implementation;
 using HireAI.Seeder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using HireAI.Service.Interfaces;
-using HireAI.Infrastructure.GenericBase;
-using HireAI.API.Extensions;
+using System.Text.Json.Serialization;
 
 
 
@@ -96,6 +92,14 @@ namespace HireAI.API
                            .WithMethods("GET")
                            .AllowAnyHeader();
                 });
+            });
+            #endregion
+
+            #region Configure JSON options to handle enum serialization as strings
+            builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
             #endregion
 

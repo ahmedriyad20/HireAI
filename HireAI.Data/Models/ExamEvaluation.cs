@@ -12,9 +12,8 @@ namespace HireAI.Data.Models
     public class ExamEvaluation
     {
         public int Id { get; set; }
-        public float TotalScore { get; set; }
-        public float MaxTotal { get; set; }
-        public bool IsPassed { get; set; }
+        public float ApplicantExamScore { get; set; }
+        public float ExamTotalScore { get; set; }
         public DateTime? EvaluatedAt { get; set; }
         public enExamEvaluationStatus Status { get; set; } = enExamEvaluationStatus.Pending;
 
