@@ -37,7 +37,7 @@ namespace HireAI.Seeder
             // ======== Create one HR ========
             var hr = new HR
             {
-                Name = "HR One",
+                FullName = "HR One",
                 Email = "hr1@example.com",
                 Role = enRole.HR,
                 CompanyName = "Acme Corp",
@@ -86,7 +86,7 @@ namespace HireAI.Seeder
             {
                 applicants.Add(new Applicant
                 {
-                    Name = $"Applicant {i}",
+                    FullName = $"Applicant {i}",
                     Email = $"applicant{i}@example.com",
                     ResumeUrl = $"https://example.com/resume/applicant{i}.pdf",
                     Role = enRole.Applicant,
@@ -107,7 +107,7 @@ namespace HireAI.Seeder
                 var c = new CV
                 {
                     ApplicantId = a.Id,
-                    Title = "CV - " + a.Name,
+                    Title = "CV - " + a.FullName,
                     Phone = a.Phone,
                     Experience = $"{rnd.Next(1, 8)} years experience",
                     Education = "BSc in Computer Science",

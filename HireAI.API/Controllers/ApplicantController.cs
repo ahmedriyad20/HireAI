@@ -1,58 +1,112 @@
-﻿using HireAI.Service.Implementation;
+﻿using HireAI.Data.Models;
+using HireAI.Data.Models.Identity;
+using HireAI.Service.Interfaces;
+using HireAI.Service.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HireAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Applicant")]
     public class ApplicantController : ControllerBase
     {
-        private readonly ApplicantDashboardService _applicantDashboardService;
-        private readonly ApplicantApplicationService _applicantApplicationService;
+        private readonly IApplicantService _applicantService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ApplicantController(ApplicantDashboardService applicantDashboardService, ApplicantApplicationService applicantApplicationService)
+        public ApplicantController(IApplicantService applicantService, UserManager<ApplicationUser> userManager)
         {
-            _applicantDashboardService = applicantDashboardService;
-            _applicantApplicationService = applicantApplicationService;
+            _applicantService = applicantService;
+            _userManager = userManager;
         }
 
-        [HttpGet("Dashboard/{Id}")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetApplicantDashboardAsync(int Id)
+        public async Task<IActionResult> GetAllAsync()
         {
-            int ActiveApplicationsNum = await _applicantDashboardService.GetActiveApplicationsNumberPerApplicantAsync(Id);
-            int MockExamsTakenNumber = await _applicantDashboardService.GetMockExamsTakenNumberPerApplicantAsync(Id);
-            double AverageExamsTakenScore = await _applicantDashboardService.GetAverageExamsTakenScorePerApplicantAsync(Id);
-            string SkillLevel = await _applicantDashboardService.GetSkillLevelPerApplicantAsync(Id);
-            var ApplicationTimeline = await _applicantDashboardService.GetApplicationTimelinePerApplicantAsync(Id);
-            var ApplicantSkillImprovementScore = await _applicantDashboardService.GetApplicantSkillImprovementScoreAsync(Id);
-
-            return Ok(new
-            {
-                ActiveApplicationsNum,
-                MockExamsTakenNumber,
-                AverageExamsTakenScore,
-                SkillLevel,
-                ApplicationTimeline,
-                ApplicantSkillImprovementScore
-            });
+            var applicants = await _applicantService.GetAllApplicantsAsync();
+            return Ok(applicants);
         }
 
-        [HttpGet("ApplicationsList/{applicantId:int}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetApplicationsListAsync(int applicantId)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
-            var applicationsList = await _applicantApplicationService.GetApplicantApplicationsList(applicantId);
-            return Ok(applicationsList);
+            /*// Get applicantId from JWT claims
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userIdClaim))
+                return Unauthorized(new { message = "Invalid token" });
+
+            var user = await _userManager.FindByIdAsync(userIdClaim);
+
+            // You need to get ApplicantId from ApplicationUser
+            // For now, assuming you pass it in the request or retrieve it
+            // Better: Add ApplicantId as a custom claim in JWT
+            int applicantId = user.ApplicantId ?? 0;
+            var applicant = await _applicantService.GetApplicantByIdAsync(applicantId);
+            if (applicant == null)
+                return NotFound();
+
+            return Ok(applicant);*/
+
+            var applicant = await _applicantService.GetApplicantByIdAsync(id);
+            if (applicant == null)
+                return NotFound();
+
+            // Optional: Check if requesting user owns this profile
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _userManager.FindByIdAsync(userIdClaim);
+
+            if (applicant.Id != user.ApplicantId)
+                return Forbid();
+
+            return Ok(applicant);
         }
 
-        [HttpGet("ApplicationDetails/{applicationId:int},{applicantId:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetApplicationDetailsAsync(int applicationId, int applicantId)
+        /*[HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> CreateAsync([FromBody] Applicant applicant)
         {
-            var applicationsDetails = await _applicantApplicationService.GetApplicationDetailsAsync(applicationId, applicantId);
-            return Ok(applicationsDetails);
+            var createdApplicant = await _applicantService.AddApplicantAsync(applicant);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = createdApplicant.Id }, createdApplicant);
+        }*/
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateAsync(int id, [FromBody] Applicant applicant)
+        {
+            if (id != applicant.Id)
+                return BadRequest();
+            
+            var existingApplicant = await _applicantService.GetApplicantByIdAsync(id);
+            if (existingApplicant == null)
+                return NotFound();
+
+            var updatedApplicant = await _applicantService.UpdateApplicantAsync(applicant);
+            return Ok(updatedApplicant);
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            var applicant = await _applicantService.GetApplicantByIdAsync(id);
+            if (applicant == null)
+                return NotFound();
+
+            await _applicantService.DeleteApplicantAsync(id);
+            return NoContent();
         }
     }
 }

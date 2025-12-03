@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 using HireAI.Infrastructure.Intrefaces;
 
-namespace HireAI.Service.Implementation
+namespace HireAI.Service.Services
 {
     public class HRDashboardService : IHrDashboardService
     {
@@ -100,7 +100,7 @@ namespace HireAI.Service.Implementation
                 .Where(a => a.HRId == hrId)
                 .Select(a => new RecentApplicationDto
                 {
-                    ApplicantName = a.Applicant.Name,
+                    ApplicantName = a.Applicant.FullName,
                     ApplicantCVlink = a.CVFilePath,
                     AppliedOn = a.DateApplied,
                     ATSScore = a.AtsScore ?? 0,

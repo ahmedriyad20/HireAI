@@ -1,4 +1,5 @@
 ﻿using HireAI.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ namespace HireAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AvailableJobsController : ControllerBase
     {
         private readonly IApplicantJobPostService _applicantJobOpeningService;

@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HireAI.Service.Implementation
+namespace HireAI.Service.Services
 {
 
     public class JopPostService : IJobPostService

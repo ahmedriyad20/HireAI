@@ -9,7 +9,7 @@ using HireAI.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace HireAI.Service.Implementation
+namespace HireAI.Service.Services
 {
     public class ApplicantDashboardService : IApplicantDashboardService
     {

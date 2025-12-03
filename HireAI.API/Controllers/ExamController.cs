@@ -1,14 +1,16 @@
-﻿using HireAI.Service.Implementation;
+﻿using HireAI.Service.Services;
 using Microsoft.AspNetCore.Http;
 
 ﻿using HireAI.Data.Helpers.DTOs.ExamDTOS.Request;
 using HireAI.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HireAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ExamController : ControllerBase
     {
         private readonly MockExamService _mockExamService;

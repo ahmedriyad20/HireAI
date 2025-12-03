@@ -1,5 +1,6 @@
-using HireAI.Service.Implementation;
+using HireAI.Service.Services;
 using HireAI.Service.Interfaces;
+
 
 namespace HireAI.API.Extensions
 {
@@ -18,6 +19,8 @@ namespace HireAI.API.Extensions
             services.AddScoped<IExamService, ExamService>();
             services.AddScoped<IJobPostService, JopPostService>();
             services.AddScoped<IHrDashboardService, HRDashboardService>();
+            services.AddScoped<IApplicantService, ApplicantService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return services;
         }

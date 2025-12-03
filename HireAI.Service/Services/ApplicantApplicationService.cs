@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using HireAI.Data.Helpers.DTOs.ApplicantApplication;
 using HireAI.Service.Interfaces;
 
-namespace HireAI.Service.Implementation
+namespace HireAI.Service.Services
 {
     public class ApplicantApplicationService : IApplicantApplicationService
     {

@@ -7,7 +7,7 @@ using HireAI.Infrastructure.Intrefaces;
 using HireAI.Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace HireAI.Service.Implementation
+namespace HireAI.Service.Services
 {
     public class MockExamService : IMockExamService
     {
@@ -160,7 +160,6 @@ namespace HireAI.Service.Implementation
                 .AsNoTracking()
                 .Where(e => e.ExamType == enExamType.MockExam)
                 .OrderBy(e => Guid.NewGuid())
-                .Take(9)
                 .Select(e => _mapper.Map<MockExamDto>(e))
                 .ToListAsync();
 

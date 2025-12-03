@@ -6,7 +6,7 @@ using HireAI.Infrastructure.Intrefaces;
 using HireAI.Service.Interfaces;
 
 
-namespace HireAI.Service.Implementation
+namespace HireAI.Service.Services
 {
     public class ExamService : IExamService
     {

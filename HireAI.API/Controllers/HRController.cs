@@ -1,5 +1,5 @@
 ﻿using HireAI.Data.Helpers.DTOs.HRDTOS;
-using HireAI.Service.Implementation;
+using HireAI.Service.Services;
 using HireAI.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
