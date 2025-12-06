@@ -16,6 +16,7 @@ namespace HireAI.Infrastructure.Repositories
         public override async Task<Applicant?> GetByIdAsync(int id)
         {
             return await _dbSet
+                .AsNoTracking()
                 .Include(a => a.ApplicantSkills)
                     .ThenInclude(s => s.Skill)
                 .FirstOrDefaultAsync(a => a.Id == id);

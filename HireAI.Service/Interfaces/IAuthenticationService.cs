@@ -14,5 +14,8 @@ namespace HireAI.Service.Interfaces
         Task<AuthResponseDto> LoginAsync(LoginDto loginDto);
         Task<AuthResponseDto> RefreshTokenAsync(string accessToken, string refreshToken);
         Task<bool> RevokeTokenAsync(string userId);
+        Task<AuthResponseDto> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
+        Task<AuthResponseDto> ChangeEmailAsync(string userId, string newEmail);
+        Task<AuthResponseDto> DeleteAccountAsync(string userId, string password);
     }
 }

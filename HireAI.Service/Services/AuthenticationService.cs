@@ -337,6 +337,146 @@ namespace HireAI.Service.Services
             }
         }
 
+        public async Task<AuthResponseDto> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (user == null)
+                {
+                    return new AuthResponseDto
+                    {
+                        IsAuthenticated = false,
+                        Message = "User not found"
+                    };
+                }
+
+                var passwordCheck = await _userManager.CheckPasswordAsync(user, currentPassword);
+
+                if (!passwordCheck)
+                {
+                    return new AuthResponseDto
+                    {
+                        IsAuthenticated = false,
+                        Message = "Current password is incorrect"
+                    };
+                }
+
+                var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+                if (!result.Succeeded)
+                {
+                    return new AuthResponseDto
+                    {
+                        IsAuthenticated = false,
+                        Message = "Password change failed",
+                        Errors = result.Errors.Select(e => e.Description).ToList()
+                    };
+                }
+
+                // Revoke all existing tokens for security
+                await RevokeTokenAsync(userId);
+
+                return new AuthResponseDto
+                {
+                    IsAuthenticated = true,
+                    Message = "Password changed successfully. Please login again."
+                };
+            }
+            catch (Exception ex)
+            {
+                return new AuthResponseDto
+                {
+                    IsAuthenticated = false,
+                    Message = "An error occurred during password change",
+                    Errors = new List<string> { ex.Message }
+                };
+            }
+        }
+
+        public async Task<AuthResponseDto> ChangeEmailAsync(string userId, string newEmail)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (user == null)
+                {
+                    return new AuthResponseDto
+                    {
+                        IsAuthenticated = false,
+                        Message = "User not found"
+                    };
+                }
+
+                // Check if new email already exists
+                var existingUser = await _userManager.FindByEmailAsync(newEmail);
+                if (existingUser != null && existingUser.Id != userId)
+                {
+                    return new AuthResponseDto
+                    {
+                        IsAuthenticated = false,
+                        Message = "Email is already in use"
+                    };
+                }
+
+                // Generate email change token
+                var token = await _userManager.GenerateChangeEmailTokenAsync(user, newEmail);
+                var result = await _userManager.ChangeEmailAsync(user, newEmail, token);
+
+                if (!result.Succeeded)
+                {
+                    return new AuthResponseDto
+                    {
+                        IsAuthenticated = false,
+                        Message = "Email change failed",
+                        Errors = result.Errors.Select(e => e.Description).ToList()
+                    };
+                }
+
+                // Update username to match email
+                user.UserName = newEmail;
+                await _userManager.UpdateAsync(user);
+
+                // Update email in Applicant or HR table
+                if (user.ApplicantId.HasValue)
+                {
+                    var applicant = await _dbContext.Applicants.FindAsync(user.ApplicantId.Value);
+                    if (applicant != null)
+                    {
+                        applicant.Email = newEmail;
+                    }
+                }
+                else if (user.HRId.HasValue)
+                {
+                    var hr = await _dbContext.HRs.FindAsync(user.HRId.Value);
+                    if (hr != null)
+                    {
+                        hr.Email = newEmail;
+                    }
+                }
+
+                await _dbContext.SaveChangesAsync();
+
+                return new AuthResponseDto
+                {
+                    IsAuthenticated = true,
+                    Message = "Email changed successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new AuthResponseDto
+                {
+                    IsAuthenticated = false,
+                    Message = "An error occurred during email change",
+                    Errors = new List<string> { ex.Message }
+                };
+            }
+
+        }
+
         public async Task<AuthResponseDto> RefreshTokenAsync(string accessToken, string refreshToken)
         {
             try
@@ -553,6 +693,90 @@ namespace HireAI.Service.Services
             catch
             {
                 return null;
+            }
+        }
+
+        public async Task<AuthResponseDto> DeleteAccountAsync(string userId, string password)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (user == null)
+                {
+                    return new AuthResponseDto
+                    {
+                        IsAuthenticated = false,
+                        Message = "User not found"
+                    };
+                }
+
+                // Verify password for security
+                var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, password);
+                if (!isPasswordCorrect)
+                {
+                    return new AuthResponseDto
+                    {
+                        IsAuthenticated = false,
+                        Message = "Invalid password. Account deletion failed."
+                    };
+                }
+
+                // Delete associated profile data (Applicant or HR)
+                if (user.ApplicantId.HasValue)
+                {
+                    var applicant = await _dbContext.Applicants.FindAsync(user.ApplicantId.Value);
+                    if (applicant != null)
+                    {
+                        _dbContext.Applicants.Remove(applicant);
+                    }
+                }
+                else if (user.HRId.HasValue)
+                {
+                    var hr = await _dbContext.HRs.FindAsync(user.HRId.Value);
+                    if (hr != null)
+                    {
+                        _dbContext.HRs.Remove(hr);
+                    }
+                }
+
+                // Delete all refresh tokens
+                var userTokens = await _dbContext.Set<UserRefreshToken>()
+                    .Where(t => t.UserId == userId)
+                    .ToListAsync();
+
+                _dbContext.Set<UserRefreshToken>().RemoveRange(userTokens);
+
+                // Save changes before deleting Identity user
+                await _dbContext.SaveChangesAsync();
+
+                // Delete the Identity user (this will cascade delete related Identity data)
+                var result = await _userManager.DeleteAsync(user);
+
+                if (!result.Succeeded)
+                {
+                    return new AuthResponseDto
+                    {
+                        IsAuthenticated = false,
+                        Message = "Account deletion failed",
+                        Errors = result.Errors.Select(e => e.Description).ToList()
+                    };
+                }
+
+                return new AuthResponseDto
+                {
+                    IsAuthenticated = false, // Account is deleted, no longer authenticated
+                    Message = "Account deleted successfully"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new AuthResponseDto
+                {
+                    IsAuthenticated = false,
+                    Message = "An error occurred during account deletion",
+                    Errors = new List<string> { ex.Message }
+                };
             }
         }
     }

@@ -21,6 +21,7 @@ namespace HireAI.API.Extensions
             services.AddScoped<IHrDashboardService, HRDashboardService>();
             services.AddScoped<IApplicantService, ApplicantService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAuthorizationService, AuthorizationService>();
 
             return services;
         }

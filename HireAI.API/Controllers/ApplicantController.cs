@@ -15,13 +15,14 @@ namespace HireAI.API.Controllers
     [Authorize(Roles = "Applicant")]
     public class ApplicantController : ControllerBase
     {
+        private readonly Service.Interfaces.IAuthorizationService _authorizationService;
         private readonly IApplicantService _applicantService;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ApplicantController(IApplicantService applicantService, UserManager<ApplicationUser> userManager)
+        public ApplicantController(Service.Interfaces.IAuthorizationService authorizationService, 
+            IApplicantService applicantService)
         {
+            _authorizationService = authorizationService;
             _applicantService = applicantService;
-            _userManager = userManager;
         }
 
         [HttpGet]
@@ -60,11 +61,8 @@ namespace HireAI.API.Controllers
             if (applicant == null)
                 return NotFound();
 
-            // Optional: Check if requesting user owns this profile
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = await _userManager.FindByIdAsync(userIdClaim);
-
-            if (applicant.Id != user.ApplicantId)
+            // Check if the current applicant is the owner of the applicant data
+            if (!await _authorizationService.ValidateApplicantOwnershipAsync(User, id))
                 return Forbid();
 
             return Ok(applicant);
@@ -88,9 +86,14 @@ namespace HireAI.API.Controllers
             if (id != applicant.Id)
                 return BadRequest();
             
+
             var existingApplicant = await _applicantService.GetApplicantByIdAsync(id);
             if (existingApplicant == null)
                 return NotFound();
+
+            // Check if the current applicant is the owner of the applicant data
+            if (!await _authorizationService.ValidateApplicantOwnershipAsync(User, id))
+                return Forbid();
 
             var updatedApplicant = await _applicantService.UpdateApplicantAsync(applicant);
             return Ok(updatedApplicant);
@@ -104,6 +107,10 @@ namespace HireAI.API.Controllers
             var applicant = await _applicantService.GetApplicantByIdAsync(id);
             if (applicant == null)
                 return NotFound();
+
+            // Check if the current applicant is the owner of the applicant data
+            if (!await _authorizationService.ValidateApplicantOwnershipAsync(User, id))
+                return Forbid();
 
             await _applicantService.DeleteApplicantAsync(id);
             return NoContent();

@@ -1,7 +1,8 @@
 ﻿using HireAI.Data.Helpers.DTOs.Authentication;
-using Microsoft.AspNetCore.Mvc;
 using HireAI.Service.Interfaces;
+using HireAI.Service.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace HireAI.API.Controllers
@@ -11,10 +12,12 @@ namespace HireAI.API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAuthenticationService _authService;
+        private readonly Service.Interfaces.IAuthorizationService _authorizationService;
 
-        public AccountController(IAuthenticationService authService)
+        public AccountController(IAuthenticationService authService, Service.Interfaces.IAuthorizationService authorizationService)
         {
             _authService = authService;
+            _authorizationService = authorizationService;
         }
 
         [HttpPost("RegisterApplicant")]
@@ -74,6 +77,50 @@ namespace HireAI.API.Controllers
             var success = await _authService.RevokeTokenAsync(userId);
             
             return success ? Ok(new { message = "Logout successful" }) : BadRequest(new { message = "Logout failed" });
+        }
+
+        [HttpPut("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User not authenticated");
+
+            var result = await _authService.ChangePasswordAsync(userId, dto.CurrentPassword, dto.NewPassword);
+
+            return result.IsAuthenticated ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpPut("change-email")]
+        [Authorize]
+        public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User not authenticated");
+
+            var result = await _authService.ChangeEmailAsync(userId, dto.NewEmail);
+
+            return result.IsAuthenticated ? Ok(result) : BadRequest(result);
+        }
+
+        [HttpDelete("delete-account")]
+        [Authorize]
+        public async Task<IActionResult> DeleteAccount([FromBody] DeleteAccountDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized("User not authenticated");
+
+            var result = await _authService.DeleteAccountAsync(userId, dto.Password);
+
+            return result.IsAuthenticated == false && result.Message == "Account deleted successfully"
+                ? Ok(result)
+                : BadRequest(result);
         }
     }
 }

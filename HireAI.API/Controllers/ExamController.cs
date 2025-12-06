@@ -15,11 +15,13 @@ namespace HireAI.API.Controllers
     {
         private readonly MockExamService _mockExamService;
         private readonly IExamService _examService;
+        private readonly Service.Interfaces.IAuthorizationService _authorizationService;
 
-        public ExamController(MockExamService mockExamService, IExamService examService)
+        public ExamController(MockExamService mockExamService, IExamService examService, Service.Interfaces.IAuthorizationService authorizationService)
         {
             _mockExamService = mockExamService;
             _examService = examService;
+            _authorizationService = authorizationService;
         }
 
         //Riyad Mock Exam Controller Methods
@@ -27,12 +29,14 @@ namespace HireAI.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetMockExamQuickStatsAsync(int applicantId)
         {
+            // Check if the current applicant is the owner of the applicant data
+            if (!await _authorizationService.ValidateApplicantOwnershipAsync(User, applicantId))
+                return Forbid();
+
             int MockExamsTakenNumber = await _mockExamService.GetMockExamsTakenNumberPerApplicantAsync(applicantId);
             int MockExamsTakenNumberForCurrentMonth = await _mockExamService.GetMockExamsTakenNumberForCurrentMonthPerApplicantAsync(applicantId);
             double AverageExamsTakenScore = await _mockExamService.GetAverageExamsTakenScorePerApplicantAsync(applicantId);
             double AverageExamsTakenScoreImprovement = await _mockExamService.GetAverageExamsTakenScoreImprovementPerApplicantAsync(applicantId);
-
-
             return Ok(new
             {
                 MockExamsTakenNumber,
@@ -46,6 +50,10 @@ namespace HireAI.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetRecommendedMockExamsAsync(int applicantId)
         {
+            // Check if the current applicant is the owner of the applicant data
+            if (!await _authorizationService.ValidateApplicantOwnershipAsync(User, applicantId))
+                return Forbid();
+
             var recommendedMockExams = await _mockExamService.GetRecommendedMockExamsPerApplicantAsync(applicantId);
             return Ok(recommendedMockExams);
         }
@@ -54,6 +62,10 @@ namespace HireAI.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllMockExamsAsync(int applicantId)
         {
+            // Check if the current applicant is the owner of the applicant data
+            if (!await _authorizationService.ValidateApplicantOwnershipAsync(User, applicantId))
+                return Forbid();
+
             var allMockExams = await _mockExamService.GetAllMockExamsPerApplicantAsync(applicantId);
             return Ok(allMockExams);
         }
