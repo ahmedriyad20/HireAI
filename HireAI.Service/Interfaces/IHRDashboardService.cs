@@ -19,6 +19,6 @@ namespace HireAI.Service.Interfaces
         
         public Task<List<RecentApplicationDto>> GetRecentApplicantsAsync(int hrId, int take = 5);
         
-        public Task<List<ActiveJopPosting>> GetActiveJobPostingsAsync(int hrId);
+        public Task<List<ActiveJobPosting>> GetActiveJobPostingsAsync(int hrId);
     }
 }
