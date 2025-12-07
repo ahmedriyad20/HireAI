@@ -10,7 +10,9 @@ namespace HireAI.Data.Helpers.Enums
     {
         EntryLevel,
         Junior,
+        MidLevel,
         Senior,
         TeamLead,
+        Executive
     }
 }

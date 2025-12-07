@@ -12,7 +12,7 @@ namespace HireAI.Data.Configurations
                .ValueGeneratedOnAdd();
 
 
-            builder.Property(es => es.CreatedAt)
+            builder.Property(es => es.AppliedAt)
                 .HasDefaultValueSql("GETUTCDATE()");
 
             // Foreign Keys
@@ -37,7 +37,7 @@ namespace HireAI.Data.Configurations
                 .IsUnique();
 
             builder.HasIndex(es => es.ExamId);
-            builder.HasIndex(es => es.CreatedAt);
+            builder.HasIndex(es => es.AppliedAt);
         }
     }
 }

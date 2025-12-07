@@ -24,12 +24,6 @@ namespace HireAI.Data.Configurations
                 .HasForeignKey(a => a.HRId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-
-            builder.HasOne(a => a.Exam)
-                .WithOne(e => e.Application)
-                .HasForeignKey<Application>(a => a.ExamId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             builder.HasOne(a => a.ExamSummary)
                 .WithOne(es => es.Application)
                 .HasForeignKey<Application>(a => a.Id)
@@ -40,14 +34,15 @@ namespace HireAI.Data.Configurations
             .HasConversion(
               v => v.ToString(),// Converts the enum to string when saving to the database                  
              v => (enApplicationStatus)Enum.Parse(typeof(enApplicationStatus), v)// Converts the string back to enum when reading from the database
-              );
+              )
+             .HasDefaultValue(enApplicationStatus.UnderReview);
 
             builder.Property(a => a.ExamStatus)
             .HasConversion(
               v => v.ToString(),// Converts the enum to string when saving to the database                  
              v => (enExamStatus)Enum.Parse(typeof(enExamStatus), v)// Converts the string back to enum when reading from the database
               )
-            .HasDefaultValue(enExamStatus.notTaken);
+            .HasDefaultValue(enExamStatus.NotTaken);
 
             // Indexes
             builder.HasIndex(a => a.HRId);

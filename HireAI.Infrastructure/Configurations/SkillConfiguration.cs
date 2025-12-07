@@ -12,7 +12,7 @@ namespace HireAI.Data.Configurations
                 .ValueGeneratedOnAdd();
 
 
-            builder.Property(s => s.Title)
+            builder.Property(s => s.Name)
                 .HasMaxLength(100);
 
             builder.Property(s => s.Description)
@@ -25,7 +25,7 @@ namespace HireAI.Data.Configurations
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Unique constraint for Title
-            builder.HasIndex(s => s.Title)
+            builder.HasIndex(s => s.Name)
                 .IsUnique();
         }
     }

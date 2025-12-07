@@ -11,7 +11,7 @@ namespace HireAI.Data.Helpers.DTOs.HRDTOS
     public class HRResponseDto
     {
         public int Id { get; set; }
-        public string Name { get; set; } = default!;
+        public string FullName { get; set; } = default!;
         public string Email { get; set; } = default!;
         public enRole Role { get; set; }
         public bool IsPremium { get; set; }
@@ -24,6 +24,8 @@ namespace HireAI.Data.Helpers.DTOs.HRDTOS
 
         // HR-specific
         public string CompanyName { get; set; } = default!;
+        public string? CompanyDescription { get; set; }
+        public string? CompanyAddress { get; set; } = default!;
         public enAccountType AccountType { get; set; }
         public DateTime? PremiumExpiry { get; set; }
 

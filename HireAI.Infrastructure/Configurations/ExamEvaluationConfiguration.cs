@@ -42,7 +42,6 @@ namespace HireAI.Data.Configurations
             builder.HasIndex(ee => ee.Status);
 
             // Check constraints
-            builder.ToTable(t => t.HasCheckConstraint("CK_ExamEvaluation_Scores", "[TotalScore] >= 0 AND [MaxTotal] > 0 AND [TotalScore] <= [MaxTotal]"));
         }
     }
 }

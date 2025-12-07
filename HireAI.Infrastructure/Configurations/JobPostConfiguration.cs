@@ -31,10 +31,12 @@ namespace HireAI.Data.Configurations
             builder.Property(j => j.SalaryRange)
                 .HasMaxLength(50);
 
-
+            //Type Conversion
             builder.Property(j => j.JobStatus)
-             .HasConversion<int>()
-                                                                                                                           // )
+             .HasConversion(
+               v => v.ToString(),// Converts the enum to string when saving to the database                  
+              v => (enJobStatus)Enum.Parse(typeof(enJobStatus), v)// Converts the string back to enum when reading from the database
+               )
              .HasDefaultValue(enJobStatus.Active);
 
             builder.Property(u => u.ExperienceLevel)

@@ -37,8 +37,9 @@ namespace HireAI.Seeder
             // ======== Create one HR ========
             var hr = new HR
             {
-                Name = "HR One",
+                FullName = "HR One",
                 Email = "hr1@example.com",
+                Address = "caior ",
                 Role = enRole.HR,
                 CompanyName = "Acme Corp",
                 AccountType = enAccountType.Free,
@@ -68,11 +69,11 @@ namespace HireAI.Seeder
             // ======== Create some Skills and link to Job ========
             var skills = new List<Skill>
             {
-                new Skill { Title = "C#", Description = "C# programming" },
-                new Skill { Title = "SQL", Description = "Database design and queries" },
-                new Skill { Title = "ASP.NET", Description = "Web development" }
+                new Skill { Name = "C#", Description = "C# programming" },
+                new Skill { Name = "SQL", Description = "Database design and queries" },
+                new Skill { Name = "ASP.NET", Description = "Web development" }
             };
-            context.Siklls.AddRange(skills);
+            context.Skills.AddRange(skills);
             await context.SaveChangesAsync();
 
             var jobSkills = skills.Select(s => new JobSkill { JobId = job.Id, SkillId = s.Id }).ToList();
@@ -86,10 +87,11 @@ namespace HireAI.Seeder
             {
                 applicants.Add(new Applicant
                 {
-                    Name = $"Applicant {i}",
+                    FullName = $"Applicant {i}",
                     Email = $"applicant{i}@example.com",
                     ResumeUrl = $"https://example.com/resume/applicant{i}.pdf",
                     Role = enRole.Applicant,
+                    Address = "fayouj",
                     IsActive = true,
                     CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 180)),
                     Phone = $"555-000-{i:D4}",
@@ -107,7 +109,7 @@ namespace HireAI.Seeder
                 var c = new CV
                 {
                     ApplicantId = a.Id,
-                    Title = "CV - " + a.Name,
+                    Title = "CV - " + a.FullName,
                     Phone = a.Phone,
                     Experience = $"{rnd.Next(1, 8)} years experience",
                     Education = "BSc in Computer Science",
@@ -140,7 +142,7 @@ namespace HireAI.Seeder
                     DateApplied = DateTime.UtcNow.AddDays(-rnd.Next(0, 180)), // spread dates
                     AtsScore = (float?)rnd.Next(40, 101),
                     ApplicationStatus = (enApplicationStatus)(rnd.Next(0, Enum.GetValues(typeof(enApplicationStatus)).Length)),
-                    ExamStatus = rnd.NextDouble() > 0.3 ? enExamStatus.completed : enExamStatus.notTaken // ~70% completed
+                    ExamStatus = rnd.NextDouble() > 0.3 ? enExamStatus.Completed : enExamStatus.NotTaken // ~70% completed
                 };
                 // set CV file path from applicant resume
                 ap.CVFilePath = applicants[i].ResumeUrl;
@@ -157,20 +159,20 @@ namespace HireAI.Seeder
             var applicantResponses = new List<ApplicantResponse>();
 
             //int examCounter = 0;
-            foreach (var appItem in applications.Where(a => a.ExamStatus == enExamStatus.completed))
+            foreach (var appItem in applications.Where(a => a.ExamStatus == enExamStatus.Completed))
             {
-                //examCounter++;
-                //var exam = new Exam
-                //{
-                //    ApplicantId = appItem.ApplicantId,
-                //    ApplicationId = appItem.Id,
-                //    ExamName = $"Coding Test #{examCounter}",
-                //    NumberOfQuestions = job.NumberOfQuestions ?? 5,
-                //    DurationInMinutes = job.ExamDurationMinutes ?? 30,
-                //    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 90)),
-                //    IsAi = true
-                //};
-                //exams.Add(exam);
+                var exam = new Exam
+                {
+                    ExamName = "test exam ",
+                    ExamDescription = "exam discriptions ",
+                    ExamLevel = enExamLevel.Intermediate,
+                    ExamType = enExamType.MockExam,
+                    NumberOfQuestions = job.NumberOfQuestions ?? 5,
+                    DurationInMinutes = job.ExamDurationMinutes ?? 30,
+                    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 90)),
+                    IsAi = true
+                };
+                exams.Add(exam);
             }
             context.Exams.AddRange(exams);
             await context.SaveChangesAsync();
@@ -180,7 +182,7 @@ namespace HireAI.Seeder
             foreach (var ex in exams)
             {
                 // update corresponding application
-                var relatedApp = applications.First(a => a.Id == ex.ApplicationId);
+                var relatedApp = applications.First(a => a.ExamId == ex.Id);
                 relatedApp.ExamId = ex.Id;
                 context.Applications.Update(relatedApp);
 
@@ -189,8 +191,8 @@ namespace HireAI.Seeder
                 {
                     ApplicationId = relatedApp.Id,
                     ExamId = ex.Id,
-                    CreatedAt = ex.CreatedAt.AddDays(1),
-                    TotalScroe = (float)rnd.Next(50, 101)
+                    AppliedAt = ex.CreatedAt.AddDays(1),
+                    ApplicantExamScore = (float)rnd.Next(50, 101)
                 };
                 summaries.Add(summary);
 
@@ -257,11 +259,10 @@ namespace HireAI.Seeder
                     {
                         ExamSummaryId = s.Id,
                         JobId = job.Id,
-                        TotalScore = s.TotalScroe,
-                        MaxTotal = 100f,
-                        IsPassed = s.TotalScroe >= 60f,
-                        EvaluatedAt = s.CreatedAt.AddDays(1),
-                        Status = enExamEvaluationStatus.Completed
+                        ApplicantExamScore = s.ApplicantExamScore,
+                        ExamTotalScore = 100f,
+                        EvaluatedAt = s.AppliedAt.AddDays(1),
+                        Status = enExamEvaluationStatus.Passed
                     };
                     examEvaluations.Add(ev);
                 }
@@ -330,36 +331,7 @@ namespace HireAI.Seeder
             context.ApplicantSkills.AddRange(applicantSkills);
             await context.SaveChangesAsync();
 
-            // ======== HR Payments (a few entries) ========
-            var payments = new List<Payment>
-            {
-                new Payment
-                {
-                    Id = Guid.NewGuid(),
-                    Amount = 49.99m,
-                    BillingPeriod = enBillingPeriod.Monthly,
-                    Currency = "USD",
-                    Status = enPaymentStatus.Completed,
-                    UpgradeTo = enAccountType.Free,
-                    CreatedAt = DateTime.UtcNow.AddMonths(-2),
-                    HrId = hr.Id,
-                    PaymentIntentId = Guid.NewGuid().ToString()
-                },
-                new Payment
-                {
-                    Id = Guid.NewGuid(),
-                    Amount = 99.99m,
-                    BillingPeriod = enBillingPeriod.Monthly,
-                    Currency = "USD",
-                    Status = enPaymentStatus.Completed,
-                    UpgradeTo = enAccountType.Pro,
-                    CreatedAt = DateTime.UtcNow.AddMonths(-1),
-                    HrId = hr.Id,
-                    PaymentIntentId = Guid.NewGuid().ToString()
-                }
-            };
-            context.Payments.AddRange(payments);
-            await context.SaveChangesAsync();
+
         }
     }
 }

@@ -42,15 +42,15 @@ namespace HireAI.Infrastructure.Repositories
         {
             var result = await _context.Applications
                 .AsNoTracking()
-                .Where(ap => ap.JobId == jobId && ap.AtsScore>70 && ap.ExamStatus == enExamStatus.notTaken)
+                .Where(ap => ap.JobId == jobId && ap.AtsScore>70 && ap.ExamStatus == enExamStatus.NotTaken)
                 .Select(ap => new ApplicantDto
                 {
                     // Applicant navigation used only for projecting fields; EF will translate to JOIN
-                    Name = ap.Applicant != null ? ap.Applicant.Name : null,
+                    Name = ap.Applicant != null ? ap.Applicant.FullName : null,
                     Email = ap.Applicant != null ? ap.Applicant.Email : null,
                     AtsScore = ap.AtsScore,
                     // Null-safe projection of ExamEvaluation.TotalScore
-                    ExamScore = ap.ExamEvaluation != null ? (float?)ap.ExamEvaluation.TotalScore : null,
+                    ExamScore = ap.ExamEvaluation != null ? (float?)ap.ExamEvaluation.ExamTotalScore: null,
                 }).OrderByDescending(a => a.AtsScore).Take(10)
                 .ToListAsync();
 

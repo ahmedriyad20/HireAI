@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HireAI.Service.Implementation
+namespace HireAI.Service.Services
 {
 
     public class HRService : IHRService

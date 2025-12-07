@@ -6,11 +6,12 @@ namespace HireAI.Data.DTOs.ApplicantDashboard
 {
     public class ApplicantApplicationsListDto
     {
+        public int ApplicationId { get; set; }
         public string JobTitle { get; set; } = default!;
         public string CompanyName { get; set; } = default!;
         public string CompanyLocation { get; set; } = default!;
         public DateTime AppliedAt { get; set; } = DateTime.UtcNow;
         public float? AtsScore { get; set; }
-        public enApplicationStatus ApplicationStatus { get; set; }
+        public string ApplicationStatus { get; set; } = default!; // Changed from enApplicationStatus to string
     }
 }

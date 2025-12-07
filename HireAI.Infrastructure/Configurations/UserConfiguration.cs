@@ -13,7 +13,7 @@ namespace HireAI.Data.Configurations
         {
             builder.HasKey(u => u.Id);
 
-            builder.Property(u => u.Name)
+            builder.Property(u => u.FullName)
                 .HasMaxLength(100);
 
             builder.Property(u => u.Email)

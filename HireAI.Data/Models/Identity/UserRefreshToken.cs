@@ -17,6 +17,6 @@ namespace HireAI.Data.Models.Identity
         public bool IsRevoked { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ExpiryDate { get; set; }
-        public virtual ApplicationUser User { get; set; } = new();
+        public virtual ApplicationUser? User { get; set; }
     }
 }

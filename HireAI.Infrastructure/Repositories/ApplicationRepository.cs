@@ -19,7 +19,7 @@ namespace HireAI.Infrastructure.Repositories
         {
             var query = _dbSet
                 .Where(app => app.JobId == jobId && app.ExamEvaluation != null)
-                .Select(app => app.ExamEvaluation.TotalScore)
+                .Select(app => app.ExamEvaluation.ExamTotalScore)
                 .Where(score => score > 70);
 
             var list = await query.ToListAsync();

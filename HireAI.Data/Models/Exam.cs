@@ -20,13 +20,9 @@ namespace HireAI.Data.Models
         public bool IsAi { get; set; } = true;
         public enExamType ExamType { get; set; } = enExamType.MockExam;
 
-        //Foreign Keys
-        public int? ApplicantId { get; set; }
-        public int? ApplicationId { get; set; }
-
         // Navigation Property
-        public Applicant? Applicant { get; set; }
-        public Application? Application { get; set; }
+        public ICollection<Applicant> Applicants { get; set; } = new HashSet<Applicant>();
+        public ICollection<Application> Applications { get; set; } = new HashSet<Application>();
         public ICollection<Question> Questions { get; set; } = new HashSet<Question>();  
 
     }

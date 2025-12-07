@@ -1,9 +1,5 @@
 ﻿using HireAI.Data.Helpers.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace HireAI.Data.Models
 {
@@ -31,7 +27,7 @@ namespace HireAI.Data.Models
         public ExamEvaluation? ExamEvaluation { get; set; }
 
         //add this exam status
-        public enExamStatus ExamStatus { get; set; } = enExamStatus.notTaken;
+        public enExamStatus ExamStatus { get; set; } = enExamStatus.NotTaken;
 
 
     }

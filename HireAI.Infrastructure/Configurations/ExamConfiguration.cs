@@ -19,11 +19,6 @@ namespace HireAI.Data.Configurations
             builder.Property(e => e.IsAi)
                 .HasDefaultValue(true);
 
-            // Foreign Keys
-            builder.HasOne(e => e.Application)
-                .WithOne(a => a.Exam)
-                .HasForeignKey<Exam>(e => e.ApplicationId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             //Type Conversion
             builder.Property(e => e.ExamType)
@@ -39,10 +34,6 @@ namespace HireAI.Data.Configurations
               v => (enExamLevel)Enum.Parse(typeof(enExamLevel), v)// Converts the string back to enum when reading from the database
                )
              .HasDefaultValue(enExamLevel.Beginner);
-
-            // Indexes
-            builder.HasIndex(e => e.ApplicantId);
-            builder.HasIndex(e => new { e.ApplicantId, e.CreatedAt });
 
             // Check constraints
             builder.ToTable(t => t.HasCheckConstraint("CK_Exam_NumberOfQuestions", "[NumberOfQuestions] > 0"));

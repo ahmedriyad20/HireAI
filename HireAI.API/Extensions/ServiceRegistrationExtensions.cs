@@ -1,7 +1,11 @@
+
 using Amazon.S3;
-using HireAI.Service.Implementation;
+
+using HireAI.Service.Services;
+
 using HireAI.Service.Interfaces;
 using HireAI.Service.Services;
+
 
 namespace HireAI.API.Extensions
 {
@@ -24,6 +28,8 @@ namespace HireAI.API.Extensions
             services.AddScoped<IReportPdfService, ReportPdfService>();
             services.AddScoped<IReportService,ReportService>();
 
+            services.AddScoped<IApplicantService, ApplicantService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
 
             return services;
         }

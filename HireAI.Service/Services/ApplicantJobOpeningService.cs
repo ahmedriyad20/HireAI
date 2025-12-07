@@ -9,8 +9,9 @@ using System.Threading.Tasks;
     
 using HireAI.Data.Models;
 using HireAI.Data.Helpers.DTOs.JopOpeningDtos.Response.HireAI.Data.Helpers.DTOs.JopOpeningDtos.Response;
+using HireAI.Data.Helpers.Enums;
 
-namespace HireAI.Service.Implementation
+namespace HireAI.Service.Services
 {
     public class ApplicantJobPostService:IApplicantJobPostService
     {
@@ -23,10 +24,10 @@ namespace HireAI.Service.Implementation
             _context = context;
            _JobPostRepositoryRepository = JobOpeninRepository;
         }
-        public async Task<List<JobPostResponseDto>> GetAllJobPostAsync()
+        public async Task<List<JobOpeningDTO>> GetAllJobPostAsync()
         {
-            var jobPost = await _JobPostRepositoryRepository.GetAll().ToListAsync();
-            var JobPostDTO = _mapper.Map<List<JobPostResponseDto>>(jobPost);
+            var jobPost = await _JobPostRepositoryRepository.GetAll().Where(j => j.JobStatus == enJobStatus.Active).ToListAsync();
+            var JobPostDTO = _mapper.Map<List<JobOpeningDTO>>(jobPost);
             return JobPostDTO;
         }
     }

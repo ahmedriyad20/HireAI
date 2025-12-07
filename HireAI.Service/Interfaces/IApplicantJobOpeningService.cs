@@ -11,6 +11,6 @@ namespace HireAI.Service.Interfaces
 {
     public interface IApplicantJobPostService
     {
-        Task<List<JobPostResponseDto>> GetAllJobPostAsync();
+        Task<List<JobOpeningDTO>> GetAllJobPostAsync();
     }
 }

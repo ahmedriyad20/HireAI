@@ -1,10 +1,12 @@
 ﻿using HireAI.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HireAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "HR")]
     public class HRDashboardController:ControllerBase
     {
 

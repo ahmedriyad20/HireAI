@@ -12,6 +12,8 @@ namespace HireAI.Data.Models
     public class HR : User
     {
         public string CompanyName { get; set; } = default!;
+        public string? CompanyDescription { get; set; }
+        public string? CompanyAddress { get; set; } = default!;
         public enAccountType AccountType { get; set; } = enAccountType.Free;
         public DateTime? PremiumExpiry { get; set; }
 

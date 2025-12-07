@@ -10,12 +10,12 @@ namespace HireAI.Data.Models
 {
 
     public abstract  class User
-
     {
         public int Id { get; set; }
-        public string Name { get; set; } = default!;
+        public string FullName { get; set; } = default!;
         public string Email { get; set; } = default!;
-        public DateOnly DateOnly { get; set; }
+        public string Address { get; set; } = default!;
+        public DateOnly DateOfBirth { get; set; }
         public enRole Role { get; set; }
         public bool IsPremium { get; set; } = false;
         public string? Phone { get; set; }

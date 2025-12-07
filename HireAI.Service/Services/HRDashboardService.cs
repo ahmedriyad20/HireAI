@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 using HireAI.Infrastructure.Intrefaces;
 
-namespace HireAI.Service.Implementation
+namespace HireAI.Service.Services
 {
     public class HRDashboardService : IHrDashboardService
     {
@@ -60,7 +60,7 @@ namespace HireAI.Service.Implementation
         {
 
             return await _applications.GetAll()
-                .Where(a => a.HRId == hrId && a.ExamStatus == enExamStatus.completed)
+                .Where(a => a.HRId == hrId && a.ExamStatus == enExamStatus.Completed)
                 .CountAsync();
         }
 
@@ -69,7 +69,7 @@ namespace HireAI.Service.Implementation
             return await _applications.GetAll()
                 .Where(a => a.HRId == hrId &&
                             a.ExamSummary != null &&
-                            a.ExamSummary.TotalScroe >= 80 &&
+                            a.ExamSummary.ApplicantExamScore >= 80 &&
                             a.AtsScore >= 80)
                 .CountAsync();
         }
@@ -100,7 +100,7 @@ namespace HireAI.Service.Implementation
                 .Where(a => a.HRId == hrId)
                 .Select(a => new RecentApplicationDto
                 {
-                    ApplicantName = a.Applicant.Name,
+                    ApplicantName = a.Applicant.FullName,
                     ApplicantCVlink = a.CVFilePath,
                     AppliedOn = a.DateApplied,
                     ATSScore = a.AtsScore ?? 0,
@@ -124,7 +124,7 @@ namespace HireAI.Service.Implementation
                     JobTitle = j.Title,
                     ApplicationTotalCount = j.Applications.Count,
                     JobStatus = j.JobStatus,
-                    TakenExamCount = j.Applications.Count(a => a.ExamStatus == enExamStatus.completed),
+                    TakenExamCount = j.Applications.Count(a => a.ExamStatus == enExamStatus.Completed),
                     JobPostLink = $"/jobopenings/{j.Id}"
                 })
                 .ToListAsync();
