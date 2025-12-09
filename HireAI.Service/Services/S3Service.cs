@@ -1,6 +1,7 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
+using HireAI.Data.Helpers.DTOs.S3;
 using HireAI.Service.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -43,11 +44,10 @@ namespace HireAI.Service.Services
 
           await transferUtility.UploadAsync(transferRequest);
 
-          var url = $"https://{_bucketName}.s3.{_region}.amazonaws.com/{key}";
-          return url;
+          return key;
         }
 
-        public async Task<(Stream FileStream, string ContentType, string FileName)> DownloadFileAsync(string key)
+        public async Task<FileDownloadDto> DownloadFileAsync(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -63,7 +63,13 @@ namespace HireAI.Service.Services
             var response = await _s3.GetObjectAsync(getObjectRequest);
 
             var fileName = Path.GetFileName(key);
-            return (response.ResponseStream, response.Headers.ContentType, fileName);
+
+            return new FileDownloadDto
+            {
+                FileStream = response.ResponseStream,
+                ContentType = response.Headers.ContentType,
+                FileName = fileName
+            };
         }
     }
 }

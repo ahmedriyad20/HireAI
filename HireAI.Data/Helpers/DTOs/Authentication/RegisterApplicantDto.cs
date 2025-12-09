@@ -1,4 +1,5 @@
 ﻿using HireAI.Data.Helpers.Enums;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace HireAI.Data.Helpers.DTOs.Authentication
@@ -35,8 +36,8 @@ namespace HireAI.Data.Helpers.DTOs.Authentication
         [StringLength(100)]
         public string? Title { get; set; }
 
-        [Required(ErrorMessage = "Resume Url is required")]
-        public string ResumeUrl { get; set; } = default!;
+        [Required(ErrorMessage = "Resume File PDF is required")]
+        public IFormFile CvFile { get; set; }
 
         public enSkillLevel? SkillLevel { get; set; } = enSkillLevel.Beginner;
     }

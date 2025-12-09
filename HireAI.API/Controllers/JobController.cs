@@ -8,7 +8,7 @@ namespace HireAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "HR,Applicant")]
+    //[Authorize(Roles = "HR,Applicant")]
     public class JobController : ControllerBase
     {
         private readonly IJobPostService _JobPostService;
@@ -44,7 +44,7 @@ namespace HireAI.API.Controllers
             return Ok(result);
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateJobOppenAsny(int id, [FromBody] Data.Helpers.DTOs.JobOpening.Request.JobPostRequestDto JobOpeingRequestDto)
+        public async Task<IActionResult> UpdateJobOppenAsny(int id, [FromBody] JobPostRequestDto JobOpeingRequestDto)
         {
             await _JobPostService.UpdateJobPostAsync(id, JobOpeingRequestDto);
             return Ok();

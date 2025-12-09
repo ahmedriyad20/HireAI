@@ -92,9 +92,9 @@ namespace HireAI.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateAsync(int id, [FromBody] Applicant applicant)
+        public async Task<IActionResult> UpdateAsync(int id, [FromForm] ApplicantUpdateDto applicantDto)
         {
-            if (id != applicant.Id)
+            if (id != applicantDto.Id)
                 return BadRequest();
             
 
@@ -106,7 +106,7 @@ namespace HireAI.API.Controllers
             if (!await _authorizationService.ValidateApplicantOwnershipAsync(User, id))
                 return Forbid();
 
-            var updatedApplicant = await _applicantService.UpdateApplicantAsync(applicant);
+            var updatedApplicant = await _applicantService.UpdateApplicantAsync(applicantDto);
             return Ok(updatedApplicant);
         }
 

@@ -4,6 +4,7 @@ using HireAI.Data.Models;
 using HireAI.Data.Models.Identity;
 using HireAI.Infrastructure.Context;
 using HireAI.Service.Interfaces;
+using Humanizer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,14 +22,16 @@ namespace HireAI.Service.Services
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _config;
         private readonly HireAIDbContext _dbContext;
+        private readonly IS3Service _s3Service;
 
         public AuthenticationService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
-            IConfiguration config, HireAIDbContext dbContext)
+            IConfiguration config, HireAIDbContext dbContext, IS3Service s3Service)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _config = config;
             _dbContext = dbContext;
+            _s3Service = s3Service;
         }
 
         public async Task<AuthResponseDto> RegisterApplicantAsync(RegisterApplicantDto registerDto)
@@ -69,6 +72,36 @@ namespace HireAI.Service.Services
                 // Assign Applicant role
                 await _userManager.AddToRoleAsync(ApplicationUser, "Applicant");
 
+                // Handle CV upload
+                if (registerDto == null || registerDto.CvFile == null)
+                {
+                    return new AuthResponseDto
+                    {
+                        IsAuthenticated = false,
+                        Message = "Registration failed due to failed file upload",
+                        Errors = result.Errors.Select(e => e.Description).ToList()
+                    };
+                }
+
+                // Upload to S3
+                string resumeKey;
+                try
+                {
+                    // Cast dto.CvFile to Microsoft.AspNetCore.Http.IFormFile f possible
+                    resumeKey = await _s3Service.UploadFileAsync(registerDto.CvFile);
+                }
+                catch (Exception ex)
+                {
+                    // log ex in real app
+                    return new AuthResponseDto
+                    {
+                        IsAuthenticated = false,
+                        Message = "Registration failed due to failed file upload",
+                        Errors = result.Errors.Select(e => e.Description).ToList()
+                    };
+                }
+
+
                 // Create Applicant profile (Domain Model)
                 var applicant = new Applicant
                 {
@@ -78,7 +111,7 @@ namespace HireAI.Service.Services
                     DateOfBirth = registerDto.DateOfBirth,
                     Phone = registerDto.Phone,
                     Title = registerDto.Title,
-                    ResumeUrl = registerDto.ResumeUrl ?? string.Empty,
+                    ResumeUrl = resumeKey ?? string.Empty,
                     SkillLevel = registerDto.SkillLevel,
                     Role = enRole.Applicant,
                     IsActive = true,

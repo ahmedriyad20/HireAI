@@ -10,7 +10,7 @@ namespace HireAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "HR,Applicant")]
+    //[Authorize(Roles = "HR,Applicant")]
     public class ExamController : ControllerBase
     {
         private readonly MockExamService _mockExamService;

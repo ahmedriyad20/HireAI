@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HireAI.Data.DTOs.ApplicantDashboard;
 using HireAI.Data.Helpers.DTOs.Applicant;
+using HireAI.Data.Helpers.DTOs.Applicant.Request;
 using HireAI.Data.Models;
 
 namespace HireAI.Service.Mapping
@@ -20,6 +21,10 @@ namespace HireAI.Service.Mapping
             // Add mapping for ApplicantSkill to ApplicantSkillDto
             CreateMap<ApplicantSkill, ApplicantSkillDto>()
                 .ForMember(dest => dest.SkillName, opt => opt.MapFrom(src => src.Skill != null ? src.Skill.Name : string.Empty));
+
+            // Add mapping for ApplicantUpdateDto to Applicant
+            CreateMap<ApplicantUpdateDto, Applicant>()
+                .ForMember(dest => dest.ResumeUrl, opt => opt.Ignore()); // File upload handled separately in service
 
 
             CreateMap<Applicant, ApplicantResponseDto>();

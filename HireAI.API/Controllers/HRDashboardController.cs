@@ -6,7 +6,7 @@ namespace HireAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "HR")]
+    //[Authorize(Roles = "HR")]
     public class HRDashboardController:ControllerBase
     {
 

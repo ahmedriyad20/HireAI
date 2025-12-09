@@ -1,4 +1,5 @@
 ﻿using HireAI.Data.Helpers.DTOs.Applicant;
+using HireAI.Data.Helpers.DTOs.Applicant.Request;
 using HireAI.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace HireAI.Service.Interfaces
         Task<IEnumerable<ApplicantResponseDto>> GetAllApplicantsAsync();
         Task<ApplicantResponseDto?> GetApplicantByIdAsync(int applicantId);
         Task<ApplicantResponseDto> AddApplicantAsync(Applicant applicant);
-        Task<ApplicantResponseDto> UpdateApplicantAsync(Applicant applicant);
+        Task<ApplicantResponseDto> UpdateApplicantAsync(ApplicantUpdateDto applicant);
         Task DeleteApplicantAsync(int applicantId);
     }
 }

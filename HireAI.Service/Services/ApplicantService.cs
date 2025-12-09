@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HireAI.Data.Helpers.DTOs.Applicant;
+using HireAI.Data.Helpers.DTOs.Applicant.Request;
 using HireAI.Data.Models;
 using HireAI.Infrastructure.Intrefaces;
 using HireAI.Service.Interfaces;
@@ -13,11 +14,13 @@ namespace HireAI.Service.Services
     {
         private readonly IApplicantRepository _applicantRepository;
         private readonly IMapper _mapper;
+        private readonly IS3Service _s3Service;
 
-        public ApplicantService(IApplicantRepository applicantRepository, IMapper mapper)
+        public ApplicantService(IApplicantRepository applicantRepository, IMapper mapper, IS3Service s3Service)
         {
             _applicantRepository = applicantRepository;
             _mapper = mapper;
+            _s3Service = s3Service;
         }
 
         public async Task<IEnumerable<ApplicantResponseDto>> GetAllApplicantsAsync()
@@ -40,8 +43,24 @@ namespace HireAI.Service.Services
             return _mapper.Map<ApplicantResponseDto>(createdApplicant);
         }
 
-        public async Task<ApplicantResponseDto> UpdateApplicantAsync(Applicant applicant)
+        public async Task<ApplicantResponseDto> UpdateApplicantAsync(ApplicantUpdateDto applicantDto)
         {
+            var applicant = _mapper.Map<Applicant>(applicantDto);
+
+            // Handle file upload separately
+            if (applicantDto.CvFile != null)
+            {
+                applicant.ResumeUrl = await _s3Service.UploadFileAsync(applicantDto.CvFile);
+            }
+            else
+            {
+                var existingApplicant = await _applicantRepository.GetByIdAsync(applicantDto.Id);
+                if (existingApplicant != null)
+                {
+                    applicant.ResumeUrl = existingApplicant.ResumeUrl;
+                }
+            }
+
             var updatedApplicant = await _applicantRepository.UpdateAsync(applicant);
             return _mapper.Map<ApplicantResponseDto>(updatedApplicant);
         }

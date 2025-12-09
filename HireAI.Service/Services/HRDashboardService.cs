@@ -41,9 +41,11 @@ namespace HireAI.Service.Services
             {
                 TotalApplicants = await GetTotalApplicantsAsync(hrId),
                 TotalExamTaken = await GetTotalExamTakenAsync(hrId),
-                TotalTopCandidates = await GetTotalTopCandidatesAsync(hrId),
+                TotalTopApplicants = await GetTotalTopCandidatesAsync(hrId),
+                ATSPassedRate = (int)await GetATSPassedRateAsync(hrId),
                 MonthlyApplicants = await GetMonthlyNumberOfApplicationsAsync(hrId),
                 ATSPassedRateMonthly = await GetMonthlyOfTotalATSPassedAsync(hrId),
+                ExamScoreDistribution = await GetExamScoreDistributionAsync(hrId),
                 RecentApplications = await GetRecentApplicantsAsync(hrId),
                 ActiveJobPostings = await GetActiveJobPostingsAsync(hrId)
             };
@@ -67,11 +69,28 @@ namespace HireAI.Service.Services
         public async Task<int> GetTotalTopCandidatesAsync(int hrId)
         {
             return await _applications.GetAll()
+                .Include(a => a.ExamSummary)
                 .Where(a => a.HRId == hrId &&
                             a.ExamSummary != null &&
                             a.ExamSummary.ApplicantExamScore >= 80 &&
                             a.AtsScore >= 80)
                 .CountAsync();
+        }
+
+        public async Task<float> GetATSPassedRateAsync(int hrId)
+        {
+            var totalApplicants = await _applications.GetAll()
+                .Where(a => a.HRId == hrId)
+                .CountAsync();
+
+            if (totalApplicants == 0)
+                return 0;
+
+            var atsPassedCount = await _applications.GetAll()
+                .Where(a => a.HRId == hrId && a.ApplicationStatus == enApplicationStatus.ATSPassed)
+                .CountAsync();
+
+            return (float)atsPassedCount / totalApplicants * 100;
         }
 
         public async Task<Dictionary<int, int>> GetMonthlyNumberOfApplicationsAsync(int hrId)
@@ -92,6 +111,46 @@ namespace HireAI.Service.Services
                 .GroupBy(a => a.DateApplied.Month)
                 .Select(g => new { g.Key, Count = g.Count() })
                 .ToDictionaryAsync(x => x.Key, x => x.Count);
+        }
+
+        public async Task<Dictionary<string, float>> GetExamScoreDistributionAsync(int hrId)
+        {
+            var scoreDistribution = new Dictionary<string, float>
+            {
+                { "0-20", 0 },
+                { "20-40", 0 },
+                { "40-60", 0 },
+                { "60-80", 0 },
+                { "80-100", 0 }
+            };
+
+            var totalExamsTaken = await _applications.GetAll()
+                .Include(a => a.ExamSummary)
+                .ThenInclude(es => es.ExamEvaluation)
+                .Where(a => a.HRId == hrId &&
+                            a.ExamSummary != null &&
+                            a.ExamSummary.ExamEvaluation != null)
+                .CountAsync();
+
+            if (totalExamsTaken == 0)
+                return scoreDistribution;
+
+            var examScores = await _applications.GetAll()
+                .Include(a => a.ExamSummary)
+                .ThenInclude(es => es.ExamEvaluation)
+                .Where(a => a.HRId == hrId &&
+                            a.ExamSummary != null &&
+                            a.ExamSummary.ExamEvaluation != null)
+                .Select(a => a.ExamSummary.ExamEvaluation.ApplicantExamScore)
+                .ToListAsync();
+
+            scoreDistribution["0-20"] = (float)(examScores.Count(s => s >= 0 && s < 20) * 100.0 / totalExamsTaken);
+            scoreDistribution["20-40"] = (float)(examScores.Count(s => s >= 20 && s < 40) * 100.0 / totalExamsTaken);
+            scoreDistribution["40-60"] = (float)(examScores.Count(s => s >= 40 && s < 60) * 100.0 / totalExamsTaken);
+            scoreDistribution["60-80"] = (float)(examScores.Count(s => s >= 60 && s < 80) * 100.0 / totalExamsTaken);
+            scoreDistribution["80-100"] = (float)(examScores.Count(s => s >= 80 && s <= 100) * 100.0 / totalExamsTaken);
+
+            return scoreDistribution;
         }
 
         public async Task<List<RecentApplicationDto>> GetRecentApplicantsAsync(int hrId, int take = 5)

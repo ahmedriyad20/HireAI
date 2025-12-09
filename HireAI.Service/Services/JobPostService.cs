@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HireAI.Data.Helpers.DTOs.JobOpening.Request;
 using HireAI.Data.Helpers.DTOs.JobOpeningDtos.Response.HireAI.Data.Helpers.DTOs.JobOpeningDtos.Response;
+using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
 using HireAI.Infrastructure.GenericBase;
 using HireAI.Infrastructure.Intrefaces;
@@ -88,6 +89,32 @@ namespace HireAI.Service.Services
             return _mapper.Map<ICollection<JobPostResponseDto>>(jobOpenings);
         }
 
+        //public async Task<ICollection<JobPostResponseDto>> GetJobPostForHrAsync(int hrid)
+        //{
+        //    var jobOpenings = await _jobPostRepository.GetJobPostForHrAsync(hrid);
+
+        //    if (jobOpenings == null || !jobOpenings.Any())
+        //    {
+        //        return Array.Empty<JobPostResponseDto>();
+        //    }
+
+        //    var jobPostDtos = _mapper.Map<ICollection<JobPostResponseDto>>(jobOpenings);
+
+        //    // Calculate TotalApplications and ExamsCompleted in the service
+        //    foreach (var jobPostDto in jobPostDtos)
+        //    {
+        //        var jobPost = jobOpenings.FirstOrDefault(j => j.Id == jobPostDto.Id);
+        //        if (jobPost != null)
+        //        {
+        //            jobPostDto.TotalApplications = jobPost.Applications?.Count ?? 0;
+        //            jobPostDto.ExamsCompleted = jobPost.Applications?
+        //                .Count(a => a.ExamStatus == enExamStatus.Completed) ?? 0;
+        //        }
+        //    }
+
+        //    return jobPostDtos;
+        //}
+
         public async Task UpdateJobPostAsync(int id, JobPostRequestDto jobPostRequestDto)
         {
             if (jobPostRequestDto == null)
@@ -147,7 +174,7 @@ namespace HireAI.Service.Services
 
         public Task<int> GetTotalApplicationsByJobIdAsync(int jobId)
         {
-            throw new NotImplementedException();
+            return _jobPostRepository.GetTotalApplicationsByJobIdAsync(jobId);
         }
 
     }

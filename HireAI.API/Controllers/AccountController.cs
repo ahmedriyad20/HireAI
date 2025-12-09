@@ -22,7 +22,7 @@ namespace HireAI.API.Controllers
 
         [HttpPost("RegisterApplicant")]
         [AllowAnonymous] // Public - anyone can register
-        public async Task<IActionResult> RegisterApplicant([FromBody] RegisterApplicantDto registerDto)
+        public async Task<IActionResult> RegisterApplicant([FromForm] RegisterApplicantDto registerDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(new { errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)) });
