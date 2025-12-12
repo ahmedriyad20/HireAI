@@ -15,7 +15,7 @@ namespace HireAI.Data.Models
         public decimal Amount { get; set; }
         public string Currency { get; set; } = "USD";
         public enPaymentStatus Status { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? CompletedAt { get; set; }
 
         // What they're upgrading to

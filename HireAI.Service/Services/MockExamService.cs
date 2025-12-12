@@ -33,8 +33,8 @@ namespace HireAI.Service.Services
         {
             return await _examSummaryRepository.GetAll()
                 .AsNoTracking()
-                .Include(es => es.Application)
-                .Where(es => es.Application.ApplicantId == applicantId &&
+                .Include(es => es.Applicant)
+                .Where(es => es.ApplicantId == applicantId &&
                              es.Exam.ExamType == enExamType.MockExam)
                 .CountAsync();
         }
@@ -46,9 +46,9 @@ namespace HireAI.Service.Services
 
             return await _examSummaryRepository.GetAll()
                 .AsNoTracking()
-                .Include(es => es.Application)
+                .Include(es => es.Applicant)
                 .Include(es => es.Exam)
-                .Where(es => es.Application.ApplicantId == applicantId &&
+                .Where(es => es.ApplicantId == applicantId &&
                              es.Exam.ExamType == enExamType.MockExam &&
                              es.AppliedAt.Month == currentMonth &&
                              es.AppliedAt.Year == currentYear)
@@ -62,21 +62,25 @@ namespace HireAI.Service.Services
             // then compute the average TotalScore. Using joins avoids relying on navigation properties being loaded.
             var avg = await (from ev in _context.ExamEvaluations
                              join es in _context.Set<ExamSummary>() on ev.ExamSummaryId equals es.Id
-                             join app in _context.Set<Application>() on es.ApplicationId equals app.Id
-                             where app.ApplicantId == applicantId
-                             select (double?)ev.ExamTotalScore).AverageAsync();
+                             join app in _context.Set<Applicant>() on es.ApplicantId equals app.Id
+                             where app.Id == applicantId
+                             select (double?)ev.ApplicantExamScore).AverageAsync();
 
-            return avg ?? 0.0;
+            if (avg == null)
+                return 0.0;
+
+            // Get the first digit after the decimal point
+            return Math.Round(avg.Value, 2);
         }
 
         public async Task<double> GetAverageExamsTakenScoreImprovementPerApplicantAsync(int applicantId)
         {
             var scores = await (from ev in _context.ExamEvaluations
                                 join es in _context.Set<ExamSummary>() on ev.ExamSummaryId equals es.Id
-                                join app in _context.Set<Application>() on es.ApplicationId equals app.Id
-                                where app.ApplicantId == applicantId
+                                join app in _context.Set<Applicant>() on es.ApplicantId equals app.Id
+                                where app.Id == applicantId
                                 orderby es.AppliedAt
-                                select ev.ExamTotalScore).ToListAsync();
+                                select ev.ApplicantExamScore).ToListAsync();
 
             if (scores.Count < 2)
                 return 0.0;

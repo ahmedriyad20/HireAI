@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using HireAI.Data.Helpers.DTOs.Exam.Request;
 using HireAI.Data.Helpers.DTOs.ExamDTOS.Request;
 using HireAI.Data.Helpers.DTOs.ExamDTOS.Respones;
-using HireAI.Data.Models;
-using HireAI.Infrastructure.Intrefaces;
-using HireAI.Service.Interfaces;
-using HireAI.Infrastructure.GenericBase;
 using HireAI.Data.Helpers.Enums;
+using HireAI.Data.Models;
+using HireAI.Infrastructure.GenaricBasies;
+using HireAI.Infrastructure.GenericBase;
+using HireAI.Infrastructure.Intrefaces;
+using HireAI.Infrastructure.Repositories;
+using HireAI.Service.Interfaces;
 
 
 namespace HireAI.Service.Services
@@ -18,22 +21,30 @@ namespace HireAI.Service.Services
         private readonly IApplicationRepository _applicationRepository;
         private readonly IJobPostRepository _jobPostRepository;
         private readonly IGeminiService _geminiService;
+        private readonly IExamSummaryRepository _examSummaryRepository;
+        private readonly IExamEvaluationRepository _examEvaluationRepository;
         private readonly IMapper _mapper;
-        
-        public ExamService(
-            IExamRepository examRepository,
-            IQuestionRepository questionRepository,
-            IApplicationRepository applicationRepository,
-            IJobPostRepository jobPostRepository,
-            IGeminiService geminiService,
-            IMapper mapper)
+
+        public ExamService(IExamRepository examRepository, IQuestionRepository questionRepository, IApplicationRepository applicationRepository,
+            IJobPostRepository jobPostRepository, IGeminiService geminiService, IExamSummaryRepository examSummaryRepository,
+            IExamEvaluationRepository examEvaluationRepository, IMapper mapper)
         {
             _examRepository = examRepository;
             _questionRepository = questionRepository;
             _applicationRepository = applicationRepository;
             _jobPostRepository = jobPostRepository;
             _geminiService = geminiService;
+            _examSummaryRepository = examSummaryRepository;
+            _examEvaluationRepository = examEvaluationRepository;
             _mapper = mapper;
+        }
+
+        public async Task<ExamResponseDTO?> GetExamByIdAsync(int examId)
+        {
+            var exam = await _examRepository.GetByIdAsync(examId);
+            if (exam == null) return null;
+
+            return _mapper.Map<ExamResponseDTO>(exam);
         }
 
         public async Task CreateExamAsync(ExamRequestDTO examRequesDTO)
@@ -100,6 +111,8 @@ namespace HireAI.Service.Services
                     {
                         Id = q.Id,
                         QuestionText = q.QuestionText,
+                        CorrectAnswerIndex = q.CorrectAnswerIndex,
+                        AnswerChoices = q.Choices,
                         QuestionNumber = q.QuestionNumber,
                         ExamId = existingExam.Id
                     }).ToList();
@@ -118,6 +131,8 @@ namespace HireAI.Service.Services
                 {
                     Id = q.Id,
                     QuestionText = q.QuestionText,
+                    CorrectAnswerIndex = q.CorrectAnswerIndex,
+                    AnswerChoices = q.Choices,
                     QuestionNumber = q.QuestionNumber,
                     ExamId = existingJobExam.Id
                 }).ToList();
@@ -145,8 +160,8 @@ namespace HireAI.Service.Services
                     _ => enExamLevel.Intermediate
                 },
                 NumberOfQuestions = aiQuestions.Questions.Count,
-                DurationInMinutes = jobPost.ExamDurationMinutes ?? 30,
-                CreatedAt = DateTime.UtcNow,
+                DurationInMinutes = jobPost.ExamDurationMinutes ?? 15,
+                CreatedAt = DateTime.Now,
                 IsAi = true,
                 ExamType = enExamType.HrExam
             };
@@ -175,6 +190,8 @@ namespace HireAI.Service.Services
                 {
                     Id = question.Id,
                     QuestionText = question.QuestionText,
+                    CorrectAnswerIndex = question.CorrectAnswerIndex,
+                    AnswerChoices = question.Choices,
                     QuestionNumber = question.QuestionNumber,
                     ExamId = exam.Id
                 });
@@ -204,6 +221,8 @@ namespace HireAI.Service.Services
                 {
                     Id = q.Id,
                     QuestionText = q.QuestionText,
+                    CorrectAnswerIndex = q.CorrectAnswerIndex,
+                    AnswerChoices = q.Choices,
                     QuestionNumber = q.QuestionNumber,
                     ExamId = exam.Id
                 }).ToList();
@@ -236,6 +255,8 @@ namespace HireAI.Service.Services
                 {
                     Id = question.Id,
                     QuestionText = question.QuestionText,
+                    CorrectAnswerIndex = question.CorrectAnswerIndex,
+                    AnswerChoices = question.Choices,
                     QuestionNumber = question.QuestionNumber,
                     ExamId = exam.Id
                 });
@@ -248,6 +269,110 @@ namespace HireAI.Service.Services
             await _examRepository.UpdateAsync(exam);
 
             return questionResponses;
+        }
+
+        public async Task<ExamSummary> EvaluateJobExamAsync(ExamEvaluationRequestDTO evaluationRequest)
+        {
+            // Validate application exists
+            var application = await _applicationRepository.GetByIdAsync(evaluationRequest.ApplicationId);
+            if (application == null)
+                throw new Exception("Application not found");
+
+            // Validate exam exists
+            var exam = await _examRepository.GetByIdAsync(evaluationRequest.ExamId);
+            if (exam == null)
+                throw new Exception("Exam not found");
+
+            // Validate job post exists
+            var jobPost = await _jobPostRepository.GetByIdAsync(evaluationRequest.JobId);
+            if (jobPost == null)
+                throw new Exception("Job post not found");
+
+            // Create ExamSummary entry
+            var examSummary = new ExamSummary
+            {
+                ApplicationId = evaluationRequest.ApplicationId,
+                ExamId = evaluationRequest.ExamId,
+                ApplicantExamScore = evaluationRequest.ApplicantExamScore,
+                AppliedAt = evaluationRequest.AppliedAt ?? DateTime.Now,
+                ApplicantId = application.ApplicantId,
+                ExamEvaluationId = null // Will be set after creating ExamEvaluation
+            };
+
+            await _examSummaryRepository.AddAsync(examSummary);
+
+            enExamEvaluationStatus examEvaluationStatus = evaluationRequest.ApplicantExamScore >= 80f?
+                enExamEvaluationStatus.Passed : enExamEvaluationStatus.Failed;
+            // Create ExamEvaluation entry
+            var examEvaluation = new ExamEvaluation
+            {
+                ExamSummaryId = examSummary.Id,
+                JobId = evaluationRequest.JobId,
+                ApplicantExamScore = evaluationRequest.ApplicantExamScore,
+                ExamTotalScore = evaluationRequest.ExamTotalScore ?? 100,
+                EvaluatedAt = DateTime.Now,
+                Status = examEvaluationStatus,
+                QuestionEvaluations = new List<QuestionEvaluation>()
+            };
+
+            await _examEvaluationRepository.AddAsync(examEvaluation);
+
+            //Update application status based on exam evaluation
+            application.ExamStatus = enExamStatus.Completed;
+            application.ApplicationStatus = enApplicationStatus.Completed;
+            application.ExamEvaluationId = examEvaluation.Id;
+            if(application.ExamId == null)
+            {
+                application.ExamId = exam.Id;
+            }
+            await _applicationRepository.UpdateAsync(application);
+
+            // Update ExamSummary with ExamEvaluationId
+            examSummary.ExamEvaluationId = examEvaluation.Id;
+            await _examSummaryRepository.UpdateAsync(examSummary);
+
+            return examSummary;
+        }
+
+        public async Task<ExamSummary> EvaluateMockExamAsync(ExamEvaluationRequestDTO evaluationRequest)
+        {
+            // Validate exam exists
+            var exam = await _examRepository.GetByIdAsync(evaluationRequest.ExamId);
+            if (exam == null)
+                throw new Exception("Exam not found");
+
+            // Create ExamSummary entry
+            var examSummary = new ExamSummary
+            {
+                ExamId = evaluationRequest.ExamId,
+                ApplicantExamScore = evaluationRequest.ApplicantExamScore,
+                AppliedAt = evaluationRequest.AppliedAt ?? DateTime.Now,
+                ApplicantId = evaluationRequest.ApplicantId,
+                ExamEvaluationId = null // Will be set after creating ExamEvaluation
+            };
+
+            await _examSummaryRepository.AddAsync(examSummary);
+
+            enExamEvaluationStatus examEvaluationStatus = evaluationRequest.ApplicantExamScore >= 80f ?
+                enExamEvaluationStatus.Passed : enExamEvaluationStatus.Failed;
+            // Create ExamEvaluation entry
+            var examEvaluation = new ExamEvaluation
+            {
+                ExamSummaryId = examSummary.Id,
+                ApplicantExamScore = evaluationRequest.ApplicantExamScore,
+                ExamTotalScore = evaluationRequest.ExamTotalScore ?? 100,
+                EvaluatedAt = DateTime.Now,
+                Status = examEvaluationStatus,
+                QuestionEvaluations = new List<QuestionEvaluation>()
+            };
+
+            await _examEvaluationRepository.AddAsync(examEvaluation);
+
+            // Update ExamSummary with ExamEvaluationId
+            examSummary.ExamEvaluationId = examEvaluation.Id;
+            await _examSummaryRepository.UpdateAsync(examSummary);
+
+            return examSummary;
         }
 
     }

@@ -1,27 +1,32 @@
-﻿using HireAI.Service.Services;
-using Microsoft.AspNetCore.Http;
-
-﻿using HireAI.Data.Helpers.DTOs.ExamDTOS.Request;
+﻿using HireAI.Data.Helpers.DTOs.Exam.Request;
+using HireAI.Data.Helpers.DTOs.ExamDTOS.Request;
+using HireAI.Data.Models;
 using HireAI.Service.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+using HireAI.Service.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace HireAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "HR,Applicant")]
+    [Authorize(Roles = "HR,Applicant")]
     public class ExamController : ControllerBase
     {
         private readonly MockExamService _mockExamService;
         private readonly IExamService _examService;
         private readonly Service.Interfaces.IAuthorizationService _authorizationService;
+        private readonly IApplicationService _applicationService;
 
-        public ExamController(MockExamService mockExamService, IExamService examService, Service.Interfaces.IAuthorizationService authorizationService)
+        public ExamController(MockExamService mockExamService, IExamService examService, Service.Interfaces.IAuthorizationService authorizationService,
+            IApplicationService applicationService)
         {
             _mockExamService = mockExamService;
             _examService = examService;
             _authorizationService = authorizationService;
+            _applicationService = applicationService;
         }
 
         //Riyad Mock Exam Controller Methods
@@ -70,18 +75,31 @@ namespace HireAI.API.Controllers
             return Ok(allMockExams);
         }
 
+        [HttpGet("id/{examId:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetExamById(int examId)
+        {
+            var examDTO = await _examService.GetExamByIdAsync(examId);
+            if (examDTO == null)
+                return NotFound(new { error = "Exam not found" });
+
+            return Ok(examDTO);
+        }
+
 
 
         //Gendy Exam Controller Methods
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetExamByApplicantId(int id)
+        [HttpGet("{applicantId:int}")]
+        public async Task<IActionResult> GetExamByApplicantId(int applicantId)
         {
 
-           Console.WriteLine("Received request for applicant ID: " + id);
-            var examDTO =  await _examService.GetExamByApplicantIdAsync(id);
+           Console.WriteLine("Received request for applicant ID: " + applicantId);
+            var examDTO =  await _examService.GetExamByApplicantIdAsync(applicantId);
           return Ok(examDTO);
 
         }
+
         [HttpGet("taken/{applicantId:int}")]
         public async Task<IActionResult> GetExamsTakenByApplicant(int applicantId, int pageNumber = 1, int pageSize = 5)
         {
@@ -102,6 +120,7 @@ namespace HireAI.API.Controllers
             await _examService.CreateQuestionAsync(questionRequestDTO);
             return Ok();
         }
+
         [HttpDelete("{examId:int}")]
         public async Task<IActionResult> DeleteExam(int examId)
         {
@@ -122,12 +141,22 @@ namespace HireAI.API.Controllers
         {
             try
             {
+                
+
                 var questions = await _examService.CreateJobExamAsync(applicationId);
+
+                var application = await _applicationService.GetApplicationByIdAsync(applicationId);
+                if (application == null)
+                    throw new Exception("Application not found");
+
+                var examDto = await _examService.GetExamByIdAsync(application.ExamId ?? 0);
+
                 return Ok(new
                 {
                     message = "Job exam created successfully with AI-generated questions",
                     questionCount = questions.Count,
-                    questions = questions
+                    ExamDurationInMinutes = examDto?.DurationInMinutes,
+                    Questions = questions
                 });
             }
             catch (Exception ex)
@@ -150,12 +179,59 @@ namespace HireAI.API.Controllers
             try
             {
                 var questions = await _examService.CreateMockExamAsync(examId);
+
+                var examDto = await _examService.GetExamByIdAsync(examId);
+
                 return Ok(new
                 {
                     message = "Mock exam questions generated successfully",
                     questionCount = questions.Count,
-                    questions = questions
+                    ExamDurationInMinutes = examDto?.DurationInMinutes,
+                    Questions = questions
                 });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Evaluates an exam and creates ExamSummary and ExamEvaluation records
+        /// </summary>
+        /// <param name="evaluationRequest">The exam evaluation data</param>
+        /// <returns>The created ExamSummary record</returns>
+        [HttpPost("evaluate")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> EvaluateExamAsync([FromBody] ExamEvaluationRequestDTO evaluationRequest)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var examSummary = new ExamSummary();
+                if (evaluationRequest.ApplicantId.HasValue) // If the frontend provides an ApplicantId, it's a mock exam
+                {
+                    examSummary = await _examService.EvaluateMockExamAsync(evaluationRequest);
+                }
+                else
+                {
+                    examSummary = await _examService.EvaluateJobExamAsync(evaluationRequest);
+                }
+                   
+
+                return Created("",
+                    new
+                    {
+                        message = "Exam evaluated successfully",
+                        evaluationId = examSummary.ExamEvaluationId,
+                        examSummaryId = examSummary.Id,
+                        examId = examSummary.ExamId,
+                        applicantExamScore = examSummary.ApplicantExamScore
+                    });
             }
             catch (Exception ex)
             {

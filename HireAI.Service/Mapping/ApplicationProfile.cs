@@ -33,7 +33,9 @@ namespace HireAI.Infrastructure.Mappings
                 .ForMember(dest => dest.AppliedAt, opt => opt.MapFrom(src => src.DateApplied))
                 .ForMember(dest => dest.AtsScore, opt => opt.MapFrom(src => src.AtsScore))
                 .ForMember(dest => dest.ApplicationStatus, opt => opt.MapFrom(src => src.ApplicationStatus.ToString())) // Convert enum to string
-                .ForMember(dest => dest.JobType, opt => opt.MapFrom(src => src.AppliedJob!.EmploymentType != null ? src.AppliedJob.EmploymentType.ToString() : null)); // Map JobType from EmploymentType
+                .ForMember(dest => dest.JobType, opt => opt.MapFrom(src => src.AppliedJob!.EmploymentType != null ? src.AppliedJob.EmploymentType.ToString() : null)) // Map JobType from EmploymentType
+                .ForMember(dest => dest.JobId, opt => opt.MapFrom(src => src.JobId ?? 0))
+                .ForMember(dest => dest.ExamEvaluationStatus, opt => opt.MapFrom(src => src.ExamEvaluation != null? src.ExamEvaluation.Status : enExamEvaluationStatus.Pending));
 
             CreateMap<Exam, ExamResponseDTO>();
             CreateMap<Question, QuestionResponseDTO>();
@@ -46,7 +48,7 @@ namespace HireAI.Infrastructure.Mappings
 
             // CreateApplicationDto -> Application
             CreateMap<CreateApplicationDto, Application>()
-                .ForMember(dest => dest.DateApplied, opt => opt.MapFrom(_ => DateTime.UtcNow))
+                .ForMember(dest => dest.DateApplied, opt => opt.MapFrom(_ => DateTime.Now))
                 .ForMember(dest => dest.ExamStatus, opt => opt.MapFrom(_ => enExamStatus.NotTaken));
 
             // UpdateApplicationDto -> Application
@@ -68,7 +70,8 @@ namespace HireAI.Infrastructure.Mappings
             // POST / PUT mapping
             CreateMap<JobPostRequestDto, JobPost>();
 
-            CreateMap<HR, HRResponseDto>();
+            CreateMap<HR, HRResponseDto>()
+                .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address));
 
             CreateMap<HRUpdateDto, HR>();
 
@@ -86,7 +89,7 @@ namespace HireAI.Infrastructure.Mappings
                  .ForMember(dest => dest.JobTitle, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.Title : string.Empty))
                  .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.CompanyName : string.Empty))
                  .ForMember(dest => dest.CompanyLocation, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.Location : string.Empty))
-                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.CreatedAt : DateTime.UtcNow))
+                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.CreatedAt : DateTime.Now))
                  .ForMember(dest => dest.IntrviewDate, opt => opt.Ignore()) // Set this manually or add to Application model
                  .ForMember(dest => dest.ExperienceLevel, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.ExperienceLevel : enExperienceLevel.EntryLevel))
                  .ForMember(dest => dest.SalaryRange, opt => opt.MapFrom(src => src.AppliedJob != null ? src.AppliedJob.SalaryRange : string.Empty))
@@ -102,7 +105,7 @@ namespace HireAI.Infrastructure.Mappings
                 .ForMember(dest => dest.SkillRating, opt => opt.MapFrom(src => src.SkillRate))
                 .ForMember(dest => dest.ImprovementPercentage, opt => opt.MapFrom(src => src.ImprovementPercentage))
                 .ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes))
-                .ForMember(dest => dest.Month, opt => opt.MapFrom(src => DateTime.UtcNow)); // Or use a timestamp field if available
+                .ForMember(dest => dest.Month, opt => opt.MapFrom(src => DateTime.Now)); // Or use a timestamp field if available
         }
     }
 }

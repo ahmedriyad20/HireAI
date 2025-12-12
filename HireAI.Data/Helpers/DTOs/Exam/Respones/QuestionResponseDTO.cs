@@ -12,13 +12,13 @@ namespace HireAI.Data.Helpers.DTOs.ExamDTOS.Respones
     {
         public int Id { get; set; }
         public string QuestionText { get; set; } = default!;
-        public enQuestionAnswers? Answer { get; set; }
+        public int? CorrectAnswerIndex { get; set; }
         public int QuestionNumber { get; set; }
 
         public int ExamId { get; set; }
         public int? ApplicantResponseId { get; set; }
 
-        public List<AnswerResponseDTO> Answers { get; set; } = new List<AnswerResponseDTO>();
+        public string[] AnswerChoices { get; set; } = new string[4];
     }
   
 }

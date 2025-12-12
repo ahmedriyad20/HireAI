@@ -87,7 +87,7 @@ namespace HireAI.Service.Services
         public async Task<ApplicationResponseDto> CreateApplicationAsync(CreateApplicationDto createDto)
         {
             var application = _mapper.Map<Application>(createDto);
-            application.DateApplied = DateTime.UtcNow;
+            application.DateApplied = DateTime.Now;
 
             await _applicationRepository.AddAsync(application);
 

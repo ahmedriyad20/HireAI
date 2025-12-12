@@ -97,7 +97,7 @@ namespace HireAI.Service.Services
         {
             return await _applications.GetAll()
                 .Where(a => a.HRId == hrId &&
-                            a.DateApplied > DateTime.UtcNow.AddYears(-1))
+                            a.DateApplied > DateTime.Now.AddYears(-1))
                 .GroupBy(a => a.DateApplied.Month)
                 .Select(g => new { g.Key, Count = g.Count() })
                 .ToDictionaryAsync(x => x.Key, x => x.Count);

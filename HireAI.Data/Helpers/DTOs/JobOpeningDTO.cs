@@ -14,7 +14,7 @@ namespace HireAI.Data.DTOs
         public string Title { get; set; } = null!;
         public string CompanyName { get; set; } = default!;
         public string? Description { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
         [EnumDataType(typeof(enJobStatus), ErrorMessage = "Invalid job status value.")]
         public enJobStatus JobStatus { get; set; }

@@ -128,7 +128,7 @@ namespace HireAI.Service.Services
                     SkillRating = skill.SkillRate,
                     ImprovementPercentage = improvementPercentage,
                     Notes = skill.Notes,
-                    Month = DateTime.UtcNow
+                    Month = DateTime.Now
                 };
             }).ToList();
 

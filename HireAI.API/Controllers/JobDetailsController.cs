@@ -10,7 +10,7 @@ namespace HireAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "HR")]
+    [Authorize(Roles = "HR")]
     public class JobDetailsController : ControllerBase
     {
         private readonly IJobDetailsService _jobDetailsService;
@@ -23,22 +23,22 @@ namespace HireAI.API.Controllers
         /// <summary>
         /// Get all jobs for a specific HR
         /// </summary>
-        /// <param name="hrid">The ID of the HR</param>
+        /// <param name="HrId">The ID of the HR</param>
         /// <returns>List of job summaries with statistics</returns>
-        [HttpGet("AllJobs")]
+        [HttpGet("AllJobs/{HrId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetCurrentHRJobsAsync(int hrid)
+        public async Task<IActionResult> GetCurrentHRJobsAsync(int HrId)
         {
             try
             {
-                var jobs = await _jobDetailsService.GetAllJobsForHRAsync(hrid);
+                var jobs = await _jobDetailsService.GetAllJobsForHRAsync(HrId);
                 return Ok(new
                 {
                     success = true,
-                    hrId = hrid,
-                    message = $"Retrieved {jobs.Count} jobs for HR {hrid}",
+                    hrId = HrId,
+                    message = $"Retrieved {jobs.Count} jobs for HR {HrId}",
                     data = jobs
                 });
             }
@@ -53,19 +53,19 @@ namespace HireAI.API.Controllers
         /// </summary>
         /// <param name="jobId">The ID of the job</param>
         /// <returns>Detailed job information with applications and rankings</returns>
-        [HttpGet("{jobId}")]
+        [HttpGet("{jobId},{HrId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetJobDetailsAsync(int jobId ,int hrId)
+        public async Task<IActionResult> GetJobDetailsAsync(int jobId ,int HrId)
         {
             try
             {
                 // Get HR ID from JWT token
                     
             
-                var jobDetails = await _jobDetailsService.GetJobDetailsAsync(jobId, hrId);
+                var jobDetails = await _jobDetailsService.GetJobDetailsAsync(jobId, HrId);
                 return Ok(new
                 {
                     success = true,
@@ -129,13 +129,13 @@ namespace HireAI.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetTopApplicantsAsync(int jobId,  int hrId , [FromQuery] int topCount = 10)
+        public async Task<IActionResult> GetTopApplicantsAsync(int jobId,  int HrId , [FromQuery] int topCount = 10)
         {
             try
             {
                 
 
-                var topApplicants = await _jobDetailsService.GetTopApplicantsAsync(jobId, hrId, topCount);
+                var topApplicants = await _jobDetailsService.GetTopApplicantsAsync(jobId, HrId, topCount);
                 return Ok(new
                 {
                     success = true,
@@ -160,13 +160,13 @@ namespace HireAI.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetTopExamTakersAsync(int jobId,int hrId, [FromQuery] int topCount = 10)
+        public async Task<IActionResult> GetTopExamTakersAsync(int jobId,int HrId, [FromQuery] int topCount = 10)
         {
             try
             {
               
 
-                var topExamTakers = await _jobDetailsService.GetTopExamTakersAsync(jobId, hrId, topCount);
+                var topExamTakers = await _jobDetailsService.GetTopExamTakersAsync(jobId, HrId, topCount);
                 return Ok(new
                 {
                     success = true,

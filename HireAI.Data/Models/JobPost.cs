@@ -14,7 +14,7 @@ namespace HireAI.Data.Models
         public string Title { get; set; } = null!;
         public string CompanyName { get; set; } = default!;
         public string? Description { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
         public enJobStatus JobStatus { get; set; } 
 

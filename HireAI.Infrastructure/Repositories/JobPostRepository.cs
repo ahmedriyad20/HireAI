@@ -6,6 +6,7 @@ using HireAI.Infrastructure.GenaricBasies;
 using HireAI.Infrastructure.GenericBase;
 using HireAI.Infrastructure.Intrefaces;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace HireAI.Infrastructure.Repositories
 {
@@ -17,6 +18,12 @@ namespace HireAI.Infrastructure.Repositories
         { 
             _applicationRepository = applicationRepository;
         }
+
+        //public override async Task<IQueryable<JobPost>> GetAll()
+        //{
+        //    return await _dbSet
+        //                    .Include(jo => jo.ExamEvaluations)
+        //}
 
         public async Task<ICollection<JobPost>?> GetJobPostForHrAsync(int hrid)
         {

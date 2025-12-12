@@ -115,7 +115,7 @@ namespace HireAI.Service.Services
                     SkillLevel = registerDto.SkillLevel,
                     Role = enRole.Applicant,
                     IsActive = true,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.Now
                 };
 
                 // Save applicant to database
@@ -199,7 +199,7 @@ namespace HireAI.Service.Services
                     AccountType = registerDto.AccountType ?? enAccountType.Free,
                     Role = enRole.HR,
                     IsActive = true,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.Now
                 };
 
                 // Save HR to database
@@ -272,8 +272,8 @@ namespace HireAI.Service.Services
                     AccessToken = token,
                     RefreshToken = refreshToken,
                     JwtId = Guid.NewGuid().ToString(),
-                    CreatedDate = DateTime.UtcNow,
-                    ExpiryDate = DateTime.UtcNow.AddDays(7),
+                    CreatedDate = DateTime.Now,
+                    ExpiryDate = DateTime.Now.AddDays(7),
                     IsRevoked = false // ✅ Explicitly set this
                 };
 
@@ -326,7 +326,7 @@ namespace HireAI.Service.Services
                     userRole = "Applicant";
 
                     var applicant = await _dbContext.Applicants.FindAsync(ApplicationUser.ApplicantId.Value);
-                    applicant.LastLogin = DateTime.UtcNow;
+                    applicant.LastLogin = DateTime.Now;
                     await _dbContext.SaveChangesAsync();
                 }
                 else if (ApplicationUser.HRId.HasValue)
@@ -335,7 +335,7 @@ namespace HireAI.Service.Services
                     userRole = "HR";
 
                     var Hr = await _dbContext.HRs.FindAsync(ApplicationUser.HRId.Value);
-                    Hr.LastLogin = DateTime.UtcNow;
+                    Hr.LastLogin = DateTime.Now;
                     await _dbContext.SaveChangesAsync();
                 }
                 else
@@ -352,7 +352,7 @@ namespace HireAI.Service.Services
                     IsAuthenticated = true,
                     Token = token,
                     RefreshToken = refreshToken,
-                    ExpiresOn = DateTime.UtcNow.AddMinutes(30),
+                    ExpiresOn = DateTime.Now.AddMinutes(30),
                     IdentityUserId = ApplicationUser.Id, // Identity framework ID
                     UserId = userSpecificId, // Applicant/HR ID
                     UserRole = userRole, // roles.Contains("Applicant") ? "Applicant" : "HR",
@@ -553,7 +553,7 @@ namespace HireAI.Service.Services
                         t.UserId == userId && 
                         t.RefreshToken == refreshToken && 
                         !t.IsRevoked && 
-                        t.ExpiryDate > DateTime.UtcNow);
+                        t.ExpiryDate > DateTime.Now);
 
                 if (storedRefreshToken == null)
                 {
@@ -571,7 +571,7 @@ namespace HireAI.Service.Services
                 // Update refresh token
                 storedRefreshToken.RefreshToken = newRefreshToken;
                 storedRefreshToken.AccessToken = newAccessToken;
-                storedRefreshToken.CreatedDate = DateTime.UtcNow;
+                storedRefreshToken.CreatedDate = DateTime.Now;
 
                 _dbContext.Set<UserRefreshToken>().Update(storedRefreshToken);
                 await _dbContext.SaveChangesAsync();
@@ -604,7 +604,7 @@ namespace HireAI.Service.Services
                     IsAuthenticated = true,
                     Token = newAccessToken,
                     RefreshToken = newRefreshToken,
-                    ExpiresOn = DateTime.UtcNow.AddMinutes(30),
+                    ExpiresOn = DateTime.Now.AddMinutes(30),
                     IdentityUserId = user.Id,
                     UserId = userSpecificId, 
                     UserRole = userRole, 
@@ -680,7 +680,7 @@ namespace HireAI.Service.Services
                 issuer: _config["JWT:IssuerIP"],
                 audience: _config["JWT:AudienceIP"], //Angular Localhost
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: signingCredentials
             );
 

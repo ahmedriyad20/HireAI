@@ -16,7 +16,7 @@ namespace HireAI.Service.Mapping
                 .ForMember(dest => dest.SkillRating, opt => opt.MapFrom(src => src.SkillRate))
                 .ForMember(dest => dest.ImprovementPercentage, opt => opt.MapFrom(src => src.ImprovementPercentage))
                 .ForMember(dest => dest.Notes, opt => opt.MapFrom(src => src.Notes))
-                .ForMember(dest => dest.Month, opt => opt.MapFrom(src => DateTime.UtcNow));
+                .ForMember(dest => dest.Month, opt => opt.MapFrom(src => DateTime.Now));
 
             // Add mapping for ApplicantSkill to ApplicantSkillDto
             CreateMap<ApplicantSkill, ApplicantSkillDto>()

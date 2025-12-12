@@ -90,7 +90,7 @@ namespace HireAI.API.Extensions
                     CompanyDescription = "System Administrator",
                     AccountType = enAccountType.Premium,
                     IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
+                    CreatedAt = DateTime.Now,
                     Phone = "000-000-0000"
                 };
                 
@@ -136,7 +136,7 @@ namespace HireAI.API.Extensions
                     ResumeUrl = "https://example.com/admin-resume.pdf",
                     SkillLevel = enSkillLevel.Expert,
                     IsActive = true,
-                    CreatedAt = DateTime.UtcNow,
+                    CreatedAt = DateTime.Now,
                     Phone = "000-000-0001"
                 };
                 

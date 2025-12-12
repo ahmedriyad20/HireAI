@@ -12,7 +12,7 @@ namespace HireAI.Data.Models
 
         //Foreign Keys
         public int ExamSummaryId { get; set; }
-        public int JobId { get; set; }
+        public int? JobId { get; set; }
 
         //Navigation Property
         public ExamSummary? ExamSummary { get; set; }

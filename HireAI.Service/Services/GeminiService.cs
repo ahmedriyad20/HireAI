@@ -31,7 +31,7 @@ namespace HireAI.Service.Services
             await _rateLimiter.WaitAsync();
             try
             {
-                var timeSinceLastRequest = DateTime.UtcNow - _lastRequestTime;
+                var timeSinceLastRequest = DateTime.Now - _lastRequestTime;
                 if (timeSinceLastRequest.TotalMilliseconds < MinMillisecondsBetweenRequests)
                 {
                     var delayMs = MinMillisecondsBetweenRequests - (int)timeSinceLastRequest.TotalMilliseconds;
@@ -39,7 +39,7 @@ namespace HireAI.Service.Services
                 }
 
                 var result = await CallGeminiApiAsync(cvContent, jobDescription, fileName);
-                _lastRequestTime = DateTime.UtcNow;
+                _lastRequestTime = DateTime.Now;
                 return result;
             }
             finally
@@ -107,19 +107,19 @@ namespace HireAI.Service.Services
         {
             return $@"Analyze the CV against this job description and return ONLY a JSON response:
 
-Job: {jobDescription}
+            Job: {jobDescription}
 
-Return JSON format:
-{{
-  ""atsScore"": <0-100>,
-  ""recommendedStatus"": ""<ATSPassed|Rejected>"",
-  ""feedback"": ""<2 sentence summary>"",
-  ""skillsFound"": [""skill1"", ""skill2""],
-  ""skillsGaps"": [""gap1"", ""gap2""]
-}}
+            Return JSON format:
+            {{
+              ""atsScore"": <0-100>,
+              ""recommendedStatus"": ""<ATSPassed|ATSFailed>"",
+              ""feedback"": ""<2 sentence summary>"",
+              ""skillsFound"": [""skill1"", ""skill2""],
+              ""skillsGaps"": [""gap1"", ""gap2""]
+            }}
 
-Score: 70-100=ATSPassed, below 70=Rejected
-Match CV skills/experience to job requirements. Return ONLY the JSON.";
+            Score: 70-100=ATSPassed, below 70=ATSFailed
+            Match CV skills/experience to job requirements. Return ONLY the JSON.";
         }
 
         private CVAnalysisResultDto ParseGeminiResponse(string responseJson)
@@ -236,8 +236,8 @@ Match CV skills/experience to job requirements. Return ONLY the JSON.";
                 var recommendedStatus = statusString switch
                 {
                     "ATSPassed" => enApplicationStatus.ATSPassed,
-                    "Rejected" => enApplicationStatus.Rejected,
-                    _ => atsScore >= 70 ? enApplicationStatus.ATSPassed : enApplicationStatus.Rejected
+                    "ATSFailed" => enApplicationStatus.ATSFailed,
+                    _ => atsScore >= 70 ? enApplicationStatus.ATSPassed : enApplicationStatus.ATSFailed
                 };
 
                 return new CVAnalysisResultDto
@@ -265,7 +265,7 @@ Match CV skills/experience to job requirements. Return ONLY the JSON.";
             await _rateLimiter.WaitAsync();
             try
             {
-                var timeSinceLastRequest = DateTime.UtcNow - _lastRequestTime;
+                var timeSinceLastRequest = DateTime.Now - _lastRequestTime;
                 if (timeSinceLastRequest.TotalMilliseconds < MinMillisecondsBetweenRequests)
                 {
                     var delayMs = MinMillisecondsBetweenRequests - (int)timeSinceLastRequest.TotalMilliseconds;
@@ -273,7 +273,7 @@ Match CV skills/experience to job requirements. Return ONLY the JSON.";
                 }
 
                 var result = await GenerateQuestionsFromDescriptionAsync(jobDescription, "job");
-                _lastRequestTime = DateTime.UtcNow;
+                _lastRequestTime = DateTime.Now;
                 return result;
             }
             finally
@@ -288,7 +288,7 @@ Match CV skills/experience to job requirements. Return ONLY the JSON.";
             await _rateLimiter.WaitAsync();
             try
             {
-                var timeSinceLastRequest = DateTime.UtcNow - _lastRequestTime;
+                var timeSinceLastRequest = DateTime.Now - _lastRequestTime;
                 if (timeSinceLastRequest.TotalMilliseconds < MinMillisecondsBetweenRequests)
                 {
                     var delayMs = MinMillisecondsBetweenRequests - (int)timeSinceLastRequest.TotalMilliseconds;
@@ -296,7 +296,7 @@ Match CV skills/experience to job requirements. Return ONLY the JSON.";
                 }
 
                 var result = await GenerateQuestionsFromDescriptionAsync(examDescription, "mock exam");
-                _lastRequestTime = DateTime.UtcNow;
+                _lastRequestTime = DateTime.Now;
                 return result;
             }
             finally
@@ -350,28 +350,28 @@ Match CV skills/experience to job requirements. Return ONLY the JSON.";
         {
             return $@"Generate 10 multiple-choice questions (MCQ) for a {examType} based on the following description.
 
-Description: {description}
+            Description: {description}
 
-Requirements:
-1. Generate exactly 10 questions
-2. Each question must have exactly 4 choices
-3. Each question must have one correct answer
-4. Questions should be relevant to the description
-5. Make questions challenging but fair
-6. Index the correct answer (0-3)
+            Requirements:
+            1. Generate exactly 10 questions
+            2. Each question must have exactly 4 choices
+            3. Each question must have one correct answer
+            4. Questions should be relevant to the description
+            5. Make questions challenging but fair
+            6. Index the correct answer (0-3)
 
-Return ONLY a JSON response in this exact format:
-{{
-  ""questions"": [
-    {{
-      ""questionText"": ""<question text>"",
-      ""choices"": [""<choice 0>"", ""<choice 1>"", ""<choice 2>"", ""<choice 3>""],
-      ""correctAnswerIndex"": <0-3>
-    }}
-  ]
-}}
+            Return ONLY a JSON response in this exact format:
+            {{
+              ""questions"": [
+                {{
+                  ""questionText"": ""<question text>"",
+                  ""choices"": [""<choice 0>"", ""<choice 1>"", ""<choice 2>"", ""<choice 3>""],
+                  ""correctAnswerIndex"": <0-3>
+                }}
+              ]
+            }}
 
-Return ONLY the JSON, no additional text or markdown.";
+            Return ONLY the JSON, no additional text or markdown.";
         }
 
         private AIGeneratedQuestionsResponseDto ParseQuestionsResponse(string responseJson)

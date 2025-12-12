@@ -1,4 +1,5 @@
 using HireAI.Data.Helpers.DTOs.Application;
+using HireAI.Data.Helpers.Enums;
 using HireAI.Service.Interfaces;
 using HireAI.Service.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -136,6 +137,7 @@ namespace HireAI.API.Controllers
 
             return NoContent();
         }
+
         [HttpGet("analyze/{applicationID}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -171,14 +173,15 @@ namespace HireAI.API.Controllers
                     AppliedJob.Description, 
                     cvFile.FileName);
 
-                // Update application with analysis results
-                var updateDto = new UpdateApplicationDto
-                {
-                    Id = applicationID,
-                    ApplicationStatus = analysisResult.RecommendedStatus,
-                    AtsScore = analysisResult.AtsScore,
-                    CVFilePath = application.CVFilePath
-                };
+                    // Update application with analysis results
+                    var updateDto = new UpdateApplicationDto
+                    {
+                        Id = applicationID,
+                        ApplicationStatus = analysisResult.RecommendedStatus,
+                        AtsScore = analysisResult.AtsScore,
+                        CVFilePath = application.CVFilePath,
+                        ExamStatus = enExamStatus.NotTaken
+                    };
 
                 await _applicationService.UpdateApplicationAsync(updateDto);
 

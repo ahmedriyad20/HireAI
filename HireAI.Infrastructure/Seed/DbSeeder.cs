@@ -70,7 +70,7 @@ namespace HireAI.Seeder
                 CompanyName = "Acme Corp",
                 AccountType = enAccountType.Free,
                 IsActive = true,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.Now
             };
             context.HRs.Add(hr);
             await context.SaveChangesAsync();
@@ -82,11 +82,11 @@ namespace HireAI.Seeder
                 CompanyName = hr.CompanyName,
                 Description = "Build awesome software",
                 HRId = hr.Id,
-                CreatedAt = DateTime.UtcNow.AddDays(-30),
+                CreatedAt = DateTime.Now.AddDays(-30),
                 JobStatus = enJobStatus.Active,
                 ExamDurationMinutes = 60,
                 NumberOfQuestions = 10,
-                ApplicationDeadline = DateTime.UtcNow.AddMonths(1),
+                ApplicationDeadline = DateTime.Now.AddMonths(1),
                 ATSMinimumScore = 60
             };
             context.JobPosts.Add(job);
@@ -119,9 +119,9 @@ namespace HireAI.Seeder
                     Role = enRole.Applicant,
                     Address = "fayouj",
                     IsActive = true,
-                    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 180)),
+                    CreatedAt = DateTime.Now.AddDays(-rnd.Next(1, 180)),
                     Phone = $"555-000-{i:D4}",
-                    LastLogin = DateTime.UtcNow.AddDays(-rnd.Next(0, 30)),
+                    LastLogin = DateTime.Now.AddDays(-rnd.Next(0, 30)),
                     SkillLevel = (enSkillLevel)(rnd.Next(0, 3))
                 });
             }
@@ -165,7 +165,7 @@ namespace HireAI.Seeder
                     ApplicantId = applicants[i].Id,
                     HRId = hr.Id,          // use FK always 1 (the HR created above)
                     JobId = job.Id,
-                    DateApplied = DateTime.UtcNow.AddDays(-rnd.Next(0, 180)), // spread dates
+                    DateApplied = DateTime.Now.AddDays(-rnd.Next(0, 180)), // spread dates
                     AtsScore = (float?)rnd.Next(40, 101),
                     ApplicationStatus = (enApplicationStatus)(rnd.Next(0, Enum.GetValues(typeof(enApplicationStatus)).Length)),
                     ExamStatus = rnd.NextDouble() > 0.3 ? enExamStatus.Completed : enExamStatus.NotTaken // ~70% completed
@@ -191,7 +191,7 @@ namespace HireAI.Seeder
                     ExamType = enExamType.HrExam,
                     NumberOfQuestions = job.NumberOfQuestions ?? 5,
                     DurationInMinutes = job.ExamDurationMinutes ?? 30,
-                    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 90)),
+                    CreatedAt = DateTime.Now.AddDays(-rnd.Next(1, 90)),
                     IsAi = true
                 };
                 exams.Add(exam);
@@ -301,7 +301,7 @@ namespace HireAI.Seeder
                     ExamType = enExamType.MockExam,
                     NumberOfQuestions = 10,
                     DurationInMinutes = 30,
-                    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 30)),
+                    CreatedAt = DateTime.Now.AddDays(-rnd.Next(1, 30)),
                     IsAi = true
                 },
                 new Exam
@@ -312,7 +312,7 @@ namespace HireAI.Seeder
                     ExamType = enExamType.MockExam,
                     NumberOfQuestions = 10,
                     DurationInMinutes = 45,
-                    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 30)),
+                    CreatedAt = DateTime.Now.AddDays(-rnd.Next(1, 30)),
                     IsAi = true
                 },
                 new Exam
@@ -323,7 +323,7 @@ namespace HireAI.Seeder
                     ExamType = enExamType.MockExam,
                     NumberOfQuestions = 10,
                     DurationInMinutes = 40,
-                    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 30)),
+                    CreatedAt = DateTime.Now.AddDays(-rnd.Next(1, 30)),
                     IsAi = true
                 },
                 new Exam
@@ -334,7 +334,7 @@ namespace HireAI.Seeder
                     ExamType = enExamType.MockExam,
                     NumberOfQuestions = 10,
                     DurationInMinutes = 60,
-                    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 30)),
+                    CreatedAt = DateTime.Now.AddDays(-rnd.Next(1, 30)),
                     IsAi = true
                 },
                 new Exam
@@ -345,7 +345,7 @@ namespace HireAI.Seeder
                     ExamType = enExamType.MockExam,
                     NumberOfQuestions = 10,
                     DurationInMinutes = 30,
-                    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 30)),
+                    CreatedAt = DateTime.Now.AddDays(-rnd.Next(1, 30)),
                     IsAi = true
                 },
                 new Exam
@@ -356,7 +356,7 @@ namespace HireAI.Seeder
                     ExamType = enExamType.MockExam,
                     NumberOfQuestions = 10,
                     DurationInMinutes = 45,
-                    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 30)),
+                    CreatedAt = DateTime.Now.AddDays(-rnd.Next(1, 30)),
                     IsAi = true
                 },
                 new Exam
@@ -367,7 +367,7 @@ namespace HireAI.Seeder
                     ExamType = enExamType.MockExam,
                     NumberOfQuestions = 10,
                     DurationInMinutes = 45,
-                    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 30)),
+                    CreatedAt = DateTime.Now.AddDays(-rnd.Next(1, 30)),
                     IsAi = true
                 },
                 new Exam
@@ -378,7 +378,7 @@ namespace HireAI.Seeder
                     ExamType = enExamType.MockExam,
                     NumberOfQuestions = 10,
                     DurationInMinutes = 50,
-                    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 30)),
+                    CreatedAt = DateTime.Now.AddDays(-rnd.Next(1, 30)),
                     IsAi = true
                 },
                 new Exam
@@ -389,7 +389,7 @@ namespace HireAI.Seeder
                     ExamType = enExamType.MockExam,
                     NumberOfQuestions = 10,
                     DurationInMinutes = 25,
-                    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 30)),
+                    CreatedAt = DateTime.Now.AddDays(-rnd.Next(1, 30)),
                     IsAi = true
                 },
                 new Exam
@@ -400,7 +400,7 @@ namespace HireAI.Seeder
                     ExamType = enExamType.MockExam,
                     NumberOfQuestions = 10,
                     DurationInMinutes = 60,
-                    CreatedAt = DateTime.UtcNow.AddDays(-rnd.Next(1, 30)),
+                    CreatedAt = DateTime.Now.AddDays(-rnd.Next(1, 30)),
                     IsAi = true
                 }
             };

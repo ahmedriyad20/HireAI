@@ -3,7 +3,6 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using HireAI.Data.Helpers.DTOs.S3;
 using HireAI.Service.Interfaces;
-using HireAI.Data.Helpers.DTOs.S3;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;

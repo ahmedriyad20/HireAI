@@ -9,8 +9,8 @@ namespace HireAI.Data.Helpers.DTOs.ApplicantApplication
         public string JobTitle { get; set; } = default!;
         public string CompanyName { get; set; } = default!;
         public string CompanyLocation { get; set; } = default!;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? IntrviewDate { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime? IntrviewDate { get; set; } = DateTime.Now;
         public enExperienceLevel ExperienceLevel { get; set; } = enExperienceLevel.EntryLevel;
         public string SalaryRange { get; set; } = default!;
         public int? ExamScore { get; set; }

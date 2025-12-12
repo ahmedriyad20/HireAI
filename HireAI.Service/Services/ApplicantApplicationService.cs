@@ -30,6 +30,7 @@ namespace HireAI.Service.Services
             var ApplicationsList = await _applicationRepository.GetAll()
                 .AsNoTracking()
                 .Include(a => a.AppliedJob)
+                .Include(a => a.ExamEvaluation)
                 .Where(a => a.ApplicantId == applicantId)
                 .ToListAsync();
 

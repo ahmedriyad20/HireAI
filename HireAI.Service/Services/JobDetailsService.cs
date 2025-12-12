@@ -45,9 +45,10 @@ namespace HireAI.Service.Services
             var jobs = await _jobPostRepository.GetAll()
                 .AsNoTracking()
                 .Where(j => j.HRId == hrId)
+                .Include(j => j.ExamEvaluations)
                 .Include(j => j.Applications)
-                    .ThenInclude(a => a.ExamSummary)
-                        .ThenInclude(es => es.ExamEvaluation)
+                    .ThenInclude(a => a.ExamEvaluation)
+                        //.ThenInclude(es => es.)
                 .ToListAsync();
 
             var result = new List<HRJobSummaryDto>();
@@ -70,11 +71,11 @@ namespace HireAI.Service.Services
                         ? (float)applications.Where(a => a.AtsScore.HasValue).Average(a => a.AtsScore)
                         : null,
                     AvgExamScore = applications
-                        .Where(a => a.ExamSummary?.ExamEvaluation != null)
+                        .Where(a => a.ExamEvaluation != null)
                         .Any()
                         ? (float)applications
-                            .Where(a => a.ExamSummary?.ExamEvaluation != null)
-                            .Average(a => a.ExamSummary.ExamEvaluation.ApplicantExamScore)
+                            .Where(a => a.ExamEvaluation != null)
+                            .Average(a => a.ExamEvaluation.ApplicantExamScore)
                         : null
                 });
             }
@@ -90,11 +91,11 @@ namespace HireAI.Service.Services
             var job = await _jobPostRepository.GetAll()
                 .AsNoTracking()
                 .Where(j => j.Id == jobId && j.HRId == hrId)
+                .Include(j => j.ExamEvaluations)
                 .Include(j => j.Applications)
                     .ThenInclude(a => a.Applicant)
                 .Include(j => j.Applications)
-                    .ThenInclude(a => a.ExamSummary)
-                        .ThenInclude(es => es.ExamEvaluation)
+                    .ThenInclude(a => a.ExamEvaluation)
                 .FirstOrDefaultAsync();
 
             if (job == null)
@@ -139,6 +140,7 @@ namespace HireAI.Service.Services
                 .AsNoTracking()
                 .Where(a => a.JobId == jobId && a.HRId == hrId)
                 .Include(a => a.Applicant)
+                .Include(a => a.ExamEvaluation)
                 .ToListAsync();
 
             return applications.Select(a => new JobApplicationDto
@@ -196,15 +198,13 @@ namespace HireAI.Service.Services
         {
             var topExamTakers = await _applicationRepository.GetAll()
                 .AsNoTracking()
-                .Where(a => a.JobId == jobId && 
-                           a.HRId == hrId && 
+                .Where(a => a.JobId == jobId &&
+                           a.HRId == hrId &&
                            a.ExamStatus == enExamStatus.Completed &&
-                           a.ExamSummary != null &&
-                           a.ExamSummary.ExamEvaluation != null)
+                           a.ExamEvaluation != null)
                 .Include(a => a.Applicant)
-                .Include(a => a.ExamSummary)
-                    .ThenInclude(es => es.ExamEvaluation)
-                .OrderByDescending(a => a.ExamSummary.ExamEvaluation.ApplicantExamScore)
+                .Include(a => a.ExamEvaluation)
+                .OrderByDescending(a => a.ExamEvaluation.ApplicantExamScore)
                 .Take(topCount)
                 .ToListAsync();
 
@@ -213,6 +213,8 @@ namespace HireAI.Service.Services
 
             foreach (var app in topExamTakers)
             {
+                var examEvaluation = app.ExamEvaluation ?? new HireAI.Data.Models.ExamEvaluation();
+
                 result.Add(new TopExamTakerDto
                 {
                     ApplicationId = app.Id,
@@ -221,7 +223,7 @@ namespace HireAI.Service.Services
                     ApplicantPhone = app.Applicant?.Phone ?? "N/A",
                     CVKey = app.CVFilePath ?? string.Empty,
                     DateApplied = app.DateApplied,
-                    ExamScore = app.ExamSummary?.ExamEvaluation?.ApplicantExamScore ?? 0,
+                    ExamScore = examEvaluation.ApplicantExamScore,
                     Rank = GetRankString(rank++)
                 });
             }

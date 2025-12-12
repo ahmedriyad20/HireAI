@@ -16,7 +16,7 @@ namespace HireAI.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Applicant")]
+    
     public class ApplicantController : ControllerBase
     {
 
@@ -38,6 +38,7 @@ namespace HireAI.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [Authorize(Roles = "Applicant")]
         public async Task<IActionResult> GetAllAsync()
         {
             var applicants = await _applicantService.GetAllApplicantsAsync();
@@ -48,6 +49,7 @@ namespace HireAI.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "Applicant")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             /*// Get applicantId from JWT claims
@@ -82,6 +84,7 @@ namespace HireAI.API.Controllers
         /*[HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = "Applicant")]
         public async Task<IActionResult> CreateAsync([FromBody] Applicant applicant)
         {
             var createdApplicant = await _applicantService.AddApplicantAsync(applicant);
@@ -92,6 +95,7 @@ namespace HireAI.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [Authorize(Roles = "Applicant")]
         public async Task<IActionResult> UpdateAsync(int id, [FromForm] ApplicantUpdateDto applicantDto)
         {
             if (id != applicantDto.Id)
@@ -113,6 +117,7 @@ namespace HireAI.API.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Authorize(Roles = "Applicant")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var applicant = await _applicantService.GetApplicantByIdAsync(id);
@@ -130,6 +135,7 @@ namespace HireAI.API.Controllers
         [HttpPost]
         [RequestSizeLimit(10 * 1024 * 1024)]
         [Route("UploadResume/{applicantId:int}")]
+        [Authorize(Roles = "Applicant")]
         public async Task<IActionResult> UploadResumeAsync([FromForm] ApplicantCreateDto dto)
         {
             if (dto == null || dto.CvFile == null)
@@ -164,6 +170,7 @@ namespace HireAI.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Applicant,HR")]
         public async Task<IActionResult> DownloadResumeAsync([FromQuery] string fileKey)
         {
             if (string.IsNullOrWhiteSpace(fileKey))
@@ -197,6 +204,7 @@ namespace HireAI.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize(Roles = "Applicant,HR")]
         public async Task<IActionResult> DownloadResumeByUrlAsync([FromQuery] string s3Url)
         {
             if (string.IsNullOrWhiteSpace(s3Url))
