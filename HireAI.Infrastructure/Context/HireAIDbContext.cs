@@ -20,7 +20,6 @@ namespace HireAI.Infrastructure.Context
         public DbSet<HR> HRs { get; set; } = default!;
         public DbSet<JobPost> JobPosts { get; set; } = default!;
         public DbSet<Application> Applications { get; set; } = default!;
-        public DbSet<Payment> Payments { get; set; } = default!;
         public DbSet<CV> CVs { get; set; } = default!;
         public DbSet<Answer> Answers { get; set; } = default!;
         public DbSet<ApplicantSkill> ApplicantSkills { get; set; } = default!;

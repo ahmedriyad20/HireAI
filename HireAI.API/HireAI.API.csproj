@@ -34,4 +34,12 @@
 
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\El-Wattaneya\Desktop\HireAIProject\HireAI.API\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\El-Wattaneya\Desktop\HireAIProject\HireAI.API\.editorconfig" />
+  </ItemGroup>
+
 </Project>

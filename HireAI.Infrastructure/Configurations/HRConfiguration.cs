@@ -16,13 +16,6 @@ namespace HireAI.Data.Configurations
                 .HasMaxLength(200);
 
         
-                                                       //Type Conversion
-            builder.Property(hr => hr.AccountType)
-             .HasConversion(
-               v => v.ToString(),// Converts the enum to string when saving to the database                  
-              v => (enAccountType)Enum.Parse(typeof(enAccountType), v)// Converts the string back to enum when reading from the database
-               )
-             .HasDefaultValue(enAccountType.Free);
 
             //Type Conversion
             builder.Property(j => j.AccountType)
@@ -32,15 +25,7 @@ namespace HireAI.Data.Configurations
                )
              .HasDefaultValue(enAccountType.Free);
 
-            builder.HasMany(hr => hr.Payments)
-                .WithOne(p => p.HR)
 
-                .HasForeignKey(p => p.
-                Id)
-
-                .HasForeignKey(p => p.HrId)
-
-                .OnDelete(DeleteBehavior.Cascade);
            
             // Indexes
             builder.HasIndex(hr => hr.CompanyName);

@@ -11,6 +11,8 @@ namespace HireAI.Data.Models
     {
         public string ResumeUrl { get; set; } = default!;
         public enSkillLevel? SkillLevel { get; set; } = enSkillLevel.Beginner;
+ 
+
 
         //Foreign Keys
         public int? CVId { get; set; }

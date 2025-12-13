@@ -1,10 +1,7 @@
-
 using Amazon.S3;
-
 using HireAI.Service.Services;
-
 using HireAI.Service.Interfaces;
-
+using HireAI.Data.Helpers.Configurations;
 
 namespace HireAI.API.Extensions
 {
@@ -37,7 +34,15 @@ namespace HireAI.API.Extensions
 
             services.AddScoped<IGeminiService, GeminiService>();
 
+            // Stripe Service
+            services.AddScoped<IStripeService, StripeService>();
 
+            return services;
+        }
+
+        public static IServiceCollection AddStripeConfiguration(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<StripeSettings>(configuration.GetSection("Stripe"));
             return services;
         }
     }

@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace HireAI.Data.Helpers.Enums
 {
-    public enum  enPaymentStatus
+    public enum enSubscriptionPlan
     {
-        Pending,
-        Completed,
-        Failed,
-        Refunded
-
+        None = 0,
+        Starter = 1,
+        Professional = 2
     }
+
 }

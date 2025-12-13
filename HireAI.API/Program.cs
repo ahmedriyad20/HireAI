@@ -53,6 +53,9 @@ namespace HireAI.API
             // Register repositories and services using extension methods
             builder.Services.AddApplicationRepositories();
             builder.Services.AddApplicationServices();
+            
+            // Configure Stripe
+            builder.Services.AddStripeConfiguration(builder.Configuration);
             #endregion
 
             #region Add AutoMapper service

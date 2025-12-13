@@ -10,6 +10,7 @@
     <PackageReference Include="AWSSDK.S3" Version="4.0.13.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.0" />
+    <PackageReference Include="Stripe.net" Version="47.4.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -16,12 +16,13 @@ namespace HireAI.Data.Models
         public string? CompanyAddress { get; set; } = default!;
         public enAccountType AccountType { get; set; } = enAccountType.Free;
         public DateTime? PremiumExpiry { get; set; }
+        public string? StripeCustomerId { get; set; } 
+        public enSubscriptionPlan SubscriptionPlan { get; set; } = enSubscriptionPlan.None; 
 
 
         // Navigation Property
         public virtual ICollection<JobPost> HRJobs { get; set; } = new HashSet<JobPost>(); // jobs created by HR users
         public virtual ICollection<Application> Applications { get; set; } = new HashSet<Application>();
-        public virtual ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();
     }
 }
 
