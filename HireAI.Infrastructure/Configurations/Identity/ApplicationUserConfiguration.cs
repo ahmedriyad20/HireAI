@@ -13,6 +13,8 @@ namespace UniversityHousingSystem.Infrastructure.Config.Identity
                 .HasColumnType("NVARCHAR")
                 .HasMaxLength(2000)
                 .IsRequired(false);
+            builder.HasOne(u => u.Applicant).WithOne().OnDelete(DeleteBehavior.SetNull);
+            builder.HasOne(u => u.HR).WithOne().OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

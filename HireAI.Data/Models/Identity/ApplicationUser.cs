@@ -13,7 +13,7 @@ namespace HireAI.Data.Models.Identity
         public int? ApplicantId { get; set; }
         public int? HRId { get; set; }
         
-        public virtual Applicant? Applicant { get; set; }
+        public virtual Applicant? Applicant { get; set; } 
         public virtual HR? HR { get; set; }
         public virtual ICollection<UserRefreshToken> UserRefreshTokens { get; set; } = new HashSet<UserRefreshToken>();
     }

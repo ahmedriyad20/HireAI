@@ -25,7 +25,7 @@ namespace HireAI.Data.Configurations
             builder.HasMany(a => a.ApplicantSkills)
                 .WithOne(asn => asn.Applicant)
                 .HasForeignKey(asn => asn.ApplicantId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Navigation properties
                 builder

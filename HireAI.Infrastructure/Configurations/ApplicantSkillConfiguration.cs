@@ -17,13 +17,13 @@ namespace HireAI.Data.Configurations
             builder.HasOne(asn => asn.Applicant)
                 .WithMany(a => a.ApplicantSkills)
                 .HasForeignKey(asn => asn.ApplicantId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Skill (many ApplicantSkill per Skill) - bridge FK
             builder.HasOne(asn => asn.Skill)
                 .WithMany(s => s.ApplicantSkills)
                 .HasForeignKey(asn => asn.SkillId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Indexes
             builder.HasIndex(asn => asn.ApplicantId);
