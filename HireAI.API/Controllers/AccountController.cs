@@ -51,7 +51,7 @@ namespace HireAI.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(new { errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)) });
 
-            var response = await _authService.LoginAsync(loginDto);
+            var response = await _authService.LoginAsync(loginDto, User);
             
             return response.IsAuthenticated ? Ok(response) : Unauthorized(response);
         }

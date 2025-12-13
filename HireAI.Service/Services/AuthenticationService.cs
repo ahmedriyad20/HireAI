@@ -23,15 +23,17 @@ namespace HireAI.Service.Services
         private readonly IConfiguration _config;
         private readonly HireAIDbContext _dbContext;
         private readonly IS3Service _s3Service;
+        private readonly IAuthorizationService _authorizationService;
 
         public AuthenticationService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
-            IConfiguration config, HireAIDbContext dbContext, IS3Service s3Service)
+            IConfiguration config, HireAIDbContext dbContext, IS3Service s3Service, IAuthorizationService authorizationService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _config = config;
             _dbContext = dbContext;
             _s3Service = s3Service;
+            _authorizationService = authorizationService;
         }
 
         public async Task<AuthResponseDto> RegisterApplicantAsync(RegisterApplicantDto registerDto)
@@ -230,7 +232,7 @@ namespace HireAI.Service.Services
             }
         }
 
-        public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto)
+        public async Task<AuthResponseDto> LoginAsync(LoginDto loginDto, ClaimsPrincipal user)
         {
             try
             {
@@ -337,6 +339,21 @@ namespace HireAI.Service.Services
                     var Hr = await _dbContext.HRs.FindAsync(ApplicationUser.HRId.Value);
                     Hr.LastLogin = DateTime.Now;
                     await _dbContext.SaveChangesAsync();
+                }
+                else if (await IsAdminAsync(ApplicationUser.Id))
+                {
+                    userRole = "Admin";
+
+                    return new AuthResponseDto
+                    {
+                        IsAuthenticated = true,
+                        Token = token,
+                        RefreshToken = refreshToken,
+                        ExpiresOn = DateTime.Now.AddMinutes(30),
+                        IdentityUserId = ApplicationUser.Id,
+                        UserRole = userRole,
+                        Message = "Admin Login successful"
+                    };
                 }
                 else
                 {
@@ -811,6 +828,15 @@ namespace HireAI.Service.Services
                     Errors = new List<string> { ex.Message }
                 };
             }
+        }
+
+        private async Task<bool> IsAdminAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return false;
+
+            var roles = await _userManager.GetRolesAsync(user);
+            return roles.Contains("Admin");
         }
     }
 }

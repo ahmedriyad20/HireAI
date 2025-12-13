@@ -87,7 +87,7 @@ namespace HireAI.API.Controllers
 
             // Check if the current applicant is the owner of the applicant data
             //if (!await _authorizationService.ValidateApplicantOwnershipAsync(User, id))
-            //    return Forbid();
+            //    return Forbid();c
 
             await _applicantService.DeleteApplicantAsync(id);
             return NoContent();

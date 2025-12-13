@@ -49,7 +49,7 @@ namespace HireAI.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Roles = "Applicant")]
+        [Authorize(Roles = "Applicant,Admin")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             /*// Get applicantId from JWT claims
@@ -95,8 +95,8 @@ namespace HireAI.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [Authorize(Roles = "Applicant")]
-        public async Task<IActionResult> UpdateAsync(int id, [FromForm] ApplicantUpdateDto applicantDto)
+        [Authorize(Roles = "Applicant,Admin")]
+        public async Task<IActionResult> UpdateAsync(int id, [FromBody] ApplicantUpdateDto applicantDto)
         {
             if (id != applicantDto.Id)
                 return BadRequest();
@@ -107,6 +107,11 @@ namespace HireAI.API.Controllers
                 return NotFound();
 
             // Check if the current applicant is the owner of the applicant data
+            //if (!User.FindFirst(ClaimTypes.Role)?.Value == "Admin")
+            //{
+               
+            //}
+
             if (!await _authorizationService.ValidateApplicantOwnershipAsync(User, id))
                 return Forbid();
 
@@ -117,7 +122,7 @@ namespace HireAI.API.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Authorize(Roles = "Applicant")]
+        [Authorize(Roles = "Applicant,Admin")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
             var applicant = await _applicantService.GetApplicantByIdAsync(id);

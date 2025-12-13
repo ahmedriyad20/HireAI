@@ -9,5 +9,6 @@ namespace HireAI.Service.Interfaces
         Task<bool> ValidateApplicantOwnershipAsync(ClaimsPrincipal user, int applicantId);
         Task<bool> ValidateHROwnershipAsync(ClaimsPrincipal user, int hrId);
         Task<ApplicationUser?> GetCurrentUserAsync(ClaimsPrincipal user);
+        public bool IsAdmin(ClaimsPrincipal user);
     }
 }

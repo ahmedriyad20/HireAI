@@ -21,12 +21,20 @@ namespace HireAI.Service.Services
 
         public async Task<bool> ValidateApplicantOwnershipAsync(ClaimsPrincipal user, int applicantId)
         {
+            // Skip ownership validation if user is admin
+            if (IsAdmin(user))
+                return true;
+
             var currentUser = await GetCurrentUserAsync(user);
             return currentUser?.ApplicantId == applicantId;
         }
 
         public async Task<bool> ValidateHROwnershipAsync(ClaimsPrincipal user, int hrId)
         {
+            // Skip ownership validation if user is admin
+            if (IsAdmin(user))
+                return true;
+
             var currentUser = await GetCurrentUserAsync(user);
             return currentUser?.HRId == hrId;
         }
@@ -35,6 +43,11 @@ namespace HireAI.Service.Services
         {
             var userIdClaim = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             return string.IsNullOrEmpty(userIdClaim) ? null : await _userManager.FindByIdAsync(userIdClaim);
+        }
+
+        public bool IsAdmin(ClaimsPrincipal user)
+        {
+            return user.FindFirst(ClaimTypes.Role)?.Value == "Admin";
         }
     }
 }

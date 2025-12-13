@@ -27,6 +27,7 @@ namespace HireAI.Service.Mapping
                 //.ForMember(dest => dest.ResumeUrl, opt => opt.Ignore()); // File upload handled separately in service
 
 
+
             CreateMap<Applicant, ApplicantResponseDto>();
         }
     }

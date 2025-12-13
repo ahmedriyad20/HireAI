@@ -40,7 +40,7 @@ namespace HireAI.Data.Configurations
 
                 .HasForeignKey(p => p.HrId)
 
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
            
             // Indexes
             builder.HasIndex(hr => hr.CompanyName);
