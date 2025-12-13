@@ -15,6 +15,8 @@ namespace HireAI.Service.Interfaces
         public Task DeleteHRAsync(int hrId);
         public Task<HRResponseDto> CreateHRAsync(HRCreateDto hrCreateDto);
         public  Task<HRResponseDto> UpdateHRAsync(int hrId, HRUpdateDto hrUpdateDto);
+        public Task<ICollection<HRResponseDto>> GetAllHRAsync();
+
 
     }
 }

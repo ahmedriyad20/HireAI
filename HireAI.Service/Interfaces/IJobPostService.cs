@@ -9,4 +9,5 @@ public interface IJobPostService
     public Task<ICollection<JobPostResponseDto>> GetJobPostForHrAsync(int hrid);
     public Task UpdateJobPostAsync(int id, JobPostRequestDto JobOpeingRequestDto);
     public Task<int> GetTotalApplicationsByJobIdAsync(int jobId);
+    public Task<ICollection<JobPostResponseDto>> GetAllJobPostsAsync();
 }

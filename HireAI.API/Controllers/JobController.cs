@@ -57,5 +57,12 @@ namespace HireAI.API.Controllers
             var count = await _JobPostService.GetTotalApplicationsByJobIdAsync(jobId);
             return Ok(new { jobId, totalApplications = count });
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAllJobOpeningAsync()
+        {
+            var result = await _JobPostService.GetAllJobPostsAsync();
+                return Ok(result);
+            
+        }
     }
 }

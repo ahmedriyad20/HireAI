@@ -5,7 +5,9 @@ using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
 using HireAI.Infrastructure.GenericBase;
 using HireAI.Infrastructure.Intrefaces;
+using HireAI.Infrastructure.Repositories;
 using HireAI.Service.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace HireAI.Service.Services
 {
@@ -177,6 +179,12 @@ namespace HireAI.Service.Services
             return _jobPostRepository.GetTotalApplicationsByJobIdAsync(jobId);
         }
 
+        public async Task<ICollection<JobPostResponseDto>> GetAllJobPostsAsync()
+        {
+            var jobs = await _jobPostRepository.GetAll().ToListAsync();
+            var jobdto = _mapper.Map<ICollection<JobPostResponseDto>>(jobs);
+            return jobdto;
+        }
     }
 }
       

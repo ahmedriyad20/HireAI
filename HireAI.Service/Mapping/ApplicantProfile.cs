@@ -24,7 +24,8 @@ namespace HireAI.Service.Mapping
 
             // Add mapping for ApplicantUpdateDto to Applicant
             CreateMap<ApplicantUpdateDto, Applicant>();
-                //.ForMember(dest => dest.IsActive, opt => opt.Ignore()); // File upload handled separately in service
+                //.ForMember(dest => dest.ResumeUrl, opt => opt.Ignore()); // File upload handled separately in service
+
 
 
             CreateMap<Applicant, ApplicantResponseDto>();

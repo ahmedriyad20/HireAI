@@ -80,7 +80,12 @@ namespace HireAI.Service.Services
             var hrResponse = _map.Map<HRResponseDto>(hr);
             return hrResponse;
         }
-
+        public async Task<ICollection<HRResponseDto>> GetAllHRAsync()
+        {
+            var hrs = await _hr.GetAll().ToListAsync();
+            var hrreseponse = _map.Map<List<HRResponseDto>>(hrs);
+            return hrreseponse;
+        }
       
     }
 
