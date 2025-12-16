@@ -16,5 +16,6 @@ namespace HireAI.Service.Interfaces
         Task<ApplicantResponseDto> AddApplicantAsync(Applicant applicant);
         Task<ApplicantResponseDto> UpdateApplicantAsync(ApplicantUpdateDto applicant);
         Task DeleteApplicantAsync(int applicantId);
+        Task<IEnumerable<ApplicantSkillDto>> AddSkillsToApplicantAsync(int applicantId, List<int> skillIds);
     }
 }

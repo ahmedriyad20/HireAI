@@ -2,6 +2,7 @@ using HireAI.Data.Helpers.Enums;
 using HireAI.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Reflection.Emit;
 
 namespace HireAI.Data.Configurations
 {
@@ -25,8 +26,18 @@ namespace HireAI.Data.Configurations
                )
              .HasDefaultValue(enAccountType.Free);
 
+//            builder.Entity<JobPost>()
+//.HasOne(jp => jp.HR)
+//.WithMany(hr => hr.HRJobs)
+//.HasForeignKey(jp => jp.HRId)
+//.OnDelete(DeleteBehavior.Cascade);
 
-           
+//            builder.Entity<Application>()
+//    .HasOne(a => a.HR)
+//    .WithMany(hr => hr.Applications)
+//    .HasForeignKey(a => a.HRId)
+//    .OnDelete(DeleteBehavior.Cascade);
+
             // Indexes
             builder.HasIndex(hr => hr.CompanyName);
             builder.HasIndex(hr => hr.AccountType);

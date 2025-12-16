@@ -59,19 +59,19 @@ namespace HireAI.Data.Configurations
             builder.HasOne(j => j.HR)
                 .WithMany(hr => hr.HRJobs)
                 .HasForeignKey(j => j.HRId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.SetNull);
 
             // Navigation properties
       
             builder.HasMany(j => j.Applications)
                 .WithOne(a => a.AppliedJob)
                 .HasForeignKey(a => a.JobId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasMany(j => j.ExamEvaluations)
                 .WithOne(ee => ee.JobPost)
                 .HasForeignKey(ee => ee.JobId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.SetNull);
 
     
 

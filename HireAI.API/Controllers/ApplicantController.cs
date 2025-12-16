@@ -1,16 +1,17 @@
-﻿using HireAI.Data.Helpers.DTOs.Applicant.Request;
+﻿using HireAI.Data.Helpers.DTOs.Applicant;
+using HireAI.Data.Helpers.DTOs.Applicant.Request;
 using HireAI.Data.Models;
+using HireAI.Data.Models.Identity;
 using HireAI.Infrastructure.GenaricBasies;
 using HireAI.Service.Interfaces;
-using Humanizer;
-using HireAI.Data.Models.Identity;
 using HireAI.Service.Services;
+using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
 using System.Security.Claims;
+using System.Threading;
 
 namespace HireAI.API.Controllers
 {
@@ -135,6 +136,38 @@ namespace HireAI.API.Controllers
 
             await _applicantService.DeleteApplicantAsync(id);
             return NoContent();
+        }
+
+        [HttpPost("{applicantId:int}/skills")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "Applicant,Admin")]
+        public async Task<IActionResult> AddSkillsAsync(int applicantId, [FromBody] AddApplicantSkillsRequestDto request)
+        {
+            if (request == null || !request.SkillIds.Any())
+            {
+                return BadRequest(new { message = "At least one skill ID must be provided" });
+            }
+
+            var existingApplicant = await _applicantService.GetApplicantByIdAsync(applicantId);
+            if (existingApplicant == null)
+                return NotFound(new { message = "Applicant not found" });
+
+            // Check if the current applicant is the owner of the applicant data
+            //if (!await _authorizationService.ValidateApplicantOwnershipAsync(User, applicantId))
+            //    return Forbid();
+
+            try
+            {
+                var addedSkills = await _applicantService.AddSkillsToApplicantAsync(applicantId, request.SkillIds);
+                return Ok(new { message = "Skills added successfully", skills = addedSkills });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPost]

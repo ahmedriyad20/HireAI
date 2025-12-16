@@ -29,7 +29,7 @@ namespace HireAI.Data.Models
         public bool AutoSend { get; set; } = false;
 
         //Foreign Keys
-        public int HRId { get; set; }
+        public int? HRId { get; set; }
 
 
         // Navigation Property

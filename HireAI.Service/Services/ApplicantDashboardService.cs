@@ -16,7 +16,7 @@ namespace HireAI.Service.Services
         private readonly IApplicationRepository _applicationRepository;
         private readonly IExamRepository _examRepository;
         private readonly IExamSummaryRepository _examSummaryRepository;
-        private readonly IExamEvaluationRepository _examEvaluationRepository;
+        private readonly IMockExamService _mockExamService;
         private readonly IApplicantRepository _applicantRepository;
         private readonly IApplicantSkillRepository _applicantSkillRepository;
         private readonly HireAIDbContext _context;
@@ -24,13 +24,13 @@ namespace HireAI.Service.Services
         
 
         public ApplicantDashboardService(IApplicationRepository applicationRepository, IExamRepository examRepository,
-            IExamSummaryRepository examSummaryRepository , IExamEvaluationRepository examEvaluationRepository,
+            IExamSummaryRepository examSummaryRepository , IMockExamService mockExamService,
             IApplicantRepository applicantRepository, IApplicantSkillRepository applicantSkillRepository, HireAIDbContext context, IMapper mapper)
         {
             _applicationRepository = applicationRepository;
             _examRepository = examRepository;
             _examSummaryRepository = examSummaryRepository;
-            _examEvaluationRepository = examEvaluationRepository;
+            _mockExamService = mockExamService;
             _applicantRepository = applicantRepository;
             _applicantSkillRepository = applicantSkillRepository;
             _context = context;
@@ -51,8 +51,8 @@ namespace HireAI.Service.Services
         {
             return await _examSummaryRepository.GetAll()
                 .AsNoTracking()
-                .Include(es => es.Application)
-                .Where(es => es.Application.ApplicantId == applicantId &&
+                .Include(es => es.Applicant)
+                .Where(es => es.ApplicantId == applicantId &&
                              es.Exam.ExamType == enExamType.MockExam)
                 .CountAsync();
         }
@@ -64,11 +64,15 @@ namespace HireAI.Service.Services
             // then compute the average TotalScore. Using joins avoids relying on navigation properties being loaded.
             var avg = await (from ev in _context.ExamEvaluations
                              join es in _context.Set<ExamSummary>() on ev.ExamSummaryId equals es.Id
-                             join app in _context.Set<Application>() on es.ApplicationId equals app.Id
-                             where app.ApplicantId == applicantId
+                             join app in _context.Set<Applicant>() on es.ApplicantId equals app.Id
+                             where app.Id == applicantId
                              select (double?)ev.ApplicantExamScore).AverageAsync();
 
-            return avg ?? 0.0;
+            if (avg == null)
+                return 0.0;
+
+            // Get the first digit after the decimal point
+            return Math.Round(avg.Value, 2);
         }
 
         public async Task<string> GetSkillLevelPerApplicantAsync(int applicantId)

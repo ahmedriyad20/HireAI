@@ -11,7 +11,7 @@ namespace HireAI.Data.Models
         public enExamEvaluationStatus Status { get; set; } = enExamEvaluationStatus.Pending;
 
         //Foreign Keys
-        public int ExamSummaryId { get; set; }
+        public int? ExamSummaryId { get; set; }
         public int? JobId { get; set; }
 
         //Navigation Property
