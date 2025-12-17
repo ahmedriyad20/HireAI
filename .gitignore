@@ -69,5 +69,10 @@ node_modules/
 # =========================
 # DO NOT IGNORE (KEEP THESE IN GIT)
 # =========================
-
+# EF Core Migrations temp
+Migrations/
+MigrationsBackup/
+/HireAI.Infrastructure/Migrations
+/HireAI.API/appsettings.json
+/Migrations
 
