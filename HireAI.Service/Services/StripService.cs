@@ -4,13 +4,10 @@ using Stripe.Checkout;
 using HireAI.Service.Interfaces;
 using HireAI.Data.Helpers.DTOs.Stripe;
 using HireAI.Data.Helpers.Enums;
-using HireAI.Data.Helpers.Configurations;
+using HireAI.Data.Configurations;
+
 
 namespace HireAI.Service.Services;
-
-
-    
-
 
 // Stripe service implementation - Stripe is the SINGLE source of truth
 public class StripeService : IStripeService

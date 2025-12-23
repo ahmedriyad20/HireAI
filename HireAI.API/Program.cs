@@ -2,7 +2,7 @@ using Amazon;
 using Amazon.Extensions.NETCore.Setup;
 using Amazon.S3;
 using HireAI.API.Extensions;
-using HireAI.API.Extensions;
+using HireAI.Core.Middleware;
 using HireAI.Data.Models.Identity;
 using HireAI.Infrastructure.Context;
 using HireAI.Infrastructure.GenericBase;
@@ -62,7 +62,7 @@ namespace HireAI.API
             builder.Services.AddAutoMapper(cfg => { }, typeof(ApplicationProfile).Assembly);
             #endregion
 
-            // Configure AWS S3 with credentials from appsettings
+            #region Configure AWS S3 with credentials from appsettings
             var awsAccessKey = builder.Configuration["AWS:AccessKey"];
             var awsSecretKey = builder.Configuration["AWS:SecretKey"];
             var awsRegion = builder.Configuration["AWS:Region"];
@@ -73,6 +73,7 @@ namespace HireAI.API
             awsOptions.Region = RegionEndpoint.GetBySystemName(awsRegion);
             builder.Services.AddDefaultAWSOptions(awsOptions);
             builder.Services.AddAWSService<IAmazonS3>();
+            #endregion
 
             #region Configure CORS to allow requests from any origin
             builder.Services.AddCors(options =>
@@ -182,6 +183,9 @@ namespace HireAI.API
             // Seed the database
             await app.SeedDatabaseAsync();
 
+            // Add Serilog middleware
+            app.UseMiddleware<SerilogLoggingMiddleware>();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -192,7 +196,7 @@ namespace HireAI.API
 
             app.UseCors("AllowAll");
 
-
+            app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();

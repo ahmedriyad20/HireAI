@@ -1,7 +1,8 @@
 using Amazon.S3;
 using HireAI.Service.Services;
 using HireAI.Service.Interfaces;
-using HireAI.Data.Helpers.Configurations;
+using HireAI.Data.Configurations;
+
 
 namespace HireAI.API.Extensions
 {
